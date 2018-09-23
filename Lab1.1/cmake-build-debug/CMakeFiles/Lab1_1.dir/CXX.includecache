@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/taya/Documents/uniProjects_secondYear/Lab1.1/Tree.h
+iostream
+-
+functional
+-
+
+/home/taya/Documents/uniProjects_secondYear/Lab1.1/main.cpp
+iostream
+-
+Tree.h
+/home/taya/Documents/uniProjects_secondYear/Lab1.1/Tree.h
+
