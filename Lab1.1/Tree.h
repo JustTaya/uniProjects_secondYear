@@ -34,17 +34,17 @@ protected:
     TData data;
 
     //methods to return data of tree node
-    TKey returnKey();
-    TData returnData();
+    TKey returnKey() const;
+    TData returnData() const;
    };
 
 template<typename TKey, typename TData>
-inline TKey TNode<TKey, TData>::returnKey() {
+inline TKey TNode<TKey, TData>::returnKey() const {
     return this->key;
 }
 
 template<typename TKey, typename TData>
-inline TData TNode<TKey, TData>::returnData() {
+inline TData TNode<TKey, TData>::returnData() const {
     return this->data;
 }
 
@@ -107,14 +107,14 @@ public:
     explicit BinTree(TKey key, TData data):_root(BinTNode(key,data)){};
 
     virtual void insert(TKey key,TData data) override;
-    virtual bool remove(TKey)=0;
-    virtual TNode<TKey,TData> search(TKey)=0;
+    virtual bool remove(TKey);
+    virtual TNode<TKey,TData> search(TKey key) const;
 
     //methods to print tree
-    virtual void printInOrder() const =0;
-    virtual void printPreOrder() const =0;
-    virtual void printPostOrder() const =0;
-    virtual void printLevelOrder() const =0;
+    virtual void printInOrder() const;
+    virtual void printPreOrder() const;
+    virtual void printPostOrder() const;
+    virtual void printLevelOrder() const;
 
 private:
     BinTNode<TKey,TData>* _root;
@@ -167,4 +167,35 @@ void BinTree<TKey, TData, Cmp>::insert(TKey key, TData data) {
         break;
     }
 }
+
+template<typename TKey, typename TData, typename Cmp>
+bool BinTree<TKey, TData, Cmp>::remove(TKey key) {
+
+}
+
+template<typename TKey, typename TData, typename Cmp>
+TNode<TKey, TData> BinTree<TKey, TData, Cmp>::search(TKey key) const {
+    if(this->_root==nullptr)
+        return nullptr;
+    std::stack<BinTNode<TKey, TData> *> stack;
+    BinTNode<TKey, TData> *tmp = nullptr;
+    stack.push(this->_root);
+    while(!stack.empty()) {
+        tmp=stack.top();
+        stack.pop();
+        if(tmp->returnKey()==key) {
+            return tmp;
+        }
+        else
+        {
+            if(tmp->left!= nullptr)
+                stack.push(tmp->left);
+            if(tmp->right!=nullptr)
+                stack.push(tmp->right);
+        }
+    }
+    return nullptr;
+}
+
+
 
