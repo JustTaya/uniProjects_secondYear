@@ -34,17 +34,17 @@ protected:
     TData data;
 
     //methods to return data of tree node
-    TKey returnKey() const;
-    TData returnData() const;
+    TKey getKey() const;
+    TData getData() const;
    };
 
 template<typename TKey, typename TData>
-inline TKey TNode<TKey, TData>::returnKey() const {
+inline TKey TNode<TKey, TData>::getKey() const {
     return this->key;
 }
 
 template<typename TKey, typename TData>
-inline TData TNode<TKey, TData>::returnData() const {
+inline TData TNode<TKey, TData>::getData() const {
     return this->data;
 }
 
@@ -55,7 +55,8 @@ class Tree
 public:
 
     virtual bool insert(TKey,TData)=0;
-    virtual bool remove(TKey)=0;
+    virtual bool deleteNode(TKey)=0;
+    virtual bool deleteSubtree(TKey)=0;
     virtual TNode<TKey,TData> search(TKey)=0;
 
     //methods to print tree
@@ -107,7 +108,8 @@ public:
     explicit BinTree(TKey key, TData data):_root(BinTNode(key,data)){};
 
     virtual void insert(TKey key,TData data) override;
-    virtual bool remove(TKey);
+    virtual bool deleteNode(TKey);   //delete the least of the tree
+    virtual bool deleteSubtree(TKey);
     virtual TNode<TKey,TData> search(TKey key) const;
 
     //methods to print tree
@@ -118,6 +120,7 @@ public:
 
 private:
     BinTNode<TKey,TData>* _root;
+    BinTNode<TKey,TData>* findParentOf(TKey key) const;  //searches a parent node for a node with key(for remove)
 };
 
 template<typename TKey, typename TData, typename Cmp>
@@ -131,7 +134,7 @@ void BinTree<TKey, TData, Cmp>::insert(TKey key, TData data) {
     char buff=' ';
     while(tmp!=nullptr) {
         std::cout << "Current node key is: ";
-        //std::cout<<this->key;
+        //std::cout<<this->getKey();
         std::cout << "Chose L for left/R for right node.\n";
         std::cin >> buff;
         switch(buff)
@@ -139,7 +142,7 @@ void BinTree<TKey, TData, Cmp>::insert(TKey key, TData data) {
             case 'L':
                 if(tmp->left==nullptr)
                 {
-                    std::cout<<"Press Y to insert node here.\n"
+                    std::cout<<"Press Y to insert node here.\n";
                     std::cin>>buff;
                     if(buff=='Y')
                         tmp->left=new BinTNode<TKey,TData>(key,data);
@@ -151,7 +154,7 @@ void BinTree<TKey, TData, Cmp>::insert(TKey key, TData data) {
             case 'R':
                 if(tmp->right==nullptr)
                 {
-                    std::cout<<"Press Y to insert node here.\n"
+                    std::cout<<"Press Y to insert node here.\n";
                     std::cin>>buff;
                     if(buff=='Y')
                         tmp->right=new BinTNode<TKey,TData>(key,data);
@@ -169,8 +172,33 @@ void BinTree<TKey, TData, Cmp>::insert(TKey key, TData data) {
 }
 
 template<typename TKey, typename TData, typename Cmp>
-bool BinTree<TKey, TData, Cmp>::remove(TKey key) {
-
+bool BinTree<TKey, TData, Cmp>::deleteNode(TKey key) {
+    BinTNode<TKey,TData>* parent=findParentOf(key), *node=nullptr;
+    if(parent==nullptr)
+        return false;
+    if(parent->getKey()==key) {
+        node = parent;
+        delete node;
+        return true;
+    }
+    if(parent->left->getKey()==key) {
+        node = parent->left;
+        if(node->left==nullptr && node->right==nullptr) {
+            delete node;
+            parent->left=nullptr;
+            return true;
+        }
+    }
+    if(parent->right->getKey()==key) {
+        node = parent->right;
+        if(node->left== nullptr && node->right==nullptr)
+        {
+            delete node;
+            parent->right=nullptr;
+            return true;
+        }
+    }
+    return false;
 }
 
 template<typename TKey, typename TData, typename Cmp>
@@ -195,6 +223,61 @@ TNode<TKey, TData> BinTree<TKey, TData, Cmp>::search(TKey key) const {
         }
     }
     return nullptr;
+}
+
+template<typename TKey, typename TData, typename Cmp>
+BinTNode<TKey, TData> *BinTree<TKey, TData, Cmp>::findParentOf(TKey key) const {
+    if(this->_root==nullptr || this->_root->getKey()==key)
+        return this->_root;
+    std::stack<BinTNode<TKey, TData> *> stack;
+    BinTNode<TKey, TData> *tmp = nullptr;
+    stack.push(this->_root);
+    while(!stack.empty()) {
+        tmp=stack.top();
+        stack.pop();
+            if(tmp->left!= nullptr) {
+                if(tmp->left->getKey()==key)
+                    return tmp;
+                stack.push(tmp->left);
+            }
+            if(tmp->right!=nullptr) {
+                if(tmp->right->getKey()==key)
+                    return tmp;
+                stack.push(tmp->right);
+            }
+          }
+    return nullptr;
+}
+
+template<typename TKey, typename TData, typename Cmp>
+bool BinTree<TKey, TData, Cmp>::deleteSubtree(TKey key) {
+    BinTNode<TKey,TData>* parent=findParentOf(key), *node=nullptr;
+    if(parent==nullptr)
+        return false;
+    if(parent->getKey()== nullptr)
+        node=parent;
+    else if(parent->left->getKey()==key) {
+        node = parent->left;
+        parent->left=nullptr;
+    }
+    else if(parent->right->getKey()==key) {
+        node = parent->right;
+        parent->right = nullptr;
+    }
+
+    std::stack<BinTNode<TKey, TData> *> stack;
+    BinTNode<TKey, TData> *tmp = nullptr;
+    stack.push(this->_root);
+    while(!stack.empty()) {
+        tmp=stack.top();
+        stack.pop();
+        if(tmp->left!= nullptr)
+            stack.push(tmp->left);
+        if(tmp->right!=nullptr)
+            stack.push(tmp->right);
+        delete tmp;
+    }
+    return true;
 }
 
 
