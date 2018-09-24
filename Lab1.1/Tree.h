@@ -53,7 +53,6 @@ template <typename TKey, typename TData, typename Cmp=std::less<TKey>>
 class Tree
 {
 public:
-
     virtual bool insert(TKey,TData)=0;
     virtual bool deleteNode(TKey)=0;
     virtual bool deleteSubtree(TKey)=0;
@@ -106,6 +105,7 @@ class BinTree:public Tree<TKey,TData>
 public:
     explicit BinTree():_root(nullptr){};
     explicit BinTree(TKey key, TData data):_root(BinTNode(key,data)){};
+    ~BinTree();
 
     virtual void insert(TKey key,TData data) override;
     virtual bool deleteNode(TKey);   //delete the least of the tree
@@ -280,5 +280,108 @@ bool BinTree<TKey, TData, Cmp>::deleteSubtree(TKey key) {
     return true;
 }
 
+template<typename TKey, typename TData, typename Cmp>
+void BinTree<TKey, TData, Cmp>::printInOrder() const {
+    if(this->_root==nullptr)
+        return;
+    std::stack<BinTNode<TKey, TData> *> stack;
+    BinTNode<TKey, TData> *tmp = nullptr;
+    stack.push(this->_root);
+    while(!stack.empty()) {
+        tmp=stack.top();
+        stack.pop();
+        if(tmp->left!= nullptr)
+            stack.push(tmp->left);
+        //std::cout<<tmp->getKey()<<' '<<tmp->getData<<std::endl;
+        if(tmp->right!=nullptr)
+            stack.push(tmp->right);
+        }
+    }
+
+template<typename TKey, typename TData, typename Cmp>
+BinTree<TKey, TData, Cmp>::~BinTree() {
+deleteSubtree(this->_root);
+}
+
+template<typename TKey, typename TData, typename Cmp>
+void BinTree<TKey, TData, Cmp>::printPreOrder() const {
+    if(this->_root==nullptr)
+        return;
+    std::stack<BinTNode<TKey, TData> *> stack;
+    BinTNode<TKey, TData> *tmp = nullptr;
+    stack.push(this->_root);
+    while(!stack.empty()) {
+        tmp=stack.top();
+        stack.pop();
+        //std::cout<<tmp->getKey()<<' '<<tmp->getData<<std::endl;
+        if(tmp->left!= nullptr)
+            stack.push(tmp->left);
+        if(tmp->right!=nullptr)
+            stack.push(tmp->right);
+    }
+}
+
+template<typename TKey, typename TData, typename Cmp>
+void BinTree<TKey, TData, Cmp>::printPostOrder() const {
+    if(this->_root==nullptr)
+        return;
+    std::stack<BinTNode<TKey, TData> *> stack;
+    BinTNode<TKey, TData> *tmp = nullptr;
+    stack.push(this->_root);
+    while(!stack.empty()) {
+        tmp=stack.top();
+        stack.pop();
+        if(tmp->left!= nullptr)
+            stack.push(tmp->left);
+        if(tmp->right!=nullptr)
+            stack.push(tmp->right);
+        //std::cout<<tmp->getKey()<<' '<<tmp->getData<<std::endl;
+    }
+}
+
+template<class TKey, class TData>
+struct Level {
+    int level = 0;
+    BinTNode<TKey, TData>* node = nullptr;
+};
+
+template<typename TKey, typename TData, typename Cmp>
+void BinTree<TKey, TData, Cmp>::printLevelOrder() const {
+    std::queue<Level< TKey, TData>*> queue;
+    int l = 1;
+    Level<TKey, TData>* tmp = new Level<TKey, TData>();
+    tmp->level = 0;
+    tmp->node = this->_root;
+    queue.push(tmp);
+    while (!queue.empty()) {
+        tmp = queue.front();
+        queue.pop();
+        if (l != tmp->level) {
+            std::cout << std::endl;
+            std::cout << "level" << tmp->level << " ";
+            l = tmp->level;
+        }
+        //std::cout << tmp->node->key << " ";
+        if (tmp->node->left != nullptr) {
+            Level<TKey, TData> *left = new Level<TKey, TData>();
+            left->node = tmp->node->left;
+            left->level = l + 1;
+            queue.push(left);
+        }
+        if (tmp->node->right != nullptr) {
+            Level<TKey, TData> *right = new Level<TKey, TData>();
+            right->node = tmp->node->right;
+            right->level = l + 1;
+            queue.push(right);
+        }
+    }
+    delete tmp;
+}
 
 
+//TODO: BST class
+template <typename TKey,typename TData>
+class BSTree:public BinTree<TKey,TData>
+        {
+                
+        };

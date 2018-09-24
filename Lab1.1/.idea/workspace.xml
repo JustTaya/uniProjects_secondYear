@@ -14,8 +14,6 @@
     <list default="true" id="3ae8c7bd-b903-455a-8e5d-94407e71d968" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tree.h" beforeDir="false" afterPath="$PROJECT_DIR$/Tree.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Lab1_1.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Lab1_1.dir/main.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Lab1_1" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Lab1_1" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -48,12 +46,12 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="cpp" value="83" />
-          <entry key="h" value="4338" />
+          <entry key="h" value="4589" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="4421" />
+          <entry key="ObjectiveC" value="4672" />
         </counts>
       </usages-collector>
     </session>
@@ -77,8 +75,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Tree.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="59" column="4" selection-start-line="59" selection-start-column="4" selection-end-line="59" selection-end-column="4" />
+            <state relative-caret-position="-820">
+              <caret line="302" column="27" lean-forward="true" selection-start-line="302" selection-start-column="27" selection-end-line="302" selection-end-column="27" />
               <folding>
                 <element signature="e#107#126#0" expanded="true" />
                 <element signature="e#481#512#0" expanded="true" />
@@ -90,6 +88,12 @@
                 <element signature="e#4445#4490#0" expanded="true" />
                 <element signature="e#5239#5284#0" expanded="true" />
                 <element signature="e#6847#6892#0" expanded="true" />
+                <element signature="e#7715#7760#0" expanded="true" />
+                <element signature="e#7843#7888#0" expanded="true" />
+                <element signature="e#8421#8466#0" expanded="true" />
+                <element signature="e#8978#9023#0" expanded="true" />
+                <element signature="e#9536#9561#0" expanded="true" />
+                <element signature="e#9536#9581#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -194,12 +198,12 @@
       <option name="presentableId" value="Default" />
       <updated>1537721949816</updated>
       <workItem from="1537721953677" duration="10429000" />
-      <workItem from="1537792597897" duration="27282000" />
+      <workItem from="1537792597897" duration="28577000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="37711000" />
+    <option name="totallyTimeSpent" value="39006000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1280" y="-2" width="1366" height="770" extended-state="6" />
@@ -211,7 +215,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3296875" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -246,8 +250,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Tree.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="59" column="4" selection-start-line="59" selection-start-column="4" selection-end-line="59" selection-end-column="4" />
+        <state relative-caret-position="-820">
+          <caret line="302" column="27" lean-forward="true" selection-start-line="302" selection-start-column="27" selection-end-line="302" selection-end-column="27" />
           <folding>
             <element signature="e#107#126#0" expanded="true" />
             <element signature="e#481#512#0" expanded="true" />
@@ -259,6 +263,12 @@
             <element signature="e#4445#4490#0" expanded="true" />
             <element signature="e#5239#5284#0" expanded="true" />
             <element signature="e#6847#6892#0" expanded="true" />
+            <element signature="e#7715#7760#0" expanded="true" />
+            <element signature="e#7843#7888#0" expanded="true" />
+            <element signature="e#8421#8466#0" expanded="true" />
+            <element signature="e#8978#9023#0" expanded="true" />
+            <element signature="e#9536#9561#0" expanded="true" />
+            <element signature="e#9536#9581#0" expanded="true" />
           </folding>
         </state>
       </provider>
