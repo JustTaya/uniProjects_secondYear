@@ -11,6 +11,12 @@ iostream
 -
 functional
 -
+list
+-
+queue
+-
+stack
+-
 
 /home/taya/Documents/uniProjects_secondYear/Lab1.1/main.cpp
 iostream
