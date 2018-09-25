@@ -2,6 +2,8 @@
 #include "Tree.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+
+    BSTree<int,int>* tree=new BSTree<int,int>();
+    tree->printPostOrder();
     return 0;
 }
