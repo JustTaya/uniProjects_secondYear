@@ -403,7 +403,7 @@ public:
 private:
     BinTNode<TKey, TData> *_root;
 
-    BinTNode<TKey, TData> *findLeftLeaf();
+    BinTNode<TKey, TData> *findLeftLeafParent();
     void replaceNode(BinTNode<TKey,TData>* parent, BinTNode<TKey,TData>* node);
 };
 
@@ -471,16 +471,16 @@ bool BSTree<TKey, TData>::deleteNode(TKey key) {
 }
 
 template<typename TKey, typename TData>
-BinTNode<TKey, TData> *BSTree<TKey, TData>::findLeftLeaf() {
+BinTNode<TKey, TData> *BSTree<TKey, TData>::findLeftLeafParent() {
     if (this->_root == nullptr)
         return nullptr;
     BinTNode<TKey, TData> *node = this->_root;
-    while (node->left != nullptr)
+    while (node->left->left != nullptr)
         node = node->left;
     return node;
 }
 
-/*
+
 template<typename TKey, typename TData>
 void BSTree<TKey, TData>::replaceNode(BinTNode<TKey, TData> *parent, BinTNode<TKey, TData> *node) {
     if (node->left == nullptr && node->right == nullptr) {
@@ -512,11 +512,15 @@ void BSTree<TKey, TData>::replaceNode(BinTNode<TKey, TData> *parent, BinTNode<TK
         }
         else
         {
-            BinTNode<TKey,TData>* tmp=findLeftLeaf();
-            tmp->left=node->left;
-            tmp->right=node->right;
+            BinTNode<TKey,TData>* tmp=findLeftLeafParent();
+            node->key=tmp->left->key;
+            node->data=tmp->left->data;
 
+            tmp->left->left=node->left;
+            tmp->left->right=node->right;
+
+            delete tmp->left;
+            tmp->left=nullptr;
         }
     }
 }
-*/
