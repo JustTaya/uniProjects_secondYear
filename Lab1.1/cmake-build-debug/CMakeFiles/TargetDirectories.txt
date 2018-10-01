@@ -1,3 +1,0 @@
-/home/taya/Documents/uniProjects_secondYear/Lab1.1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/taya/Documents/uniProjects_secondYear/Lab1.1/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/taya/Documents/uniProjects_secondYear/Lab1.1/cmake-build-debug/CMakeFiles/Lab1_1.dir

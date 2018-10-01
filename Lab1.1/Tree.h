@@ -13,20 +13,6 @@
 #include <queue>
 #include <stack>
 
-//default functor to print node key and data
-class Print {
-    void operator()(const int &key);
-
-    void operator()(const int &key, const int &data);
-};
-
-void Print::operator()(const int &key) {
-    std::cout << "Key: " << key << std::endl;
-}
-
-void Print::operator()(const int &key, const int &data) {
-    std::cout << "Key: " << key << " Data: " << data << std::endl;
-}
 
 //abstract class of tree node
 template<typename TKey, typename TData>
@@ -53,29 +39,27 @@ TData TNode<TKey, TData>::getData() const {
     return this->data;
 }
 
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
+template<typename TKey, typename TData,typename Cmp=std::less<TKey>>
 class Tree {
 public:
     explicit Tree() : _root(nullptr) {};
 
     explicit Tree(TKey key, TData data) : _root(TNode(key, data)) {};
 
-    virtual TNode<TKey, TData> *insert(TNode<TKey, TData> *, TKey, TData) = 0;
+    virtual bool insert(TKey, TData) = 0;
 
     virtual bool deleteNode(TKey) = 0;
 
     virtual bool deleteSubtree(TKey) = 0;
 
-    virtual TNode<TKey, TData> *search(TKey) const = 0;
-
     //methods to print tree
-    virtual void printInOrder() const = 0;
+    virtual void printInOrder(void (*print)(TKey,TData)) const = 0;
 
-    virtual void printPreOrder() const = 0;
+    virtual void printPreOrder(void (*print)(TKey,TData)) const = 0;
 
-    virtual void printPostOrder() const = 0;
+    virtual void printPostOrder(void (*print)(TKey,TData)) const = 0;
 
-    virtual void printLevelOrder() const = 0;
+    virtual void printLevelOrder(void (*print)(TKey,TData)) const = 0;
 
 private:
     TNode<TKey, TData> *_root;
@@ -101,14 +85,18 @@ void MultiNode<TKey, TData>::add(TKey key, TData data) {
     this->nodes.push_back(node);
 }
 
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-class MultiTree : public Tree<TKey, TData, P, Cmp> {
+template<typename TKey, typename TData, typename Cmp=std::less<TKey>>
+class MultiTree : public Tree<TKey, TData, Cmp> {
 public:
-    MultiTree() : Tree<TKey, TData, P, Cmp>() {};
+    MultiTree() : Tree<TKey, TData,Cmp>() {};
 
-    MultiTree(TKey key, TData data) : Tree<TKey, TData, P, Cmp>(key, data) {};
+    MultiTree(TKey key, TData data) : Tree<TKey, TData,Cmp>(key, data) {};
+
+    virtual bool insert(TKey key, TData data);
 
     virtual MultiNode<TKey, TData> *insert(MultiNode<TKey, TData> *node, TKey key, TData data);
+
+    MultiNode<TKey, TData> *getRoot();
 
     virtual bool deleteNode(TKey key);
 
@@ -117,11 +105,13 @@ public:
     virtual MultiNode<TKey, TData> *search(TKey key) const;
 
     //methods to print tree
-    virtual void printPreOrder() const;
+    virtual void printInOrder(void (*print)(TKey,TData)) const;
 
-    virtual void printPostOrder() const;
+    virtual void printPreOrder(void (*print)(TKey,TData)) const;
 
-    virtual void printLevelOrder() const;
+    virtual void printPostOrder(void (*print)(TKey,TData)) const;
+
+    virtual void printLevelOrder(void (*print)(TKey,TData)) const;
 
 private:
     MultiNode<TKey, TData> *_root;
@@ -129,190 +119,7 @@ private:
     MultiNode<TKey, TData> *searchParent(TKey key) const;
 };
 
-template<typename TKey, typename TData, typename P, typename Cmp>
-MultiNode<TKey, TData> *MultiTree<TKey, TData, P, Cmp>::insert(MultiNode<TKey, TData> *node, TKey key, TData data) {
-    if (node != nullptr) {
-        node->add(key, data);
-        return node->nodes.back();
-    }
-    return nullptr;
-}
-
-template<typename TKey, typename TData, typename P, typename Cmp>
-MultiNode<TKey, TData> *MultiTree<TKey, TData, P, Cmp>::searchParent(TKey key) const {
-    if (this->_root == nullptr || this->_root->getKey() == key)
-        return this->_root;
-    MultiNode<TKey, TData> *tmp = nullptr;
-    std::stack<MultiNode<TKey, TData> *> stack;
-    typename std::list<MultiNode<TKey, TData> *>::iterator it;
-    stack.push(this->_root);
-    while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        if (tmp->nodes.empty())
-            continue;
-        it = std::find_if(tmp->nodes.begin(), tmp->nodes.end(),
-                          [key](const MultiNode<TKey, TData> *node) -> bool {
-                              return (node->getKey() == key);
-                          });
-        if (it != tmp->nodes.back())
-            return tmp;
-        std::for_each(tmp->nodes.begin(), tmp->nodes.end(), [stack](const MultiNode<TKey, TData> *node) {
-            stack.push(node);
-        });
-    }
-    return nullptr;
-}
-
-template<typename TKey, typename TData, typename P, typename Cmp>
-MultiNode<TKey, TData> *MultiTree<TKey, TData, P, Cmp>::search(TKey key) const {
-    if (this->_root == nullptr || this->_root->getKey() == key)
-        return this->_root;
-    MultiNode<TKey, TData> *tmp = nullptr;
-    std::stack<MultiNode<TKey, TData> *> stack;
-    stack.push(this->_root);
-    while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        if (tmp->getKey() == key)
-            return tmp;
-        if (!tmp->nodes.empty())
-            std::for_each(tmp->nodes.begin(), tmp->nodes.end(), [stack](const MultiNode<TKey, TData> *node) {
-                stack.push(node);
-            });
-    }
-    return nullptr;
-}
-
-template<typename TKey, typename TData, typename P, typename Cmp>
-bool MultiTree<TKey, TData, P, Cmp>::deleteNode(TKey key) {
-    MultiNode<TKey, TData> *parent = searchParent(key);
-    if (parent == nullptr)
-        return false;
-    if (parent == this->_root && parent->nodes.empty()) {
-        delete this->_root;
-        this->_root = nullptr;
-        return true;
-    }
-    typename std::list<MultiNode<TKey, TData> *>::iterator it =
-            std::find_if(parent->nodes.begin(), parent->nodes.end(),
-                         [key](const MultiNode<TKey, TData> *node) -> bool {
-                             return (node->getKey() == key);
-                         });
-    MultiNode<TKey, TData> *node = *it;
-    std::for_each(node->nodes.begin(), node->nodes.end(), [parent, node](const MultiNode<TKey, TData> *tmp) {
-        parent->nodes.push_back(node);
-    });
-    parent->nodes.erase(it);
-    node = nullptr;
-    return true;
-}
-
-template<typename TKey, typename TData, typename P, typename Cmp>
-bool MultiTree<TKey, TData, P, Cmp>::deleteSubtree(TKey key) {
-    MultiNode<TKey, TData> *parent = searchParent(key);
-    if (parent == nullptr)
-        return false;
-    if (parent == this->_root && parent->nodes.empty()) {
-        delete this->_root;
-        this->_root = nullptr;
-        return true;
-    }
-    typename std::list<MultiNode<TKey, TData> *>::iterator it =
-            std::find_if(parent->nodes.begin(), parent->nodes.end(),
-                         [key](const MultiNode<TKey, TData> *node) -> bool {
-                             return (node->getKey() == key);
-                         });
-    MultiNode<TKey, TData> *node = *it;
-    MultiNode<TKey, TData> *tmp = nullptr;
-    std::stack<MultiNode<TKey, TData> *> stack;
-    stack.push(node);
-    tmp->nodes.remove(node);
-    while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        if (!tmp->nodes.empty())
-            std::for_each(tmp->nodes.begin(), tmp->nodes.end(), [stack](const MultiNode<TKey, TData> *node) {
-                stack.push(node);
-            });
-        delete tmp;
-        tmp = nullptr;
-    }
-    return true;
-}
-
-template<typename TKey, typename TData, typename P, typename Cmp>
-void MultiTree<TKey, TData, P, Cmp>::printPreOrder() const {
-
-    if (this->_root == nullptr)
-        return;
-    std::stack<MultiNode<TKey, TData> *> stack;
-    MultiNode<TKey, TData> *tmp = nullptr;
-    stack.push(this->_root);
-    while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        //P(tmp->key, tmp->data);
-        if (!tmp->nodes.empty())
-            std::for_each(tmp->nodes.begin(), tmp->nodes.end(), [](const MultiNode<TKey, TData> *node) {
-                //P(node->key,node->data);
-            });
-    }
-}
-
-template<typename TKey, typename TData, typename P, typename Cmp>
-void MultiTree<TKey, TData, P, Cmp>::printPostOrder() const {
-    if (this->_root == nullptr)
-        return;
-    std::stack<MultiNode<TKey, TData> *> stack;
-    MultiNode<TKey, TData> *tmp = nullptr;
-    stack.push(this->_root);
-    while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        if (!tmp->nodes.empty())
-            std::for_each(tmp->nodes.begin(), tmp->nodes.end(), [](const MultiNode<TKey, TData> *node) {
-                //P(node->key,node->data);
-            });
-        //P(tmp->key, tmp->data);
-    }
-}
-
-template<typename TKey, typename TData>
-struct MultiTreeLevel {
-    size_t level = 0;
-    MultiNode<TKey, TData> *node = nullptr;
-};
-
-template<typename TKey, typename TData, typename P, typename Cmp>
-void MultiTree<TKey, TData, P, Cmp>::printLevelOrder() const {
-    std::queue<MultiTreeLevel<TKey, TData> *> queue;
-    size_t l = 1;
-    MultiTreeLevel<TKey, TData> *tmp = new MultiTreeLevel<TKey, TData>();
-    tmp->level = 0;
-    tmp->node = this->_root;
-    queue.push(tmp);
-    while (!queue.empty()) {
-        tmp = queue.front();
-        queue.pop();
-        if (l != tmp->level) {
-            std::cout << std::endl;
-            std::cout << "level" << tmp->level << " ";
-            l = tmp->level;
-        }
-//P(key,data);
-        if (!tmp->node->nodes.empty()) {
-            std::for_each(tmp->node->nodes.begin(), tmp->node->nodes.end(),
-                          [queue, l](const MultiNode<TKey, TData> *node) {
-                              MultiTreeLevel<TKey, TData> *tmp = new MultiTreeLevel<TKey, TData>();
-                              tmp->node = node;
-                              tmp->level = l + 1;
-                              queue.push(tmp);
-                          });
-        }
-    }
-    delete tmp;
-}
+#include "MultiTree.inc"
 
 //TODO: check, refactor & rewrite
 /*
