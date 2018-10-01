@@ -5,8 +5,6 @@
 #ifndef LAB1_1_TREE_H
 #define LAB1_1_TREE_H
 
-#endif //LAB1_1_TREE_H
-
 #include <iostream>
 #include <functional>
 #include <list>
@@ -39,12 +37,14 @@ TData TNode<TKey, TData>::getData() const {
     return this->data;
 }
 
-template<typename TKey, typename TData,typename Cmp=std::less<TKey>>
+//abstract class for tree
+template<typename TKey, typename TData, typename Cmp=std::less<TKey>>
 class Tree {
 public:
     explicit Tree() : _root(nullptr) {};
 
     explicit Tree(TKey key, TData data) : _root(TNode(key, data)) {};
+
 
     virtual bool insert(TKey, TData) = 0;
 
@@ -53,13 +53,13 @@ public:
     virtual bool deleteSubtree(TKey) = 0;
 
     //methods to print tree
-    virtual void printInOrder(void (*print)(TKey,TData)) const = 0;
+    virtual void printInOrder(void (*print)(TKey, TData)) const = 0;
 
-    virtual void printPreOrder(void (*print)(TKey,TData)) const = 0;
+    virtual void printPreOrder(void (*print)(TKey, TData)) const = 0;
 
-    virtual void printPostOrder(void (*print)(TKey,TData)) const = 0;
+    virtual void printPostOrder(void (*print)(TKey, TData)) const = 0;
 
-    virtual void printLevelOrder(void (*print)(TKey,TData)) const = 0;
+    virtual void printLevelOrder(void (*print)(TKey, TData)) const = 0;
 
 private:
     TNode<TKey, TData> *_root;
@@ -88,30 +88,32 @@ void MultiNode<TKey, TData>::add(TKey key, TData data) {
 template<typename TKey, typename TData, typename Cmp=std::less<TKey>>
 class MultiTree : public Tree<TKey, TData, Cmp> {
 public:
-    MultiTree() : Tree<TKey, TData,Cmp>() {};
+    MultiTree() : Tree<TKey, TData, Cmp>() {};
 
-    MultiTree(TKey key, TData data) : Tree<TKey, TData,Cmp>(key, data) {};
+    MultiTree(TKey key, TData data) : Tree<TKey, TData, Cmp>(key, data) {};
 
-    virtual bool insert(TKey key, TData data);
+    ~MultiTree();
 
-    virtual MultiNode<TKey, TData> *insert(MultiNode<TKey, TData> *node, TKey key, TData data);
+    bool insert(TKey key, TData data);      //insert root if tree is empty
 
-    MultiNode<TKey, TData> *getRoot();
+    MultiNode<TKey, TData> *insert(MultiNode<TKey, TData> *node, TKey key, TData data);     //insert node as son
 
-    virtual bool deleteNode(TKey key);
+    MultiNode<TKey, TData> *getRoot();      //reference to root
 
-    virtual bool deleteSubtree(TKey key);
+    bool deleteNode(TKey key);      //delete node by key
 
-    virtual MultiNode<TKey, TData> *search(TKey key) const;
+    bool deleteSubtree(TKey key);   //delete subtree with root with given key
+
+    MultiNode<TKey, TData> *search(TKey key) const;
 
     //methods to print tree
-    virtual void printInOrder(void (*print)(TKey,TData)) const;
+    void printInOrder(void (*print)(TKey, TData)) const;     //the same as printPreOrder
 
-    virtual void printPreOrder(void (*print)(TKey,TData)) const;
+    void printPreOrder(void (*print)(TKey, TData)) const;
 
-    virtual void printPostOrder(void (*print)(TKey,TData)) const;
+    void printPostOrder(void (*print)(TKey, TData)) const;
 
-    virtual void printLevelOrder(void (*print)(TKey,TData)) const;
+    void printLevelOrder(void (*print)(TKey, TData)) const;
 
 private:
     MultiNode<TKey, TData> *_root;
@@ -121,146 +123,229 @@ private:
 
 #include "MultiTree.inc"
 
-//TODO: check, refactor & rewrite
-/*
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-class BinTNode : public TNode<TKey, TData> {
-public:
-    template<typename K, typename D> friend
-    class BSTree;
-    explicit BinTNode() : TNode<TKey, TData>(), left(nullptr), right(nullptr) {};
-    explicit BinTNode(TKey key, TData data) :
-            TNode<TKey, TData>(key, data), left(nullptr), right(nullptr) {};
-    BinTNode<TKey, TData> *left;
-    BinTNode<TKey, TData> *right;
-};
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-class BinTree : public Tree<TKey, TData> {
-public:
-    explicit BinTree() : _root(nullptr) {};
-    explicit BinTree(TKey key, TData data) : _root(BinTNode(key, data)) {};
-    virtual ~BinTree();
-    virtual void insert(TKey key, TData data);
-    virtual bool deleteNode(TKey);   //delete the least of the tree
-    virtual bool deleteSubtree(TKey);
-    BinTNode<TKey, TData> *search(TKey key) const;
-    //methods to print tree
-    virtual void printInOrder() const;
-    virtual void printPreOrder() const;
-    virtual void printPostOrder() const;
-    virtual void printLevelOrder() const;
-private:
-    BinTNode<TKey, TData> *_root;
-    BinTNode<TKey, TData> *findParentOf(TKey key) const;  //searches a parent node for a node with key(for remove)
-};
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-void BinTree<TKey, TData,P,Cmp>::insert(TKey key, TData data) {
-    if (this->_root == nullptr) {
-        this->_root = new BinTNode<TKey, TData>(key, data);
-        return;
-    }
-    BinTNode<TKey, TData> *tmp = this->_root;
-    char buff = ' ';
-    while (tmp != nullptr) {
-        std::cout << "Current node key is: ";
-        //std::cout<<this->getKey();
-        std::cout << "Chose L for left/R for right node.\n";
-        std::cin >> buff;
-        switch (buff) {
-            case 'L':
-                if (tmp->left == nullptr) {
-                    std::cout << "Press Y to insert node here.\n";
-                    std::cin >> buff;
-                    if (buff == 'Y')
-                        tmp->left = new BinTNode<TKey, TData>(key, data);
-                    return;
-                } else
-                    tmp = tmp->left;
-                break;
-            case 'R':
-                if (tmp->right == nullptr) {
-                    std::cout << "Press Y to insert node here.\n";
-                    std::cin >> buff;
-                    if (buff == 'Y')
-                        tmp->right = new BinTNode<TKey, TData>(key, data);
-                    return;
-                } else
-                    tmp = tmp->right;
-                break;
-            default:
-                std::cout << "Input is not correct. Try one more time.";
-                break;
-        }
-        break;
-    }
+template<typename TKey, typename TData, typename Cmp>
+MultiTree<TKey, TData, Cmp>::~MultiTree() {
+    deleteSubtree(this->_root->getKey());
 }
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-bool BinTree<TKey, TData,P,Cmp>::deleteNode(TKey key) {
-    BinTNode<TKey, TData> *parent = findParentOf(key), *node = nullptr;
-    if (parent == nullptr)
-        return false;
-    if (parent->getKey() == key) {
-        node = parent;
-        delete node;
+
+template<typename TKey, typename TData, typename Cmp=std::less<TKey>>
+class BinNode : public TNode<TKey, TData> {
+public:
+    template<typename K, typename D, typename C> friend
+    class BSTree;
+
+    explicit BinNode() : TNode<TKey, TData>(), left(nullptr), right(nullptr) {};
+
+    explicit BinNode(TKey key, TData data) :
+            TNode<TKey, TData>(key, data), left(nullptr), right(nullptr) {};
+    BinNode<TKey, TData> *left;
+    BinNode<TKey, TData> *right;
+};
+
+
+template<typename TKey, typename TData, typename Cmp=std::less<TKey>>
+class BinTree : public Tree<TKey, TData, Cmp> {
+public:
+    BinTree() : Tree<TKey, TData, Cmp>() {};
+
+    BinTree(TKey key, TData data) : Tree<TKey, TData, Cmp>(key, data) {};
+
+    ~BinTree();
+
+    bool insert(TKey key, TData data);      //insert root if tree is empty
+
+    BinNode<TKey, TData> *insertleft(BinNode<TKey, TData> *node, TKey key, TData data);     //insert node as left son
+
+    BinNode<TKey, TData> *insertright(BinNode<TKey, TData> *node, TKey key, TData data);     //insert node as left son
+
+
+    BinNode<TKey, TData> *getRoot();      //reference to root
+
+    bool deleteNode(TKey key);      //delete node by key if it has one or zero sons
+
+    bool deleteSubtree(TKey key);   //delete subtree with root with given key
+
+    BinNode<TKey, TData> *search(TKey key) const;
+
+    //methods to print tree
+    void printInOrder(void (*print)(TKey, TData)) const;
+
+    void printPreOrder(void (*print)(TKey, TData)) const;
+
+    void printPostOrder(void (*print)(TKey, TData)) const;
+
+    void printLevelOrder(void (*print)(TKey, TData)) const;
+
+private:
+    BinNode<TKey, TData> *_root;
+
+    BinNode<TKey, TData> *searchParent(TKey key) const; //searches a parent node for a node with key(for remove)
+};
+
+#include "BinTree.inc"
+
+
+template<typename TKey, typename TData, typename Cmp=std::less<TKey>>
+class BSTree : public BinTree<TKey, TData, Cmp> {
+public:
+    BSTree() : BinTree<TKey, TData, Cmp>() {};
+
+    BSTree(TKey key, TData data) : BinTree<TKey, TData, Cmp>(key, data) {};
+
+    ~BSTree();
+
+    bool insert(TKey key, TData data, const Cmp &cmp = Cmp());    //insert node using comparator
+
+    BinNode<TKey, TData> *search(TKey key, const Cmp &cmp = Cmp()) const;
+
+    bool deleteNode(TKey key, const Cmp &cmp = Cmp());      //delete node by key if it has one or zero sons
+
+    bool deleteSubtree(TKey key, const Cmp &cmp = Cmp());   //delete subtree with root with given key
+
+    void printInOrder(void (*print)(TKey, TData)) const;
+
+    void printPreOrder(void (*print)(TKey, TData)) const;
+
+    void printPostOrder(void (*print)(TKey, TData)) const;
+
+    void printLevelOrder(void (*print)(TKey, TData)) const;
+
+private:
+    BinNode<TKey, TData> *_root;
+
+    BinNode<TKey, TData> *
+    searchParent(TKey key, Cmp &cmp = Cmp()) const; //searches a parent node for a node with key(for remove)
+};
+
+template<typename TKey, typename TData, typename Cmp>
+bool BSTree<TKey, TData, Cmp>::insert(TKey key, TData data, const Cmp &cmp) {
+    if (this->_root == nullptr) {
+        this->_root = new BinNode<TKey, TData>(key, data);
         return true;
     }
-    if (parent->left->getKey() == key) {
+    BinNode<TKey, TData> *tmp = this->_root;
+    while (tmp != nullptr) {
+        if (cmp(tmp->getKey(), key)) {
+            if (tmp->left == nullptr) {
+                tmp->left = new BinNode<TKey, TData>(key, data);
+
+                return true;
+            }
+            tmp = tmp->left;
+        } else if (cmp(key, tmp->getKey())) {
+            if (tmp->right == nullptr) {
+                tmp->right = new BinNode<TKey, TData>(key, data);
+
+                return true;
+            }
+            tmp = tmp->right;
+        } else
+            return tmp;
+    }
+    return false;
+}
+
+template<typename TKey, typename TData, typename Cmp>
+BinNode<TKey, TData> *BSTree<TKey, TData, Cmp>::search(TKey key, const Cmp &cmp) const {
+    if (this->_root == nullptr)
+        return nullptr;
+
+    BinNode<TKey, TData> *tmp = this->_root;
+    while (tmp != nullptr) {
+        if (cmp(tmp->getKey(), key)) {
+            if (tmp->left == nullptr)
+                return nullptr;
+            tmp = tmp->left;
+        } else if (cmp(key, tmp->getKey())) {
+            if (tmp->right == nullptr)
+                return nullptr;
+            tmp = tmp->right;
+        } else
+            return tmp;
+    }
+    return nullptr;
+}
+
+template<typename TKey, typename TData, typename Cmp>
+BinNode<TKey, TData> *BSTree<TKey, TData, Cmp>::searchParent(TKey key, Cmp &cmp) const {
+    if (this->_root == nullptr)
+        return nullptr;
+
+    BinNode<TKey, TData> *tmp = this->_root, *parent = nullptr;
+    while (tmp != nullptr) {
+        if (cmp(tmp->getKey(), key)) {
+            parent = tmp;
+            if (tmp->left == nullptr)
+                return nullptr;
+            tmp = tmp->left;
+        } else if (cmp(key, tmp->getKey())) {
+            parent = tmp;
+            if (tmp->right == nullptr)
+                return nullptr;
+            tmp = tmp->right;
+        } else
+            return parent;
+    }
+    return nullptr;
+}
+
+//TODO: delete method
+template<typename TKey, typename TData, typename Cmp>
+bool BSTree<TKey, TData, Cmp>::deleteNode(TKey key, const Cmp &cmp) {
+    if (this->_root == nullptr)
+        return false;
+    BinNode<TKey, TData> *parent = searchParent(key), *node = nullptr;
+    if (cmp(parent->getKey(), key)) {
         node = parent->left;
         if (node->left == nullptr && node->right == nullptr) {
             delete node;
             parent->left = nullptr;
             return true;
         }
-    }
-    if (parent->right->getKey() == key) {
-        node = parent->right;
-        if (node->left == nullptr && node->right == nullptr) {
-            delete node;
-            parent->right = nullptr;
-            return true;
+        if (node->left != nullptr && node->right != nullptr) {
+            BinNode<TKey, TData> *tmp = node->right;
+            if (tmp->left != nullptr) {
+                while (tmp->left->left != nullptr)
+                    tmp = tmp->left;
+            }
+            node->key = tmp->left->key;
+            node->data = tmp->left->data;
+            tmp->left = tmp->left->right;
         }
+    } else if (cmp(key, parent->getKey())) {
+        node = parent->right;
+        parent->right = nullptr;
+    } else {
+        delete parent;
+        parent = nullptr;
+        return true;
     }
     return false;
 }
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-BinTNode<TKey, TData,P,Cmp>*BinTree<TKey, TData>::findParentOf(TKey key) const {
-    if (this->_root == nullptr || this->_root->getKey() == key)
-        return this->_root;
-    std::stack<BinTNode<TKey, TData> *> stack;
-    BinTNode<TKey, TData> *tmp = nullptr;
-    stack.push(this->_root);
-    while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        if (tmp->left != nullptr) {
-            if (tmp->left->getKey() == key)
-                return tmp;
-            stack.push(tmp->left);
-        }
-        if (tmp->right != nullptr) {
-            if (tmp->right->getKey() == key)
-                return tmp;
-            stack.push(tmp->right);
-        }
-    }
-    return nullptr;
+
+template<typename TKey, typename TData, typename Cmp>
+BSTree<TKey, TData, Cmp>::~BSTree() {
+    deleteSubtree(this->_root->getKey());
 }
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-bool BinTree<TKey, TData,P,Cmp>::deleteSubtree(TKey key) {
-    BinTNode<TKey, TData> *parent = findParentOf(key), *node = nullptr;
-    if (parent == nullptr)
+
+template<typename TKey, typename TData, typename Cmp>
+bool BSTree<TKey, TData, Cmp>::deleteSubtree(TKey key, const Cmp &cmp) {
+    if (this->_root == nullptr)
         return false;
-    if (parent->getKey() == key)
-        node = parent;
-    else if (parent->left->getKey() == key) {
+    BinNode<TKey, TData> *parent = searchParent(key), *node = nullptr;
+    if (cmp(parent->getKey(), key)) {
         node = parent->left;
         parent->left = nullptr;
-    } else if (parent->right->getKey() == key) {
+    } else if (cmp(key, parent->getKey())) {
         node = parent->right;
         parent->right = nullptr;
+    } else {
+        delete parent;
+        parent = nullptr;
+        return true;
     }
-    std::stack<BinTNode<TKey, TData> *> stack;
-    BinTNode<TKey, TData> *tmp = nullptr;
+    std::stack<BinNode<TKey, TData> *> stack;
+    BinNode<TKey, TData> *tmp = nullptr;
     stack.push(this->_root);
     while (!stack.empty()) {
         tmp = stack.top();
@@ -273,51 +358,50 @@ bool BinTree<TKey, TData,P,Cmp>::deleteSubtree(TKey key) {
     }
     return true;
 }
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-void BinTree<TKey, TData,P,Cmp>::printInOrder() const {
+
+template<typename TKey, typename TData, typename Cmp>
+void BSTree<TKey, TData, Cmp>::printInOrder(void (*print)(TKey, TData)) const {
     if (this->_root == nullptr)
         return;
-    std::stack<BinTNode<TKey, TData> *> stack;
-    BinTNode<TKey, TData> *tmp = nullptr;
+    std::stack<BinNode<TKey, TData> *> stack;
+    BinNode<TKey, TData> *tmp = nullptr;
     stack.push(this->_root);
     while (!stack.empty()) {
         tmp = stack.top();
         stack.pop();
         if (tmp->left != nullptr)
             stack.push(tmp->left);
-        //std::cout<<tmp->getKey()<<' '<<tmp->getData<<std::endl;
+        print(tmp->getKey(), tmp->getData());
         if (tmp->right != nullptr)
             stack.push(tmp->right);
     }
 }
-//TODO:check this
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-BinTree<TKey, TData,P,Cmp>::~BinTree() {
-    deleteSubtree(this->_root->getKey());
-}
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-void BinTree<TKey, TData,P,Cmp>::printPreOrder() const {
+
+template<typename TKey, typename TData, typename Cmp>
+void BSTree<TKey, TData, Cmp>::printPreOrder(void (*print)(TKey, TData)) const {
     if (this->_root == nullptr)
         return;
-    std::stack<BinTNode<TKey, TData> *> stack;
-    BinTNode<TKey, TData> *tmp = nullptr;
+    std::stack<BinNode<TKey, TData> *> stack;
+    BinNode<TKey, TData> *tmp = nullptr;
     stack.push(this->_root);
     while (!stack.empty()) {
         tmp = stack.top();
         stack.pop();
-        //std::cout<<tmp->getKey()<<' '<<tmp->getData<<std::endl;
+        print(tmp->getKey(), tmp->getData());
         if (tmp->left != nullptr)
             stack.push(tmp->left);
         if (tmp->right != nullptr)
             stack.push(tmp->right);
     }
 }
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-void BinTree<TKey, TData,P,Cmp>::printPostOrder() const {
+
+
+template<typename TKey, typename TData, typename Cmp>
+void BSTree<TKey, TData, Cmp>::printPostOrder(void (*print)(TKey, TData)) const {
     if (this->_root == nullptr)
         return;
-    std::stack<BinTNode<TKey, TData> *> stack;
-    BinTNode<TKey, TData> *tmp = nullptr;
+    std::stack<BinNode<TKey, TData> *> stack;
+    BinNode<TKey, TData> *tmp = nullptr;
     stack.push(this->_root);
     while (!stack.empty()) {
         tmp = stack.top();
@@ -326,19 +410,17 @@ void BinTree<TKey, TData,P,Cmp>::printPostOrder() const {
             stack.push(tmp->left);
         if (tmp->right != nullptr)
             stack.push(tmp->right);
-        //std::cout<<tmp->getKey()<<' '<<tmp->getData<<std::endl;
+        print(tmp->getKey(), tmp->getData());
     }
 }
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-struct Level {
-    int level = 0;
-    BinTNode<TKey, TData> *node = nullptr;
-};
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-void BinTree<TKey, TData,P,Cmp>::printLevelOrder() const {
-    std::queue<Level<TKey, TData> *> queue;
+
+template<typename TKey, typename TData, typename Cmp>
+void BSTree<TKey, TData, Cmp>::printLevelOrder(void (*print)(TKey, TData)) const {
+    if (this->_root == nullptr)
+        return;
+    std::queue<BinLevel<TKey, TData> *> queue;
     int l = 1;
-    Level<TKey, TData> *tmp = new Level<TKey, TData>();
+    BinLevel<TKey, TData> *tmp = new BinLevel<TKey, TData>();
     tmp->level = 0;
     tmp->node = this->_root;
     queue.push(tmp);
@@ -350,15 +432,15 @@ void BinTree<TKey, TData,P,Cmp>::printLevelOrder() const {
             std::cout << "level" << tmp->level << " ";
             l = tmp->level;
         }
-        //std::cout << tmp->node->key << " ";
+        print(tmp->node->getKey(), tmp->node->getData());
         if (tmp->node->left != nullptr) {
-            Level<TKey, TData> *left = new Level<TKey, TData>();
+            BinLevel<TKey, TData> *left = new BinLevel<TKey, TData>();
             left->node = tmp->node->left;
             left->level = l + 1;
             queue.push(left);
         }
         if (tmp->node->right != nullptr) {
-            Level<TKey, TData> *right = new Level<TKey, TData>();
+            BinLevel<TKey, TData> *right = new BinLevel<TKey, TData>();
             right->node = tmp->node->right;
             right->level = l + 1;
             queue.push(right);
@@ -366,150 +448,6 @@ void BinTree<TKey, TData,P,Cmp>::printLevelOrder() const {
     }
     delete tmp;
 }
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-BinTNode<TKey, TData,P,Cmp> *BinTree<TKey, TData>::search(TKey key) const {
-    if (this->_root == nullptr)
-        return nullptr;
-    std::stack<BinTNode<TKey, TData> *> stack;
-    BinTNode<TKey, TData> *tmp = nullptr;
-    stack.push(this->_root);
-    while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        if (tmp->returnKey() == key) {
-            return tmp;
-        } else {
-            if (tmp->left != nullptr)
-                stack.push(tmp->left);
-            if (tmp->right != nullptr)
-                stack.push(tmp->right);
-        }
-    }
-    return nullptr;
-}
-//TODO: insert, delete & search methods
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-class BSTree : public BinTree<TKey, TData> {
-public:
-    explicit BSTree() : _root(nullptr) {};
-    explicit BSTree(TKey key, TData data) : _root(BinTNode(key, data)) {};
-    virtual void insert(TKey key, TData data);
-    virtual bool deleteNode(TKey);
-    virtual bool deleteSubtree(TKey);
-    //virtual TNode<TKey,TData> search(TKey key) const;
-private:
-    BinTNode<TKey, TData> *_root;
-    BinTNode<TKey, TData> *findLeftLeafParent();
-    BinTNode<TKey, TData> *
-    void replaceNode(BinTNode<TKey, TData> *parent, BinTNode<TKey, TData> *node);
-};
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-void BSTree<TKey, TData,P,Cmp>::insert(TKey key, TData data) {
-    if (this->_root == nullptr) {
-        this->_root = new BinTNode<TKey, TData>(key, data);
-        return;
-    }
-    BinTNode<TKey, TData> *tmp = this->_root;
-    while (tmp != nullptr) {
-        if (key < tmp->getKey()) {
-            if (tmp->left == nullptr) {
-                BinTNode<TKey, TData> *node = new BinTNode<TKey, TData>(key, data);
-                tmp->left = node;
-                return;
-            } else
-                tmp = tmp->left;
-        } else if (key > tmp->getKey()) {
-            if (tmp->right == nullptr) {
-                BinTNode<TKey, TData> *node = new BinTNode<TKey, TData>(key, data);
-                tmp->right = node;
-                return;
-            } else
-                tmp = tmp->right;
-        } else {
-            tmp->data = data;
-        }
-    }
-}
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-bool BSTree<TKey, TData,P,Cmp>::deleteNode(TKey key) {
-    if (this->_root == nullptr)
-        return false;
-    BinTNode<TKey, TData> *tmp = this->_root,
-            *node = nullptr;
-    while (tmp != nullptr) {
-        if (key < tmp->key) {
-            if (tmp->left == nullptr)
-                return false;
-            else if (tmp->left->key != key)
-                tmp = tmp->left;
-            else {
-                node = tmp->left;
-                break;
-            }
-        } else if (key > tmp->getKey()) {
-            if (tmp->right == nullptr)
-                return false;
-            else if (tmp->right->key != key)
-                tmp = tmp->right;
-            else {
-                node = tmp->right;
-                break;
-            }
-        } else {
-            delete tmp;
-            this->_root = nullptr;
-        }
-    }
-    return true;
-}
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-BinTNode<TKey, TData,P,Cmp> *BSTree<TKey, TData>::findLeftLeafParent() {
-    if (this->_root == nullptr)
-        return nullptr;
-    BinTNode<TKey, TData> *node = this->_root;
-    while (node->left->left != nullptr)
-        node = node->left;
-    return node;
-}
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-void BSTree<TKey, TData,P,Cmp>::replaceNode(BinTNode<TKey, TData> *parent, BinTNode<TKey, TData> *node) {
-    if (node->left == nullptr && node->right == nullptr) {
-        if (parent->left == node)
-            parent->left = nullptr;
-        else
-            parent->right = nullptr;
-        delete node;
-    } else if (node->left == nullptr) {
-        if (parent->left == node)
-            parent->left = node->right;
-        else
-            parent->right = node->right;
-        delete node;
-    } else if (node->right == nullptr) {
-        if (parent->left == node)
-            parent->left = node->left;
-        else
-            parent->right = node->left;
-        delete node;
-    } else {
-        if (node->right->left == nullptr) {
-            if (parent->left == node)
-                parent->left = node->right;
-            else
-                parent->right = node->right;
-            delete node;
-        } else {
-            BinTNode<TKey, TData> *tmp = findLeftLeafParent();
-            node->key = tmp->left->key;
-            node->data = tmp->left->data;
-            tmp->left->left = node->left;
-            tmp->left->right = node->right;
-            delete tmp->left;
-            tmp->left = nullptr;
-        }
-    }
-}
-template<typename TKey, typename TData, typename P=Print, typename Cmp=std::less<TKey>>
-bool BSTree<TKey, TData,P,Cmp>::deleteSubtree(TKey) {
-}
-*/
+
+
+#endif //LAB1_1_TREE_H
