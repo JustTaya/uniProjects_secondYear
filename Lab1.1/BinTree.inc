@@ -148,57 +148,18 @@ BinNode<TKey, TData> *BinTree<TKey, TData, Cmp>::search(TKey key) const {
 
 template<typename TKey, typename TData, typename Cmp>
 void BinTree<TKey, TData, Cmp>::printInOrder(void (*print)(TKey, TData)) const {
-    if (this->_root == nullptr)
-        return;
-    std::stack<BinNode<TKey, TData> *> stack;
-    BinNode<TKey, TData> *tmp = nullptr;
-    stack.push(this->_root);
-    while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        if (tmp->left != nullptr)
-            stack.push(tmp->left);
-        print(tmp->getKey(), tmp->getData());
-        if (tmp->right != nullptr)
-            stack.push(tmp->right);
-    }
+    printInOrder(print,this->_root);
 }
 
 template<typename TKey, typename TData, typename Cmp>
 void BinTree<TKey, TData, Cmp>::printPreOrder(void (*print)(TKey, TData)) const {
-    if (this->_root == nullptr)
-        return;
-    std::stack<BinNode<TKey, TData> *> stack;
-    BinNode<TKey, TData> *tmp = nullptr;
-    stack.push(this->_root);
-    while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        print(tmp->getKey(), tmp->getData());
-        if (tmp->left != nullptr)
-            stack.push(tmp->left);
-        if (tmp->right != nullptr)
-            stack.push(tmp->right);
-    }
+   printPreOrder(print,this->_root);
 }
 
 
 template<typename TKey, typename TData, typename Cmp>
 void BinTree<TKey, TData, Cmp>::printPostOrder(void (*print)(TKey, TData)) const {
-    if (this->_root == nullptr)
-        return;
-    std::stack<BinNode<TKey, TData> *> stack;
-    BinNode<TKey, TData> *tmp = nullptr;
-    stack.push(this->_root);
-    while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        if (tmp->left != nullptr)
-            stack.push(tmp->left);
-        if (tmp->right != nullptr)
-            stack.push(tmp->right);
-        print(tmp->getKey(), tmp->getData());
-    }
+    printPostOrder(print,this->_root);
 }
 
 template<typename TKey, typename TData>
@@ -210,13 +171,81 @@ struct BinLevel {
 template<typename TKey, typename TData, typename Cmp>
 void BinTree<TKey, TData, Cmp>::printLevelOrder(void (*print)(TKey, TData)) const {
 
-    if(this->_root==nullptr)
-    return;
+    printLevelOrder(print,this->_root);
+
+}
+
+template<typename TKey, typename TData, typename Cmp>
+BinTree<TKey, TData, Cmp>::~BinTree() {
+    deleteSubtree(this->_root->getKey());
+}
+
+
+template<typename TKey, typename TData, typename Cmp>
+void BinTree<TKey, TData, Cmp>::printInOrder(void (*print)(TKey, TData), BinNode<TKey, TData> *root) const {
+    if (root == nullptr)
+        return;
+    std::stack<BinNode<TKey, TData> *> stack;
+    BinNode<TKey, TData> *tmp = nullptr;
+    stack.push(root);
+    while (!stack.empty()) {
+        tmp = stack.top();
+        stack.pop();
+        if (tmp->left != nullptr)
+            stack.push(tmp->left);
+        print(tmp->getKey(), tmp->getData());
+        if (tmp->right != nullptr)
+            stack.push(tmp->right);
+    }
+}
+
+
+template<typename TKey, typename TData, typename Cmp>
+void BinTree<TKey, TData, Cmp>::printPreOrder(void (*print)(TKey, TData), BinNode<TKey, TData> *root) const {
+    if (root == nullptr)
+        return;
+    std::stack<BinNode<TKey, TData> *> stack;
+    BinNode<TKey, TData> *tmp = nullptr;
+    stack.push(root);
+    while (!stack.empty()) {
+        tmp = stack.top();
+        stack.pop();
+        print(tmp->getKey(), tmp->getData());
+        if (tmp->left != nullptr)
+            stack.push(tmp->left);
+        if (tmp->right != nullptr)
+            stack.push(tmp->right);
+    }
+}
+
+template<typename TKey, typename TData, typename Cmp>
+void BinTree<TKey, TData, Cmp>::printPostOrder(void (*print)(TKey, TData), BinNode<TKey, TData> *root) const {
+    if (root == nullptr)
+        return;
+    std::stack<BinNode<TKey, TData> *> stack;
+    BinNode<TKey, TData> *tmp = nullptr;
+    stack.push(root);
+    while (!stack.empty()) {
+        tmp = stack.top();
+        stack.pop();
+        if (tmp->left != nullptr)
+            stack.push(tmp->left);
+        if (tmp->right != nullptr)
+            stack.push(tmp->right);
+        print(tmp->getKey(), tmp->getData());
+    }
+}
+
+
+template<typename TKey, typename TData, typename Cmp>
+void BinTree<TKey, TData, Cmp>::printLevelOrder(void (*print)(TKey, TData), BinNode<TKey, TData> *root) const {
+    if(root==nullptr)
+        return;
     std::queue<BinLevel<TKey, TData> *> queue;
     int l = 1;
     BinLevel<TKey, TData> *tmp = new BinLevel<TKey, TData>();
     tmp->level = 0;
-    tmp->node = this->_root;
+    tmp->node = root;
     queue.push(tmp);
     while (!queue.empty()) {
         tmp = queue.front();
@@ -241,10 +270,4 @@ void BinTree<TKey, TData, Cmp>::printLevelOrder(void (*print)(TKey, TData)) cons
         }
     }
     delete tmp;
-
-}
-
-template<typename TKey, typename TData, typename Cmp>
-BinTree<TKey, TData, Cmp>::~BinTree() {
-    deleteSubtree(this->_root->getKey());
 }
