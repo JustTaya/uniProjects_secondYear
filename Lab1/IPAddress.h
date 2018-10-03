@@ -5,45 +5,13 @@
 #ifndef LAB1_1_IPADRESS_H
 #define LAB1_1_IPADRESS_H
 
+#include <iostream>
 #include <bitset>
 #include <map>
+#include <ctime>
+#include <random>
 
-const char *hex_char_to_bin(char c) {
-    switch (toupper(c)) {
-        case '0':
-            return "0000";
-        case '1':
-            return "0001";
-        case '2':
-            return "0010";
-        case '3':
-            return "0011";
-        case '4':
-            return "0100";
-        case '5':
-            return "0101";
-        case '6':
-            return "0110";
-        case '7':
-            return "0111";
-        case '8':
-            return "1000";
-        case '9':
-            return "1001";
-        case 'A':
-            return "1010";
-        case 'B':
-            return "1011";
-        case 'C':
-            return "1100";
-        case 'D':
-            return "1101";
-        case 'E':
-            return "1110";
-        case 'F':
-            return "1111";
-    }
-}
+const char *hex_to_bin(char c);
 
 std::string getBin(unsigned dec);
 
@@ -60,19 +28,21 @@ struct IP4 {
 struct IP6 {
     std::string octet[8];
 
-    unsigned *toIP6();
-
     std::bitset<128> &returnBinary();
 };
 
 
 //class to represent IP address
 struct IPAddress {
-    explicit IPAddress();
+    explicit IPAddress() : ipv4(nullptr), ipv6(nullptr) { version = v4; };
 
-    explicit IPAddress(unsigned address[4]);
+    explicit IPAddress(const unsigned* v4_input[4]):ipv4();
 
-    explicit IPAddress(std::string address[8]);
+    explicit IPAddress(const std::string* v6_input[8]):;
+
+    explicit IPAddress(IP4* address):ipv4(address){version=v4;};
+
+    explicit IPAddress(IP6* address):ipv6(address){version=v6};
 
     IPVersion version;
     IP4 *ipv4;
@@ -80,24 +50,21 @@ struct IPAddress {
 
     void setRandomIP4();
 
-    void setRandimIP6();
+    void setRandomIP6();
 
-    void converttoIP4();
+//  void converttoIP4();
 
     void converttoIP6();
 };
 
 //CIDR: {IPv4 or IPv6}/{subnet mask}
 struct SubNet {
-    IPVersion version;
-    IP4 *ipv4;
-    IP6 *ipv6;
+    explicit SubNet(IP4* address, unsigned mask) : address(IPAddress(address)), mask(mask) {};
 
-    void converttoIP4();
-
-    void converttoIP6();
-
+    explicit SubNet(IP6* address, unsigned mask) : address(IPAddress(address)), mask(mask) {};
+    IPAddress address;
     unsigned mask;  //subnet mask
+    void converttoIP6();
 };
 
 #endif //LAB1_1_IPADRESS_H
