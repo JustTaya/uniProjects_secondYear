@@ -1,7 +1,7 @@
 //
 // Created by taya on 02.10.18.
 //
-
+/*
 #include "IPAddress.h"
 
 std::bitset<32> &IP4::returnBinary() {
@@ -76,3 +76,4 @@ void SubNet::converttoIP6() {
     mask = 96 + mask;   //128-(32-mask) ipv4 mask is 32-bit, ipv6 mask is 128-bit
 }
 
+*/

@@ -4,7 +4,7 @@
 
 #ifndef LAB1_1_IPADRESS_H
 #define LAB1_1_IPADRESS_H
-
+/*
 #include <iostream>
 #include <bitset>
 #include <map>
@@ -66,5 +66,5 @@ struct SubNet {
     unsigned mask;  //subnet mask
     void converttoIP6();
 };
-
+*/
 #endif //LAB1_1_IPADRESS_H
