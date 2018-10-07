@@ -34,7 +34,7 @@ TKey TNode<TKey>::getKey() const {
 template<typename TKey, typename Cmp=std::less<TKey>>
 class Tree {
 public:
-    explicit Tree() : _root(nullptr) {};
+    Tree() : _root(nullptr) {};
 
     explicit Tree(TKey key) : _root(TNode(key)) {};
 
@@ -82,7 +82,7 @@ class MultiTree : public Tree<TKey, Cmp> {
 public:
     MultiTree() : Tree<TKey, Cmp>() {};
 
-    MultiTree(TKey key) : Tree<TKey, Cmp>(key) {};
+    explicit MultiTree(TKey key) : Tree<TKey, Cmp>(key) {};
 
     ~MultiTree();
 
@@ -124,7 +124,7 @@ public:
     template<typename K, typename C> friend
     class BSTree;
 
-    explicit BinNode() : TNode<TKey>(), left(nullptr), right(nullptr) {};
+    BinNode() : TNode<TKey>(), left(nullptr), right(nullptr) {};
 
     explicit BinNode(TKey key) :
             TNode<TKey>(key), left(nullptr), right(nullptr) {};
@@ -138,7 +138,7 @@ class BinTree : public Tree<TKey, Cmp> {
 public:
     BinTree() : Tree<TKey, Cmp>() {};
 
-    BinTree(TKey key) : Tree<TKey, Cmp>(key) {};
+    explicit BinTree(TKey key) : Tree<TKey, Cmp>(key) {};
 
     ~BinTree();
 
@@ -188,7 +188,7 @@ class BSTree : public BinTree<TKey, Cmp> {
 public:
     BSTree() : BinTree<TKey, Cmp>() {};
 
-    BSTree(TKey key) : BinTree<TKey, Cmp>(key) {};
+    explicit BSTree(TKey key) : BinTree<TKey, Cmp>(key) {};
 
     ~BSTree();
 
@@ -219,38 +219,6 @@ private:
 
 };
 
-template<typename TKey, typename Cmp>
-bool BSTree<TKey,Cmp>::deleteSubtree(TKey key, Cmp cmp) {
-    if (this->_root == nullptr)
-        return false;
-    BinNode<TKey> *parent = searchParent(key), *node = nullptr;
-    if(parent== nullptr)
-        return  false;
-    if (cmp(key, parent->getKey())) {
-        node = parent->left;
-        parent->left = nullptr;
-    } else if (cmp(parent->getKey(), key)) {
-        node = parent->right;
-        parent->right = nullptr;
-    } else {
-        this->_root= nullptr;
-        node = parent;
-    }
-    std::stack<BinNode<TKey> *> stack;
-    BinNode<TKey> *tmp = nullptr;
-    stack.push(node);
-    while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        if (tmp->left != nullptr)
-            stack.push(tmp->left);
-        if (tmp->right != nullptr)
-            stack.push(tmp->right);
-        delete tmp;
-        tmp= nullptr;
-    }
-    return true;
-}
 
 #include "BSTree.inc"
 

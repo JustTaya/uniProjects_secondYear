@@ -1,4 +1,5 @@
-#include "Tree.h"
+//#include "Tree.h"
+#include "IPAddress.h"
 #include <iostream>
 
 void print(int key) {
@@ -42,5 +43,10 @@ int main() {
 //    delete tree;
 
 
+unsigned ip[4];
+ip[0]=192;ip[1]=27;ip[2]=254;ip[3]=255;
+IPv4* ip4=new IPv4(ip);
+ip4->converttoIPv6();
     return 0;
 }
+

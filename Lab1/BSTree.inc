@@ -108,7 +108,38 @@ if(this->_root!=nullptr)
     deleteSubtree(this->_root->getKey());
 }
 
-
+template<typename TKey, typename Cmp>
+bool BSTree<TKey,Cmp>::deleteSubtree(TKey key, Cmp cmp) {
+    if (this->_root == nullptr)
+        return false;
+    BinNode<TKey> *parent = searchParent(key), *node = nullptr;
+    if(parent== nullptr)
+        return  false;
+    if (cmp(key, parent->getKey())) {
+        node = parent->left;
+        parent->left = nullptr;
+    } else if (cmp(parent->getKey(), key)) {
+        node = parent->right;
+        parent->right = nullptr;
+    } else {
+        this->_root= nullptr;
+        node = parent;
+    }
+    std::stack<BinNode<TKey> *> stack;
+    BinNode<TKey> *tmp = nullptr;
+    stack.push(node);
+    while (!stack.empty()) {
+        tmp = stack.top();
+        stack.pop();
+        if (tmp->left != nullptr)
+            stack.push(tmp->left);
+        if (tmp->right != nullptr)
+            stack.push(tmp->right);
+        delete tmp;
+        tmp= nullptr;
+    }
+    return true;
+}
 
 
 template<typename TKey, typename Cmp>
@@ -205,3 +236,4 @@ template<typename TKey, typename Cmp>
 void BSTree<TKey,  Cmp>::printLevelOrder(void (*print)(TKey)) const {
     BinTree<TKey,Cmp>::printLevelOrder(print,this->_root);
 }
+
