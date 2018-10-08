@@ -13,19 +13,19 @@
 #include <random>
 #include <ctime>
 
-void print(int key) {
+void print_int(int key) {
     std::cout << "Key: " << key << std::endl;
 }
 
-void print(double key) {
+void print_double(double key) {
     std::cout << "Key: " << key << std::endl;
 }
 
-void print(std::string key) {
+void print_string(std::string key) {
     std::cout << "Key: " << key << std::endl;
 }
 
-void print(std::vector<int> *key) {
+void print_vector(std::vector<int> *key) {
     std::cout << "Key: ";
     std::for_each(key->begin(), key->end(), [](int digit) {
         std::cout << digit;
@@ -33,13 +33,13 @@ void print(std::vector<int> *key) {
     std::cout << std::endl;
 }
 
-void print(IP *key) {
+void print_ip(IP *key) {
     std::cout << "Key: ";
     key->print();
     std::cout << std::endl;
 }
 
-void print(Subnet *key) {
+void print_subnet(Subnet *key) {
     std::cout << "Key: ";
     key->print();
     std::cout << std::endl;
@@ -72,8 +72,8 @@ class CompareSubnet {
         net1->compare(net2);
     }
 };
-void multiTree_int()
-{
+
+void multiTree_int() {
     std::cout << "MultiTree<int>" << std::endl;
     MultiTree<int> *multiTree = new MultiTree<int>();
     multiTree->insert(rand() % 100);
@@ -81,13 +81,12 @@ void multiTree_int()
     multiTree->insert(multiTree->getRoot(), rand() % 100);
     multiTree->insert(tmp1, 5);
     multiTree->deleteNode(5);
-    multiTree->printLevelOrder(print);
+    multiTree->printLevelOrder(print_int);
     delete multiTree;
     std::cout << std::endl;
 }
 
-void binTree_int()
-{
+void binTree_int() {
     std::cout << "BinTree<int>" << std::endl;
     BinTree<int> *binTree = new BinTree<int>();
     binTree->insert(rand() % 100);
@@ -95,22 +94,21 @@ void binTree_int()
     BinNode<int> *tmp2 = binTree->insertright(binTree->getRoot(), rand() % 100);
     binTree->insertright(tmp2, 5);
     binTree->deleteNode(5);
-    binTree->printLevelOrder(print);
+    binTree->printLevelOrder(print_int);
     delete binTree;
     std::cout << std::endl;
 }
 
-void bsTree_int()
-{
+void bsTree_int() {
     std::cout << "BSTree<int>" << std::endl;
     BSTree<int> *bsTree = new BSTree<int>();
     bsTree->insert(8);
-    for(size_t i=0; i<5;i++)
-        bsTree->insert(rand()%100);
+    for (size_t i = 0; i < 5; i++)
+        bsTree->insertNode(rand() % 100);
     bsTree->deleteNode(8);
-    bsTree->printLevelOrder(print);
+    bsTree->printLevelOrder(print_int);
     delete bsTree;
-    std::cout<<std::endl;
+    std::cout << std::endl;
 }
 
 void int_sample() {
@@ -118,44 +116,60 @@ void int_sample() {
     multiTree_int();
 
     //bin tree
-   binTree_int();
+    binTree_int();
 
     //binary search tree
-  // bsTree_int();
+    bsTree_int();
 }
 
-
-void double_sample() {
+void multiTree_double() {
+    std::cout << "MultiTree<double>" << std::endl;
     MultiTree<double> *multiTree = new MultiTree<double>();
-    multiTree->insert((rand() % 100) / 10);
-    multiTree->insert((rand() % 100) / 10);
-    MultiNode<double> *tmp1 = multiTree->insert(multiTree->getRoot(), (rand() % 100) / 10);
-    multiTree->insert(multiTree->getRoot(), (rand() % 100) / 10);
+    multiTree->insert((rand() % 100) / 10.0);
+    multiTree->insert((rand() % 100) / 10.0);
+    MultiNode<double> *tmp1 = multiTree->insert(multiTree->getRoot(), (rand() % 100) / 10.0);
+    multiTree->insert(multiTree->getRoot(), (rand() % 100) / 10.0);
     multiTree->insert(tmp1, 5.0);
     multiTree->deleteNode(5.0);
-    multiTree->printLevelOrder(print);
+    multiTree->printLevelOrder(print_double);
     delete multiTree;
+};
+
+void binTree_double() {
+    std::cout << "BinTree<double>" << std::endl;
+    BinTree<double> *binTree = new BinTree<double>();
+    binTree->insert((rand() % 100)/10.0);
+    binTree->insertleft(binTree->getRoot(), (rand() % 100)/10.0);
+    BinNode<double> *tmp2 = binTree->insertright(binTree->getRoot(), (rand() % 100)/10.0);
+    binTree->insertright(tmp2, 5.0);
+    binTree->deleteNode(5.0);
+    binTree->printLevelOrder(print_double);
+    delete binTree;
+}
+
+void bsTree_double()
+{
+    std::cout << "BSTree<double>" << std::endl;
+    BSTree<double> *bsTree = new BSTree<double>();
+    bsTree->insert(5.0);
+    for (size_t i = 0; i < 5; i++)
+        bsTree->insertNode((rand() % 100)/10.0);
+   // bsTree->deleteNode(8.1);
+    bsTree->printLevelOrder(print_double);
+    delete bsTree;
+    std::cout << std::endl;
+}
+
+void double_sample() {
+    //multi node tree
+    multiTree_double();
 
     //bin tree
-    BinTree<double> *binTree = new BinTree<double>();
-    binTree->insert(rand() % 100);
-    binTree->insertleft(binTree->getRoot(), rand() % 100);
-    BinNode<double> *tmp2 = binTree->insertright(binTree->getRoot(), rand() % 100);
-    binTree->insertright(tmp2, 5);
-    binTree->deleteNode(5);
-    binTree->printLevelOrder(print);
-    delete binTree;
+    binTree_double();
 
     //binary search tree
-    BSTree<double> *bsTree = new BSTree<double>();
-    for (size_t i = 0; i < 5; i++)
-        bsTree->insert(rand() % 100);
-    bsTree->insert(5);
-    for (size_t i = 0; i < 5; i++)
-        bsTree->insert(rand() % 100);
-    bsTree->deleteNode(5);
-    bsTree->printLevelOrder(print);
-    delete bsTree;
+    bsTree_double();
+
 }
 //TODO:
 /*

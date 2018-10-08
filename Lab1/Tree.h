@@ -192,7 +192,9 @@ public:
 
     ~BSTree(){};
 
-    bool insert(TKey key, Cmp cmp = Cmp());    //insert node using comparator
+    bool insert(TKey key){this->_root=new BinNode<TKey>(key);}
+
+    bool insertNode(TKey key, Cmp cmp = Cmp());    //insert node using comparator
 
     BinNode<TKey> *search(TKey key, Cmp cmp = Cmp()) const;
 
