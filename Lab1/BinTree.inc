@@ -41,8 +41,9 @@ bool BinTree<TKey, Cmp>::deleteNode(TKey key) {
         node = nullptr;
         return true;
     }
-    if (parent->left->getKey() == key) {
-        node = parent->left;
+    if(parent->left!=nullptr)
+        if (parent->left->getKey() == key) {
+          node = parent->left;
         if (node->left == nullptr) {
             parent->left = node->right;
             delete node;
@@ -54,7 +55,8 @@ bool BinTree<TKey, Cmp>::deleteNode(TKey key) {
             return true;
         }
     }
-    if (parent->right->getKey() == key) {
+    if(parent->right!=nullptr)
+        if (parent->right->getKey() == key) {
         node = parent->right;
         if (node->left == nullptr) {
             parent->right = node->right;
@@ -69,35 +71,6 @@ bool BinTree<TKey, Cmp>::deleteNode(TKey key) {
     }
 
     return false;
-}
-
-template<typename TKey, typename Cmp>
-bool BinTree<TKey, Cmp>::deleteSubtree(TKey key) {
-    BinNode<TKey> *parent = searchParent(key), *node = nullptr;
-    if (parent == nullptr)
-        return false;
-    if (parent->getKey() == key)
-        node = parent;
-    else if (parent->left->getKey() == key) {
-        node = parent->left;
-        parent->left = nullptr;
-    } else if (parent->right->getKey() == key) {
-        node = parent->right;
-        parent->right = nullptr;
-    }
-    std::stack<BinNode<TKey> *> stack;
-    BinNode<TKey> *tmp = nullptr;
-    stack.push(this->_root);
-    while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        if (tmp->left != nullptr)
-            stack.push(tmp->left);
-        if (tmp->right != nullptr)
-            stack.push(tmp->right);
-        delete tmp;
-    }
-    return true;
 }
 
 template<typename TKey, typename Cmp>
@@ -177,8 +150,24 @@ void BinTree<TKey, Cmp>::printLevelOrder(void (*print)(TKey)) const {
 
 template<typename TKey, typename Cmp>
 BinTree<TKey, Cmp>::~BinTree() {
-if(this->_root!=nullptr)
-    deleteSubtree(this->_root->getKey());
+if(this->_root!=nullptr){
+ std::stack<BinNode<TKey> *> stack;
+    BinNode<TKey> *tmp = nullptr;
+    stack.push(this->_root);
+    while (!stack.empty()) {
+        tmp = stack.top();
+        stack.pop();
+        if(tmp==nullptr)
+        break;
+        if (tmp->left != nullptr)
+            stack.push(tmp->left);
+        if (tmp->right != nullptr)
+            stack.push(tmp->right);
+        delete tmp;
+        tmp= nullptr;
+}
+    }
+    this->_root=nullptr;
 }
 
 

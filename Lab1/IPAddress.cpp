@@ -31,7 +31,7 @@ std::bitset<32> IPv4::getBinary() {
 }
 
 void IPv4::print() {
-    std::cout << octet[0] << ":" << octet[1] << ":" << octet[2] << ":" << octet[3] << std::endl;
+    std::cout << octet[0] << ":" << octet[1] << ":" << octet[2] << ":" << octet[3];
 }
 
 IPv6 *IPv4::converttoIPv6() {
@@ -100,7 +100,7 @@ void IPv6::compress() {
 void IPv6::print() {
     this->compress();
     std::cout << octet[0] << ":" << octet[1] << ":" << octet[2] << ":" << octet[3] << ":" <<
-              octet[4] << ":" << octet[5] << ":" << octet[6] << ":" << octet[7] << std::endl;
+              octet[4] << ":" << octet[5] << ":" << octet[6] << ":" << octet[7];
 }
 
 IP::IP() {
@@ -170,15 +170,21 @@ bool IP::compare(IP *right) {
         for (size_t i = 0; i < 8; i++)
             if (l->octet[i] < r->octet[i])
                 return true;
+            else if (l->octet[i] > r->octet[i])
+                return false;
     } else {
         if (this->version == v4) {
             for (size_t i = 0; i < 4; i++)
                 if (this->address.ipv4->octet[i] < this->address.ipv4->octet[i])
                     return true;
+                else if (this->address.ipv4->octet[i] > this->address.ipv4->octet[i])
+                    return false;
         } else {
             for (size_t i = 0; i < 8; i++)
                 if (this->address.ipv6->octet[i] < this->address.ipv6->octet[i])
                     return true;
+                else if (this->address.ipv6->octet[i] > this->address.ipv6->octet[i])
+                    return false;
         }
     }
     return false;
@@ -240,5 +246,14 @@ bool Subnet::check(IP *checkIP) {
         }
     }
     return false;
+}
+
+bool Subnet::compare(Subnet *right) {
+    return (this->mask < right->mask);    //2^mask-2 is number of hosts in subnet, so compare masks
+}
+
+void Subnet::print() {
+    this->ip->print();
+    std::cout << "/" << this->mask;
 }
 

@@ -18,15 +18,18 @@ class TNode {
 public:
     explicit TNode(TKey key) : key(key) {};
 
-    TKey getKey() const;
+    virtual ~TNode() {};
+
+    virtual TKey getKey() const;
 
 protected:
     TKey key;
 };
 
+
 template<typename TKey>
 TKey TNode<TKey>::getKey() const {
-    return this->key;
+    return key;
 }
 
 
@@ -36,14 +39,14 @@ class Tree {
 public:
     Tree() : _root(nullptr) {};
 
+    virtual ~Tree() {};
+
     explicit Tree(TKey key) : _root(TNode(key)) {};
 
 
     virtual bool insert(TKey) = 0;
 
     virtual bool deleteNode(TKey) = 0;
-
-    virtual bool deleteSubtree(TKey) = 0;
 
     //methods to print tree
     virtual void printInOrder(void (*print)(TKey)) const = 0;
@@ -62,13 +65,15 @@ template<typename TKey>
 class MultiNode : public TNode<TKey> {
 public:
     explicit MultiNode(TKey key) : TNode<TKey>(key) {};
+    ~MultiNode() {};
 
     void add(TKey key);
 
     std::list<MultiNode<TKey> *> nodes;
 
-protected:
-    TKey key;
+    TKey getKey() const {
+        return TNode<TKey>::getKey();
+    };
 };
 
 template<typename TKey>
@@ -76,6 +81,7 @@ void MultiNode<TKey>::add(TKey key) {
     MultiNode<TKey> *node = new MultiNode<TKey>(key);
     this->nodes.push_back(node);
 }
+
 
 template<typename TKey, typename Cmp=std::less<TKey>>
 class MultiTree : public Tree<TKey, Cmp> {
@@ -93,8 +99,6 @@ public:
     MultiNode<TKey> *getRoot();      //reference to root
 
     bool deleteNode(TKey key);      //delete node by key
-
-    bool deleteSubtree(TKey key);   //delete subtree with root with given key
 
     MultiNode<TKey> *search(TKey key) const;
 
@@ -117,19 +121,19 @@ private:
 #include "MultiTree.inc"
 
 
-
 template<typename TKey, typename Cmp=std::less<TKey>>
 class BinNode : public TNode<TKey> {
 public:
     template<typename K, typename C> friend
     class BSTree;
-
-    BinNode() : TNode<TKey>(), left(nullptr), right(nullptr) {};
-
     explicit BinNode(TKey key) :
             TNode<TKey>(key), left(nullptr), right(nullptr) {};
+    ~BinNode(){};
     BinNode<TKey> *left;
     BinNode<TKey> *right;
+    TKey getKey() const {
+        return TNode<TKey>::getKey();
+    };
 };
 
 
@@ -140,7 +144,7 @@ public:
 
     explicit BinTree(TKey key) : Tree<TKey, Cmp>(key) {};
 
-    ~BinTree();
+    virtual ~BinTree();
 
     bool insert(TKey key);      //insert root if tree is empty
 
@@ -152,8 +156,6 @@ public:
     BinNode<TKey> *getRoot();      //reference to root
 
     bool deleteNode(TKey key);      //delete node by key if it has one or zero sons
-
-    bool deleteSubtree(TKey key);   //delete subtree with root with given key
 
     BinNode<TKey> *search(TKey key) const;
 
@@ -190,15 +192,13 @@ public:
 
     explicit BSTree(TKey key) : BinTree<TKey, Cmp>(key) {};
 
-    ~BSTree();
+    ~BSTree(){};
 
     bool insert(TKey key, Cmp cmp = Cmp());    //insert node using comparator
 
     BinNode<TKey> *search(TKey key, Cmp cmp = Cmp()) const;
 
     bool deleteNode(TKey key, Cmp cmp = Cmp());      //delete node by key if it has one or zero sons
-
-    bool deleteSubtree(TKey key, Cmp cmp = Cmp());   //delete subtree with root with given key
 
     void printInOrder(void (*print)(TKey)) const;
 
@@ -213,13 +213,14 @@ private:
 
     BinNode<TKey> *
     searchParent(TKey key, Cmp cmp = Cmp()) const; //searches a parent node for a node with key(for remove)
+
     bool deleteLeftNode(BinNode<TKey> *parent);
 
     bool deleteRightNode(BinNode<TKey> *parent);
-
 };
 
 
 #include "BSTree.inc"
+
 
 #endif //LAB1_1_TREE_H

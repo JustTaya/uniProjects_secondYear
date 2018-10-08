@@ -9,6 +9,7 @@
 #include <bitset>
 #include <random>
 #include <ctime>
+#include <cmath>
 
 
 enum IPversion {
@@ -82,7 +83,11 @@ public:
 
     Subnet(IP *ip, unsigned mask) : ip(ip), mask(mask) {};
 
-    bool check(IP* checkIP);
+    bool check(IP *checkIP);
+
+    bool compare(Subnet *right);    //compare the number of hosts
+
+    void print();
 
 private:
     IP *ip;  //ip address

@@ -1,4 +1,3 @@
-
 template<typename TKey, typename Cmp>
 MultiNode<TKey> *MultiTree<TKey, Cmp> ::insert(MultiNode<TKey> *node, TKey key) {
     if (node != nullptr) {
@@ -6,52 +5,6 @@ MultiNode<TKey> *MultiTree<TKey, Cmp> ::insert(MultiNode<TKey> *node, TKey key) 
         return node->nodes.back();
     }
 return nullptr;
-}
-
-
-
-template<typename TKey, typename Cmp>
-bool MultiTree<TKey, Cmp> :: deleteSubtree(TKey key) {
-    MultiNode<TKey> *parent = searchParent(key);
-    if (parent == nullptr)
-        return false;
-
-    MultiNode<TKey> *tmp = nullptr;
-    std::stack<MultiNode<TKey> *> stack;
-    if (this->_root->getKey() == key) {
-        if (!this->_root->nodes.empty())
-            std::for_each(this->_root->nodes.begin(), this->_root->nodes.end(),
-                          [&stack](MultiNode<TKey> *node) {
-                              stack.push(node);
-                          });
-delete this->_root;
-this->_root = nullptr;
-} else {
-        std::remove_if(parent->nodes.begin(), parent->nodes.end(),
-                       [&stack, key](const MultiNode<TKey> *node) -> bool {
-                           std::cout << node->getKey();
-                           if (node->getKey() == key) {
-                               std::for_each(node->nodes.begin(), node->nodes.end(),
-                                       [&stack](MultiNode<TKey> *node) {
-                                   stack.push(node);
-                               });
-return true;
-}
-return false;
-});
-
-}
-while (!stack.empty()) {
-        tmp = stack.top();
-        stack.pop();
-        if (!tmp->nodes.empty())
-            std::for_each(tmp->nodes.begin(), tmp->nodes.end(), [&stack](MultiNode<TKey> *node) {
-                stack.push(node);
-            });
-delete tmp;
-tmp = nullptr;
-}
-return true;
 }
 
 template<typename TKey, typename Cmp>
@@ -221,6 +174,19 @@ MultiNode<TKey> *MultiTree<TKey, Cmp>::getRoot() {
 template<typename TKey, typename Cmp>
 MultiTree<TKey,Cmp>::~MultiTree(){
  if (this->_root != nullptr)
-        deleteSubtree(this->_root->getKey());
+       {
+       MultiNode<TKey> *tmp = nullptr;
+           std::stack<MultiNode<TKey> *> stack;
+           stack.push(this->_root);
+           while(!stack.empty()){
+           tmp=stack.top();
+           stack.pop();
+               if (!tmp->nodes.empty())
+                   std::for_each(tmp->nodes.begin(), tmp->nodes.end(),
+                                 [&stack](MultiNode<TKey> *node) {
+                                     stack.push(node);
+       });
+       delete tmp;
+       }
+       }
 }
-
