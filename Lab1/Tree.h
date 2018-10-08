@@ -37,11 +37,11 @@ TKey TNode<TKey>::getKey() const {
 template<typename TKey, typename Cmp=std::less<TKey>>
 class Tree {
 public:
-    Tree() : _root(nullptr) {};
+    Tree(){};
 
-    virtual ~Tree() {};
+    virtual ~Tree(){};
 
-    explicit Tree(TKey key) : _root(TNode(key)) {};
+    explicit Tree(TKey key){};
 
 
     virtual bool insert(TKey) = 0;
@@ -57,8 +57,6 @@ public:
 
     virtual void printLevelOrder(void (*print)(TKey)) const = 0;
 
-private:
-    TNode<TKey> *_root;
 };
 
 template<typename TKey>
@@ -86,11 +84,11 @@ void MultiNode<TKey>::add(TKey key) {
 template<typename TKey, typename Cmp=std::less<TKey>>
 class MultiTree : public Tree<TKey, Cmp> {
 public:
-    MultiTree() : Tree<TKey, Cmp>() {};
+    MultiTree() : _root(nullptr) {};
 
-    explicit MultiTree(TKey key) : Tree<TKey, Cmp>(key) {};
+    explicit MultiTree(TKey key) : _root(MultiNode<TKey>(key)) {};
 
-    ~MultiTree();
+    virtual ~MultiTree();
 
     bool insert(TKey key);      //insert root if tree is empty
 
@@ -140,9 +138,9 @@ public:
 template<typename TKey, typename Cmp=std::less<TKey>>
 class BinTree : public Tree<TKey, Cmp> {
 public:
-    BinTree() : Tree<TKey, Cmp>() {};
+    BinTree() : _root(nullptr) {};
 
-    explicit BinTree(TKey key) : Tree<TKey, Cmp>(key) {};
+    explicit BinTree(TKey key) : _root(BinNode<TKey>(key)) {};
 
     virtual ~BinTree();
 

@@ -82,7 +82,7 @@ void multiTree_int()
     multiTree->insert(tmp1, 5);
     multiTree->deleteNode(5);
     multiTree->printLevelOrder(print);
-    //delete multiTree;
+    delete multiTree;
     std::cout << std::endl;
 }
 
@@ -118,14 +118,13 @@ void int_sample() {
     multiTree_int();
 
     //bin tree
-    binTree_int();
+   binTree_int();
 
     //binary search tree
-   bsTree_int();
+  // bsTree_int();
 }
 
-//TODO
-/*
+
 void double_sample() {
     MultiTree<double> *multiTree = new MultiTree<double>();
     multiTree->insert((rand() % 100) / 10);
@@ -158,7 +157,8 @@ void double_sample() {
     bsTree->printLevelOrder(print);
     delete bsTree;
 }
-
+//TODO:
+/*
 void string_sample() {
 
 }
