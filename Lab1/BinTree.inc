@@ -245,6 +245,8 @@ void BinTree<TKey, Cmp>::printLevelOrder(void (*print)(TKey), BinNode<TKey> *roo
             std::cout << "level" << tmp->level << " ";
             l = tmp->level;
         }
+        if(tmp->node==nullptr)
+                  continue;
         print(tmp->node->getKey());
         if (tmp->node->left != nullptr) {
             BinLevel<TKey> *left = new BinLevel<TKey>();

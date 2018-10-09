@@ -57,10 +57,14 @@ BinNode<TKey> *BSTree<TKey, Cmp>::searchParent(TKey key, Cmp cmp) const {
         if (cmp(key, tmp->getKey())) {
             if (tmp->left == nullptr)
                 return nullptr;
+            if(!cmp(key, tmp->left->getKey()) && !cmp(tmp->left->getKey(), key))
+                return tmp;
             tmp = tmp->left;
         } else if (cmp(tmp->getKey(), key)) {
             if (tmp->right == nullptr)
                 return nullptr;
+            if(!cmp(key, tmp->right->getKey()) && !cmp(tmp->right->getKey(), key))
+                return tmp;
             tmp = tmp->right;
         } else {
             return parent;
@@ -70,10 +74,12 @@ BinNode<TKey> *BSTree<TKey, Cmp>::searchParent(TKey key, Cmp cmp) const {
 }
 
 template<typename TKey, typename Cmp>
-bool BSTree<TKey, Cmp>::deleteNode(TKey key, Cmp cmp) {
+bool BSTree<TKey, Cmp>::del(TKey key, Cmp cmp) {
     if (this->_root == nullptr)
         return false;
     BinNode<TKey> *parent = searchParent(key);
+    if(parent==nullptr)
+        return false;
     if (this->_root == parent && !cmp(parent->getKey(), key) && !cmp(key, parent->getKey())) {
         BinNode<TKey> *tmp = this->_root->right;
         if (tmp->left != nullptr) {
@@ -106,12 +112,12 @@ template<typename TKey, typename Cmp>
 bool BSTree<TKey, Cmp>::deleteLeftNode(BinNode<TKey> *parent) {
     BinNode<TKey> *node = parent->left;
     if (node->left == nullptr && node->right == nullptr) {
-        delete node;
         parent->left = nullptr;
+        delete node;
         return true;
     }
     if (node->left != nullptr && node->right != nullptr) {
-        BinNode<TKey> *tmp = node->right;
+            BinNode<TKey> *tmp = node->left;
         if (tmp->left != nullptr) {
             while (tmp->left->left != nullptr)
                 tmp = tmp->left;
@@ -144,8 +150,8 @@ template<typename TKey, typename Cmp>
 bool BSTree<TKey, Cmp>::deleteRightNode(BinNode<TKey> *parent) {
     BinNode<TKey> *node = parent->right;
     if (node->left == nullptr && node->right == nullptr) {
-        delete node;
         parent->right = nullptr;
+        delete node;
         return true;
     }
     if (node->left != nullptr && node->right != nullptr) {

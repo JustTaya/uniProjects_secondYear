@@ -125,7 +125,6 @@ void IP::print() {
 }
 
 void IP::getRandom() {
-    srand(time(NULL));
     int type = rand() % 2;
     if (type == 0) {
         this->version = v4;

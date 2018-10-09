@@ -152,7 +152,7 @@ public:
 
     BinNode<TKey> *getRoot();      //reference to root
 
-    bool deleteNode(TKey key);      //delete node by key if it has one or zero sons
+    virtual bool deleteNode(TKey key);      //delete node by key if it has one or zero sons
 
     BinNode<TKey> *search(TKey key) const;
 
@@ -197,7 +197,7 @@ public:
 
     BinNode<TKey> *search(TKey key, Cmp cmp = Cmp()) const;
 
-    bool deleteNode(TKey key, Cmp cmp = Cmp());      //delete node by key if it has one or zero sons
+    bool deleteNode(TKey key);      //delete node by key if it has one or zero sons
 
     void printInOrder(void (*print)(TKey)) const;
 
@@ -216,10 +216,17 @@ private:
     bool deleteLeftNode(BinNode<TKey> *parent);
 
     bool deleteRightNode(BinNode<TKey> *parent);
+
+    bool del(TKey key, Cmp cmp = Cmp());      //delete node by key if it has one or zero sons
 };
 
 
 #include "BSTree.inc"
+
+template<typename TKey, typename Cmp>
+bool BSTree<TKey, Cmp>::deleteNode(TKey key) {
+    return this->del(key);
+}
 
 
 #endif //LAB1_1_TREE_H
