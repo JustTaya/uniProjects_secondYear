@@ -223,10 +223,6 @@ private:
 
 #include "BSTree.inc"
 
-template<typename TKey, typename Cmp>
-bool BSTree<TKey, Cmp>::deleteNode(TKey key) {
-    return this->del(key);
-}
 
 
 #endif //LAB1_1_TREE_H

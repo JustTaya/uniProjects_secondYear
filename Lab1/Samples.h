@@ -25,7 +25,7 @@ void print_string(std::string key) {
     std::cout << "Key: " << key << std::endl;
 }
 
-void print_vector(std::vector<int>* key) {
+void print_vector(std::vector<int> *key) {
     std::cout << "Key: ";
     std::for_each(key->begin(), key->end(), [](int digit) {
         std::cout << digit << " ";
@@ -47,13 +47,13 @@ void print_subnet(Subnet *key) {
 
 class Compare_vector {
 public:
-    bool operator()(std::vector<int>* vector1, std::vector<int>* vector2) {
-        if ((*vector1).size()<(*vector2).size())
+    bool operator()(std::vector<int> *vector1, std::vector<int> *vector2) {
+        if ((*vector1).size() < (*vector2).size())
             return true;
-        else if ((*vector1).size()>(*vector2).size())
+        else if ((*vector1).size() > (*vector2).size())
             return false;
         for (size_t i = 0; i < (*vector1).size(); i++) {
-            if ((*vector1)[i]<(*vector2)[i])
+            if ((*vector1)[i] < (*vector2)[i])
                 return true;
             else if ((*vector1)[i] > (*vector2)[i])
                 return false;
@@ -96,8 +96,9 @@ void binTree_int() {
     binTree->insertleft(binTree->getRoot(), rand() % 100);
     BinNode<int> *tmp2 = binTree->insertright(binTree->getRoot(), rand() % 100);
     binTree->insertright(tmp2, 5);
+    binTree->search(5);
     binTree->deleteNode(5);
- //   binTree->printLevelOrder(print_int);
+    binTree->printLevelOrder(print_int);
     delete binTree;
     std::cout << std::endl;
 }
@@ -135,6 +136,7 @@ void multiTree_double() {
     multiTree->deleteNode(5.0);
     multiTree->printLevelOrder(print_double);
     delete multiTree;
+    std::cout << std::endl;
 };
 
 void binTree_double() {
@@ -147,6 +149,7 @@ void binTree_double() {
     binTree->deleteNode(5.0);
     binTree->printLevelOrder(print_double);
     delete binTree;
+    std::cout << std::endl;
 }
 
 void bsTree_double() {
@@ -183,6 +186,7 @@ void multiTree_string() {
     multiTree->deleteNode("yy");
     multiTree->printLevelOrder(print_string);
     delete multiTree;
+    std::cout << std::endl;
 };
 
 void binTree_string() {
@@ -195,6 +199,7 @@ void binTree_string() {
     binTree->deleteNode("yy");
     binTree->printLevelOrder(print_string);
     delete binTree;
+    std::cout << std::endl;
 }
 
 void bsTree_string() {
@@ -222,33 +227,35 @@ void string_sample() {
     bsTree_string();
 }
 
-void multiTree_vector(std::vector<std::vector<int>*> tmp) {
+void multiTree_vector(std::vector<std::vector<int> *> tmp) {
     std::cout << "MultiTree<vector>" << std::endl;
-    MultiTree<std::vector<int>*> *multiTree = new MultiTree<std::vector<int>*>();
+    MultiTree<std::vector<int> *> *multiTree = new MultiTree<std::vector<int> *>();
     multiTree->insertRoot(tmp[0]);
-    MultiNode<std::vector<int>*> *tmp1 = multiTree->insert(multiTree->getRoot(), tmp[1]);
+    MultiNode<std::vector<int> *> *tmp1 = multiTree->insert(multiTree->getRoot(), tmp[1]);
     multiTree->insert(multiTree->getRoot(), tmp[2]);
     multiTree->insert(tmp1, tmp[3]);
     multiTree->deleteNode(tmp[3]);
     multiTree->printLevelOrder(print_vector);
     delete multiTree;
+    std::cout << std::endl;
 };
 
-void binTree_vector(std::vector<std::vector<int>*> tmp) {
+void binTree_vector(std::vector<std::vector<int> *> tmp) {
     std::cout << "BinTree<vector>" << std::endl;
-    BinTree<std::vector<int>*> *binTree = new BinTree<std::vector<int>*>();
+    BinTree<std::vector<int> *> *binTree = new BinTree<std::vector<int> *>();
     binTree->insertRoot(tmp[0]);
     binTree->insertleft(binTree->getRoot(), tmp[1]);
-    BinNode<std::vector<int>*> *tmp2 = binTree->insertright(binTree->getRoot(),tmp[2]);
+    BinNode<std::vector<int> *> *tmp2 = binTree->insertright(binTree->getRoot(), tmp[2]);
     binTree->insertright(tmp2, tmp[3]);
     binTree->deleteNode(tmp[3]);
     binTree->printLevelOrder(print_vector);
     delete binTree;
+    std::cout << std::endl;
 }
 
-void bsTree_vector(std::vector<std::vector<int>*> tmp) {
+void bsTree_vector(std::vector<std::vector<int> *> tmp) {
     std::cout << "BSTree<vector>" << std::endl;
-    BSTree<std::vector<int>*,Compare_vector> *bsTree = new BSTree<std::vector<int>*,Compare_vector>();
+    BSTree<std::vector<int> *, Compare_vector> *bsTree = new BSTree<std::vector<int> *, Compare_vector>();
     bsTree->insertRoot(tmp[0]);
     bsTree->insertNode(tmp[1]);
     bsTree->insertNode(tmp[2]);
@@ -259,51 +266,53 @@ void bsTree_vector(std::vector<std::vector<int>*> tmp) {
     std::cout << std::endl;
 }
 
-void vector_sample(std::vector<std::vector<int>*> tmp) {
+void vector_sample(std::vector<std::vector<int> *> tmp) {
 //multi node tree
-multiTree_vector(tmp);
+    multiTree_vector(tmp);
 
 //bin tree
-binTree_vector(tmp);
+    binTree_vector(tmp);
 
 //binary search tree
-bsTree_vector(tmp);
+    bsTree_vector(tmp);
 
 }
 
 
 void multiTree_ip() {
     std::cout << "MultiTree<IP>" << std::endl;
-    MultiTree<IP*> *multiTree = new MultiTree<IP*>();
+    MultiTree<IP *> *multiTree = new MultiTree<IP *>();
     multiTree->insertRoot(new IP());
-    MultiNode<IP*> *tmp1 = multiTree->insert(multiTree->getRoot(),new IP());
-    multiTree->insert(multiTree->getRoot(),new IP());
-    multiTree->insert(tmp1,new IP());
-   // multiTree->deleteNode();
+    MultiNode<IP *> *tmp1 = multiTree->insert(multiTree->getRoot(), new IP());
+    multiTree->insert(multiTree->getRoot(), new IP());
+    multiTree->insert(tmp1, new IP());
+    // multiTree->deleteNode();
     multiTree->printLevelOrder(print_ip);
     delete multiTree;
+    std::cout << std::endl;
 };
 
 void binTree_ip() {
     std::cout << "BinTree<IP>" << std::endl;
-    BinTree<IP*> *binTree = new BinTree<IP*>();
+    BinTree<IP *> *binTree = new BinTree<IP *>();
     binTree->insertRoot(new IP());
     binTree->insertleft(binTree->getRoot(), new IP());
-    BinNode<IP*> *tmp2 = binTree->insertright(binTree->getRoot(),new IP());
+    BinNode<IP *> *tmp2 = binTree->insertright(binTree->getRoot(), new IP());
     binTree->insertright(tmp2, new IP());
     //binTree->deleteNode(new IP());
     binTree->printLevelOrder(print_ip);
     delete binTree;
+    std::cout << std::endl;
 }
 
 void bsTree_ip() {
     std::cout << "BSTree<IP>" << std::endl;
-    BSTree<IP*,CompareIP> *bsTree = new BSTree<IP*,CompareIP>();
+    BSTree<IP *, CompareIP> *bsTree = new BSTree<IP *, CompareIP>();
     bsTree->insertRoot(new IP());
     bsTree->insertNode(new IP());
     bsTree->insertNode(new IP());
     bsTree->insertNode(new IP());
-  //  bsTree->deleteNode(new IP());
+    //  bsTree->deleteNode(new IP());
     bsTree->printLevelOrder(print_ip);
     delete bsTree;
     std::cout << std::endl;
@@ -322,36 +331,36 @@ void ip_sample() {
 
 void multiTree_subnet() {
     std::cout << "MultiTree<subnet>" << std::endl;
-    MultiTree<Subnet*> *multiTree = new MultiTree<Subnet*>();
+    MultiTree<Subnet *> *multiTree = new MultiTree<Subnet *>();
     multiTree->insertRoot(new Subnet());
-    MultiNode<Subnet*> *tmp1 = multiTree->insert(multiTree->getRoot(),new Subnet());
-    multiTree->insert(multiTree->getRoot(),new Subnet());
-    multiTree->insert(tmp1,new Subnet());
+    MultiNode<Subnet *> *tmp1 = multiTree->insert(multiTree->getRoot(), new Subnet());
+    multiTree->insert(multiTree->getRoot(), new Subnet());
+    multiTree->insert(tmp1, new Subnet());
     // multiTree->deleteNode();
     multiTree->printLevelOrder(print_subnet);
     delete multiTree;
+    std::cout << std::endl;
 };
 
 void binTree_subnet() {
     std::cout << "BinTree<subnet>" << std::endl;
-    BinTree<Subnet*> *binTree = new BinTree<Subnet*>();
+    BinTree<Subnet *> *binTree = new BinTree<Subnet *>();
     binTree->insertRoot(new Subnet());
     binTree->insertleft(binTree->getRoot(), new Subnet());
-    BinNode<Subnet*> *tmp2 = binTree->insertright(binTree->getRoot(),new Subnet());
+    BinNode<Subnet *> *tmp2 = binTree->insertright(binTree->getRoot(), new Subnet());
     binTree->insertright(tmp2, new Subnet());
-    //binTree->deleteNode(new IP());
     binTree->printLevelOrder(print_subnet);
     delete binTree;
+    std::cout << std::endl;
 }
 
 void bsTree_subnet() {
     std::cout << "BSTree<subnet>" << std::endl;
-    BSTree<Subnet*,CompareSubnet> *bsTree = new BSTree<Subnet*,CompareSubnet>();
+    BSTree<Subnet *, CompareSubnet> *bsTree = new BSTree<Subnet *, CompareSubnet>();
     bsTree->insertRoot(new Subnet());
     bsTree->insertNode(new Subnet());
     bsTree->insertNode(new Subnet());
     bsTree->insertNode(new Subnet());
-    //  bsTree->deleteNode(new IP());
     bsTree->printLevelOrder(print_subnet);
     delete bsTree;
     std::cout << std::endl;

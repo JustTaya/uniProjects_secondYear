@@ -203,3 +203,7 @@ void BSTree<TKey,  Cmp>::printLevelOrder(void (*print)(TKey)) const {
     BinTree<TKey,Cmp>::printLevelOrder(print,this->_root);
 }
 
+template<typename TKey, typename Cmp>
+bool BSTree<TKey, Cmp>::deleteNode(TKey key) {
+    return this->del(key);
+}

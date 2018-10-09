@@ -107,7 +107,7 @@ BinNode<TKey> *BinTree<TKey,Cmp>::search(TKey key) const {
     while (!stack.empty()) {
         tmp = stack.top();
         stack.pop();
-        if (tmp->returnKey() == key) {
+        if (tmp->getKey() == key) {
             return tmp;
         } else {
             if (tmp->left != nullptr)
