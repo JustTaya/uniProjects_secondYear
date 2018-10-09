@@ -154,7 +154,7 @@ void MultiTree<TKey, Cmp>::printLevelOrder(void (*print)(TKey)) const {
 }
 
 template<typename TKey,typename Cmp>
-bool MultiTree<TKey, Cmp>::insert(TKey key) {
+bool MultiTree<TKey, Cmp>::insertRoot(TKey key) {
     if(this->_root==nullptr){
         this->_root=new MultiNode<TKey>(key);
         return true;

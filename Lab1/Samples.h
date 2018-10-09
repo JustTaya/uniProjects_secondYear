@@ -76,7 +76,7 @@ class CompareSubnet {
 void multiTree_int() {
     std::cout << "MultiTree<int>" << std::endl;
     MultiTree<int> *multiTree = new MultiTree<int>();
-    multiTree->insert(rand() % 100);
+    multiTree->insertRoot(rand() % 100);
     MultiNode<int> *tmp1 = multiTree->insert(multiTree->getRoot(), rand() % 100);
     multiTree->insert(multiTree->getRoot(), rand() % 100);
     multiTree->insert(tmp1, 5);
@@ -89,7 +89,7 @@ void multiTree_int() {
 void binTree_int() {
     std::cout << "BinTree<int>" << std::endl;
     BinTree<int> *binTree = new BinTree<int>();
-    binTree->insert(rand() % 100);
+    binTree->insertRoot(rand() % 100);
     binTree->insertleft(binTree->getRoot(), rand() % 100);
     BinNode<int> *tmp2 = binTree->insertright(binTree->getRoot(), rand() % 100);
     binTree->insertright(tmp2, 5);
@@ -102,7 +102,7 @@ void binTree_int() {
 void bsTree_int() {
     std::cout << "BSTree<int>" << std::endl;
     BSTree<int> *bsTree = new BSTree<int>();
-    bsTree->insert(8);
+    bsTree->insertRoot(8);
     for (size_t i = 0; i < 5; i++)
         bsTree->insertNode(rand() % 100);
     bsTree->deleteNode(8);
@@ -125,8 +125,7 @@ void int_sample() {
 void multiTree_double() {
     std::cout << "MultiTree<double>" << std::endl;
     MultiTree<double> *multiTree = new MultiTree<double>();
-    multiTree->insert((rand() % 100) / 10.0);
-    multiTree->insert((rand() % 100) / 10.0);
+    multiTree->insertRoot((rand() % 100) / 10.0);
     MultiNode<double> *tmp1 = multiTree->insert(multiTree->getRoot(), (rand() % 100) / 10.0);
     multiTree->insert(multiTree->getRoot(), (rand() % 100) / 10.0);
     multiTree->insert(tmp1, 5.0);
@@ -138,7 +137,7 @@ void multiTree_double() {
 void binTree_double() {
     std::cout << "BinTree<double>" << std::endl;
     BinTree<double> *binTree = new BinTree<double>();
-    binTree->insert((rand() % 100)/10.0);
+    binTree->insertRoot((rand() % 100)/10.0);
     binTree->insertleft(binTree->getRoot(), (rand() % 100)/10.0);
     BinNode<double> *tmp2 = binTree->insertright(binTree->getRoot(), (rand() % 100)/10.0);
     binTree->insertright(tmp2, 5.0);
@@ -151,7 +150,7 @@ void bsTree_double()
 {
     std::cout << "BSTree<double>" << std::endl;
     BSTree<double> *bsTree = new BSTree<double>();
-    bsTree->insert(5.0);
+    bsTree->insertRoot(5.0);
     for (size_t i = 0; i < 5; i++)
         bsTree->insertNode((rand() % 100)/10.0);
    // bsTree->deleteNode(8.1);
@@ -171,12 +170,59 @@ void double_sample() {
     bsTree_double();
 
 }
-//TODO:
-/*
-void string_sample() {
 
+void multiTree_string() {
+    std::cout << "MultiTree<double>" << std::endl;
+    MultiTree<std::string> *multiTree = new MultiTree<std::string>();
+    multiTree->insertRoot("xx");
+    MultiNode<std::string> *tmp1 = multiTree->insert(multiTree->getRoot(), "xy");
+    multiTree->insert(multiTree->getRoot(), "yx");
+    multiTree->insert(tmp1, "yy");
+    multiTree->deleteNode("yy");
+    multiTree->printLevelOrder(print_string);
+    delete multiTree;
+};
+
+void binTree_string() {
+    std::cout << "BinTree<string>" << std::endl;
+    BinTree<std::string> *binTree = new BinTree<std::string>();
+    binTree->insertRoot("xx");
+    binTree->insertleft(binTree->getRoot(), "xy");
+    BinNode<std::string> *tmp2 = binTree->insertright(binTree->getRoot(), "yx");
+    binTree->insertright(tmp2, "yy");
+    binTree->deleteNode("yy");
+    binTree->printLevelOrder(print_string);
+    delete binTree;
 }
 
+void bsTree_string()
+{
+    std::cout << "BSTree<string>" << std::endl;
+    BSTree<std::string> *bsTree = new BSTree<std::string>();
+    bsTree->insertRoot("xx");
+    bsTree->insertNode("xy");
+    bsTree->insertNode("yx");
+    bsTree->insertNode("yy");
+     bsTree->deleteNode("xx");
+    bsTree->printLevelOrder(print_string);
+    delete bsTree;
+    std::cout << std::endl;
+}
+
+
+void string_sample() {
+    //multi node tree
+    multiTree_string();
+
+    //bin tree
+    binTree_string();
+
+    //binary search tree
+    bsTree_string();
+}
+
+//TODO:
+/*
 void vector_sample() {
 
 }

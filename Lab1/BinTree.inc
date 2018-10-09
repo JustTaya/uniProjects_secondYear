@@ -1,5 +1,5 @@
 template<typename TKey, typename Cmp>
-bool BinTree<TKey, Cmp>::insert(TKey key) {
+bool BinTree<TKey, Cmp>::insertRoot(TKey key) {
     if (this->_root == nullptr) {
         this->_root = new BinNode<TKey>(key);
         return true;

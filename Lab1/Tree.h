@@ -43,8 +43,7 @@ public:
 
     explicit Tree(TKey key){};
 
-
-    virtual bool insert(TKey) = 0;
+    virtual bool insertRoot(TKey) = 0;
 
     virtual bool deleteNode(TKey) = 0;
 
@@ -90,7 +89,7 @@ public:
 
     virtual ~MultiTree();
 
-    bool insert(TKey key);      //insert root if tree is empty
+    bool insertRoot(TKey key);      //insert root if tree is empty
 
     MultiNode<TKey> *insert(MultiNode<TKey> *node, TKey key);     //insert node as son
 
@@ -144,7 +143,7 @@ public:
 
     virtual ~BinTree();
 
-    bool insert(TKey key);      //insert root if tree is empty
+    bool insertRoot(TKey key);      //insert root if tree is empty
 
     BinNode<TKey> *insertleft(BinNode<TKey> *node, TKey key);     //insert node as left son
 
@@ -192,7 +191,7 @@ public:
 
     ~BSTree(){};
 
-    bool insert(TKey key){this->_root=new BinNode<TKey>(key);}
+    bool insertRoot(TKey key){this->_root=new BinNode<TKey>(key);}
 
     bool insertNode(TKey key, Cmp cmp = Cmp());    //insert node using comparator
 
