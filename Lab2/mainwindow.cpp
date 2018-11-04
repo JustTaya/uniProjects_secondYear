@@ -27,5 +27,9 @@ void MainWindow::changeEvent(QEvent *e)
 
 void MainWindow::on_pushButton_clicked()
 {
-
+    QListWidgetItem* listWidgetItem=new QListWidgetItem(ui->listWidget);
+    ui->listWidget->addItem(listWidgetItem);
+    TimerScrollItem* item=new TimerScrollItem;
+    listWidgetItem->setSizeHint(item->sizeHint());
+    ui->listWidget->setItemWidget(listWidgetItem,item);
 }

@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-10-13T12:46:00
+# Project created by QtCreator 2018-11-03T17:26:34
 #
 #-------------------------------------------------
 
@@ -24,18 +24,29 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    alarmlistitem.cpp \
+    timerListitem.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    alarmlistitem.h \
+    timerListitem.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    alarmlistitem.ui \
+    timerListitem.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+        QT += widgets
+        DEFINES += HAVE_QT5
+    }
 
 RESOURCES += \
     icons/icons.qrc
