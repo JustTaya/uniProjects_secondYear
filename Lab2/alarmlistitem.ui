@@ -21,10 +21,12 @@ background-color: rgb(46, 52, 54);
 
 QPushButton
 {
-min-width:30px;
-min-height:30px;
-border:30px;
-border-radius:30px;
+min-height:25px;
+min-width:25px;
+max-height:25px;
+max-width:25px;
+border: 30px;
+border-radius:15px;
 }
 
 QPushButton#deleteButton
@@ -35,6 +37,22 @@ image: url(:/delete_icon.svg);
 QPushButton#deleteButton:pressed
 {
 image: url(:/delete_clicked_icon.svg);
+}
+
+QPushButton#editButton
+{
+image: url(:/edit_icon.ai.svg);
+}
+
+QPushButton#editButton:pressed
+{
+image: url(:/edit_clicked_icon.ai.svg);
+}
+
+QChechBox
+{
+max-width:60px;
+min-width:60px;
 }
 
 QCheckBox::indicator:unchecked {
@@ -63,7 +81,7 @@ image: url(:/switch_turn_on.svg);
    <item>
     <widget class="QLabel" name="label">
      <property name="styleSheet">
-      <string notr="true">font-size:25px;</string>
+      <string notr="true">font-size:20px;</string>
      </property>
      <property name="text">
       <string>00:00 AM</string>
@@ -74,19 +92,6 @@ image: url(:/switch_turn_on.svg);
     </widget>
    </item>
    <item>
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item>
     <widget class="QCheckBox" name="checkBox">
      <property name="text">
       <string/>
@@ -95,6 +100,13 @@ image: url(:/switch_turn_on.svg);
    </item>
    <item>
     <widget class="QPushButton" name="deleteButton">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="editButton">
      <property name="text">
       <string/>
      </property>

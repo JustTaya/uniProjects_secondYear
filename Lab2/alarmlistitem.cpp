@@ -67,3 +67,16 @@ void AlarmListItem::runTimer()
     this->timer->start(this->time*1000);
 }
 
+
+void AlarmListItem::on_editButton_clicked()
+{
+    AddAlarmDialog* dialog=new AddAlarmDialog;
+    dialog->show();
+    if(dialog->exec())
+    {
+        QTime time;
+        connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
+        time=dialog->getValues();
+        this->setTime(time);
+    }
+}

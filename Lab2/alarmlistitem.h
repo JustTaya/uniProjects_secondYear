@@ -8,6 +8,7 @@
 #endif
 
 #include "timeralarm.h"
+#include "addalarmdialog.h"
 #include <QTime>
 #include <QTimer>
 #include <QListWidgetItem>
@@ -42,6 +43,8 @@ private slots:
     void on_checkBox_stateChanged(int arg1);
 
     void alarm();
+
+    void on_editButton_clicked();
 
 private:
     Ui::AlarmListItem *ui;
