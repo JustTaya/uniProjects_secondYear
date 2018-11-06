@@ -2,12 +2,11 @@
 #define TIMERALARM_H
 
 #ifdef HAVE_QT5
-#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QDialog>
 #else
-#include <QtGui/QMainWindow>
+#include <QtGui/QDialog>
 #endif
 
-#include <QDialog>
 #include <QTime>
 #include <QTimer>
 #include <QMediaPlayer>

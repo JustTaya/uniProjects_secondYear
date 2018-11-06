@@ -15,7 +15,21 @@
   </property>
   <property name="styleSheet">
    <string notr="true">color: rgb(245, 239, 215);
-background-color: rgb(46, 52, 54);</string>
+background-color: rgb(46, 52, 54);
+QMainWindow{
+	min-width:303px;
+	min-height:500px;
+	max-width:303px;
+	max-height:500px;
+}
+
+QWidget#centralWidget
+{
+	min-width:303px;
+	min-height:500px;
+	max-width:303px;
+	max-height:500px;
+}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="styleSheet">

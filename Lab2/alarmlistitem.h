@@ -1,7 +1,7 @@
 #ifndef ALARMLISTITEM_H
 #define ALARMLISTITEM_H
 
-#if QT_VERSION >= 0x050000
+#ifdef HAVE_QT5
 #include <QtWidgets/QWidget>
 #else
 #include <QtGui/QWidget>

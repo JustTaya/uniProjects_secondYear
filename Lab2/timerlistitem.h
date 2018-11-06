@@ -1,11 +1,10 @@
 #ifndef TIMERLISTITEM_H
 #define TIMERLISTITEM_H
 
-
 #ifdef HAVE_QT5
-#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QWidget>
 #else
-#include <QtGui/QMainWindow>
+#include <QtGui/QWidget>
 #endif
 
 #include "timeralarm.h"
@@ -26,7 +25,7 @@ namespace Ui {
 class TimerListItem;
 }
 
-class TimerListItem : public QWidget,public QListWidgetItem
+class TimerListItem : public QWidget
 {
     Q_OBJECT
 

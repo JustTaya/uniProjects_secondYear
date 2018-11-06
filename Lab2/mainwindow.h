@@ -31,6 +31,7 @@ protected:
 
 private slots:
     void on_addTimerButton_clicked();
+    void nonadd(){};
 
 //    void on_timerList_itemPressed(QListWidgetItem *item);
 

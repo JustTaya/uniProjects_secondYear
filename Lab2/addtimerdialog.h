@@ -3,9 +3,9 @@
 
 
 #ifdef HAVE_QT5
-#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QDialog>
 #else
-#include <QtGui/QMainWindow>
+#include <QtGui/QDialog>
 #endif
 
 #include <QDialog>
@@ -24,12 +24,18 @@ public:
     ~AddTimerDialog();
     QTime getValues();
     void setValue(QTime);
+    bool getFlag()
+    {
+        return this->flag;
+    }
 
 protected:
     void changeEvent(QEvent *e);
 
+
 private:
     Ui::AddTimerDialog *ui;
+    bool flag;
 };
 
 #endif // ADDTIMERDIALOG_H

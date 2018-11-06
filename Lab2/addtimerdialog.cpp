@@ -6,7 +6,9 @@ AddTimerDialog::AddTimerDialog(QWidget *parent) :
     ui(new Ui::AddTimerDialog)
 {
     ui->setupUi(this);
-}
+
+    this->flag=false;
+    }
 
 AddTimerDialog::~AddTimerDialog()
 {
@@ -34,3 +36,4 @@ void  AddTimerDialog::setValue(QTime time)
 {
     ui->timeEdit->setTime(time);
 }
+
