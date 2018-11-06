@@ -6,6 +6,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->timerList=new QWidget;
+    this->timerList->setLayout(new QVBoxLayout);
+    ui->timerList->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
+    ui->timerList->setWidget(this->timerList);
+    this->timer=new QTimer;
 }
 
 MainWindow::~MainWindow()
@@ -32,12 +37,9 @@ void MainWindow::on_addTimerButton_clicked()
     QTime time;
     if(dialog->exec())
             time=dialog->getValues();
-    QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->timerList);
-    ui->timerList->addItem(listWidgetItem);
     TimerListItem* item=new TimerListItem;
     item->setTime(time);
-    listWidgetItem->setSizeHint(item->sizeHint());
-    ui->timerList->setItemWidget(listWidgetItem,item);
+    this->timerList->layout()->addWidget(item);
+    this->timers.push_back(item);
 }
-
 

@@ -11,6 +11,8 @@
 #include "timerlistitem.h"
 #include <QTime>
 #include <QListWidgetItem>
+#include <memory>
+#include <iostream>
 
 namespace Ui {
 class MainWindow;
@@ -34,6 +36,10 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QWidget* timerList;
+    QList<TimerListItem*> timers;
+    //QList<AlarmListItem*> alarms;
+    QTimer* timer;
 };
 
 #endif // MAINWINDOW_H

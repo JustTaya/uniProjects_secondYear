@@ -81,10 +81,20 @@ background-color: rgb(77, 15, 15);
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QListWidget" name="timerList">
-          <property name="styleSheet">
-           <string notr="true">selection-background-color: rgb(77, 15, 15);</string>
+         <widget class="QScrollArea" name="timerList">
+          <property name="widgetResizable">
+           <bool>true</bool>
           </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>261</width>
+             <height>342</height>
+            </rect>
+           </property>
+          </widget>
          </widget>
         </item>
         <item>

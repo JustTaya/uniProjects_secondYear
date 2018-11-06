@@ -10,6 +10,10 @@
 
 #include <QTime>
 #include <QTimer>
+#include <QListWidgetItem>
+#include <QSound>
+#include <QMediaPlayer>
+
 
 enum State
 {
@@ -20,7 +24,7 @@ namespace Ui {
 class TimerListItem;
 }
 
-class TimerListItem : public QWidget
+class TimerListItem : public QWidget,public QListWidgetItem
 {
     Q_OBJECT
 
@@ -38,9 +42,6 @@ public:
         return this->state;
     }
 
-public slots:
-    void run ();
-
 protected:
     void changeEvent(QEvent *e);
 
@@ -51,10 +52,23 @@ private slots:
 
     void on_stopButton_clicked();
 
+    void on_playButton_clicked();
+
+    void step();
+
+    void alarm();
+
 private:
     Ui::TimerListItem *ui;
     State state;
     int initTime;
+    int time;
+    QTimer* tmpTimer;
+    QTimer* timer;
+    QTimer* alarmTimer;
+    QMediaPlayer* alarmPlayer;
+    void run ();
+
 };
 
 #endif // TIMERLISTITEM_H

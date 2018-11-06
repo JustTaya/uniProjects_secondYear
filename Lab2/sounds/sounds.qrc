@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/resource"/>
+    <qresource prefix="/">
+        <file>Alarmclockbell.mp3</file>
+        <file>AlarmClock.wav</file>
+        <file>1097.mp3</file>
+    </qresource>
+</RCC>

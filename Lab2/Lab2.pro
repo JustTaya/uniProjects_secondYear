@@ -41,8 +41,10 @@ FORMS += \
 
 greaterThan(QT_MAJOR_VERSION, 4) {
         QT += widgets
+        QT += widgets multimedia
         DEFINES += HAVE_QT5
     }
 
 RESOURCES += \
-    icons/icons.qrc
+    icons/icons.qrc \
+    sounds/sounds.qrc
