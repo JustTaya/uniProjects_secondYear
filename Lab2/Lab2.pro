@@ -29,21 +29,24 @@ SOURCES += \
     timerlistitem.cpp \
     addtimerdialog.cpp \
     timeralarm.cpp \
-    alarmlistitem.cpp
+    alarmlistitem.cpp \
+    addalarmdialog.cpp
 
 HEADERS += \
         mainwindow.h \
     timerlistitem.h \
     addtimerdialog.h \
     timeralarm.h \
-    alarmlistitem.h
+    alarmlistitem.h \
+    addalarmdialog.h
 
 FORMS += \
         mainwindow.ui \
     timerlistitem.ui \
     addtimerdialog.ui \
     timeralarm.ui \
-    alarmlistitem.ui
+    alarmlistitem.ui \
+    addalarmdialog.ui
 
 greaterThan(QT_MAJOR_VERSION, 4) {
         QT += widgets

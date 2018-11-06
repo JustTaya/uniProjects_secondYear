@@ -24,10 +24,6 @@ public:
     ~AddTimerDialog();
     QTime getValues();
     void setValue(QTime);
-    bool getFlag()
-    {
-        return this->flag;
-    }
 
 protected:
     void changeEvent(QEvent *e);
@@ -35,7 +31,6 @@ protected:
 
 private:
     Ui::AddTimerDialog *ui;
-    bool flag;
 };
 
 #endif // ADDTIMERDIALOG_H

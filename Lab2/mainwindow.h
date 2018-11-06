@@ -8,8 +8,9 @@
 #endif
 
 #include "addtimerdialog.h"
+#include "addalarmdialog.h"
 #include "timerlistitem.h"
-#include <QTime>
+#include "alarmlistitem.h"
 #include <QListWidgetItem>
 #include <memory>
 #include <iostream>
@@ -31,16 +32,18 @@ protected:
 
 private slots:
     void on_addTimerButton_clicked();
-    void nonadd(){};
+    void nonadd(){}
 
 //    void on_timerList_itemPressed(QListWidgetItem *item);
+
+    void on_addAlarmButton_clicked();
 
 private:
     Ui::MainWindow *ui;
     QWidget* timerList;
+    QWidget* alarmList;
     QList<TimerListItem*> timers;
-    //QList<AlarmListItem*> alarms;
-    QTimer* timer;
+    QList<AlarmListItem*> alarms;
 };
 
 #endif // MAINWINDOW_H

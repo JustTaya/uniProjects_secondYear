@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>AddTimerDialog</class>
- <widget class="QDialog" name="AddTimerDialog">
+ <class>AddAlarmDialog</class>
+ <widget class="QDialog" name="AddAlarmDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -42,7 +42,7 @@
     <set>Qt::AlignCenter</set>
    </property>
    <property name="displayFormat">
-    <string>hh:mm:ss</string>
+    <string>h:mm AP</string>
    </property>
   </widget>
  </widget>
@@ -51,7 +51,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>AddTimerDialog</receiver>
+   <receiver>AddAlarmDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -67,7 +67,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>AddTimerDialog</receiver>
+   <receiver>AddAlarmDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

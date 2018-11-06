@@ -87,7 +87,7 @@ background-color: rgb(77, 15, 15);
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -131,7 +131,21 @@ border: 30px;</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QListWidget" name="alarmList"/>
+         <widget class="QScrollArea" name="alarmList">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>261</width>
+             <height>342</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
         </item>
         <item>
          <widget class="QPushButton" name="addAlarmButton">

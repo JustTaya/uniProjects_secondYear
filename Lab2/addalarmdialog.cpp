@@ -1,19 +1,19 @@
-#include "addtimerdialog.h"
-#include "ui_addtimerdialog.h"
+#include "addalarmdialog.h"
+#include "ui_addalarmdialog.h"
 
-AddTimerDialog::AddTimerDialog(QWidget *parent) :
+AddAlarmDialog::AddAlarmDialog(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::AddTimerDialog)
+    ui(new Ui::AddAlarmDialog)
 {
     ui->setupUi(this);
 }
 
-AddTimerDialog::~AddTimerDialog()
+AddAlarmDialog::~AddAlarmDialog()
 {
     delete ui;
 }
 
-void AddTimerDialog::changeEvent(QEvent *e)
+void AddAlarmDialog::changeEvent(QEvent *e)
 {
     QDialog::changeEvent(e);
     switch (e->type()) {
@@ -25,13 +25,12 @@ void AddTimerDialog::changeEvent(QEvent *e)
     }
 }
 
-QTime AddTimerDialog::getValues()
+QTime AddAlarmDialog::getValues()
 {
     return ui->timeEdit->time();
 }
 
-void  AddTimerDialog::setValue(QTime time)
+void  AddAlarmDialog::setValue(QTime time)
 {
     ui->timeEdit->setTime(time);
 }
-

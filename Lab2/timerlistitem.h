@@ -16,11 +16,6 @@
 #include <QMediaPlaylist>
 
 
-enum State
-{
-    on,off,del  //del state to delete item from list on main form & from list of timer
-};
-
 namespace Ui {
 class TimerListItem;
 }
