@@ -15,5 +15,15 @@
         <file>add_clicked_icon.svg</file>
         <file>delete_icon.png</file>
         <file>delete_clicked_icon.png</file>
+        <file>w_icon.svg</file>
+        <file>w_clicked_icon.svg</file>
+        <file>t_icon.svg</file>
+        <file>t_clicked_icon.svg</file>
+        <file>s_icon.svg</file>
+        <file>s_clicked_icon.svg</file>
+        <file>m_icon.svg</file>
+        <file>m_clicked_icon.svg</file>
+        <file>edit_icon.ai.svg</file>
+        <file>edit_clicked_icon.ai.svg</file>
     </qresource>
 </RCC>

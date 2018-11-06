@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->alarmList->setLayout(new QVBoxLayout);
     ui->alarmList->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     ui->alarmList->setWidget(this->alarmList);
+
+    connect(ui->timerFilter,SIGNAL(activated(int)),this,SLOT(showTimerItems(int)));
 }
 
 MainWindow::~MainWindow()
@@ -65,5 +67,55 @@ void MainWindow::on_addAlarmButton_clicked()
         item->setTime(time);
         this->alarmList->layout()->addWidget(item);
         this->alarms.push_back(item);
+    }
+}
+
+void  MainWindow::showTimerItems(int filter)
+{
+    switch(filter){
+    case 0:
+        noFilter();
+        break;
+    case 1:
+        showEnabled();
+        break;
+    case 2:
+        showDisabled();
+        break;
+    }
+}
+
+/*TimerListItem* item=new TimerListItem;
+        item->setTime(time);
+        this->timerList->layout()->addWidget(item);
+        this->timers.push_back(item);
+*/
+
+void MainWindow::noFilter()
+{
+    foreach(TimerListItem* iter,this->timers)
+        iter->setVisible(true);
+}
+
+
+void  MainWindow::showEnabled()
+{
+    foreach(TimerListItem* iter,this->timers)
+    {
+        if(iter->getState()==on)
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
+    }
+}
+
+void  MainWindow::showDisabled()
+{
+    foreach(TimerListItem* iter,this->timers)
+    {
+        if(iter->getState()==off)
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
     }
 }

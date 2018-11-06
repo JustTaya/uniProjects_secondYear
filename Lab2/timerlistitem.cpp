@@ -6,7 +6,6 @@ TimerListItem::TimerListItem(QWidget *parent) :
     ui(new Ui::TimerListItem)
 {
     ui->setupUi(this);
-
     ui->pauseButton->setDisabled(true);
     ui->pauseButton->setVisible(false);
     ui->stopButton->setDisabled(true);
