@@ -120,3 +120,18 @@ void TimerListItem::setPauseMode()
     ui->stopButton->setVisible(false);
     this->state=off;
 }
+
+void TimerListItem::on_editButton_clicked()
+{
+    setPauseMode();
+
+    AddTimerDialog* dialog=new AddTimerDialog;
+    dialog->show();
+    QTime time;
+    if(dialog->exec())
+    {
+        connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
+        time=dialog->getValues();
+        this->setTime(time);
+    }
+}

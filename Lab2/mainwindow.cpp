@@ -85,11 +85,6 @@ void  MainWindow::showTimerItems(int filter)
     }
 }
 
-/*TimerListItem* item=new TimerListItem;
-        item->setTime(time);
-        this->timerList->layout()->addWidget(item);
-        this->timers.push_back(item);
-*/
 
 void MainWindow::noFilter()
 {

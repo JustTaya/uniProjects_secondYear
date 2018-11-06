@@ -8,6 +8,7 @@
 #endif
 
 #include "timeralarm.h"
+#include "addtimerdialog.h"
 #include <QTime>
 #include <QTimer>
 #include <QListWidgetItem>
@@ -53,6 +54,8 @@ private slots:
     void alarm();
 
     void on_playButton_clicked();
+
+    void on_editButton_clicked();
 
 private:
     Ui::TimerListItem *ui;
