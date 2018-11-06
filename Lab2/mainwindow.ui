@@ -87,7 +87,7 @@ background-color: rgb(77, 15, 15);
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -150,10 +150,25 @@ border: 30px;</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QComboBox" name="comboBox_2">
+         <widget class="QComboBox" name="alarmFilter">
           <item>
            <property name="text">
-            <string/>
+            <string>No filter</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Show enabled</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Show disabled</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Sunday</string>
            </property>
           </item>
          </widget>

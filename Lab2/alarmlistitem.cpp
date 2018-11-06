@@ -49,8 +49,12 @@ void AlarmListItem::on_deleteButton_clicked()
 
 void AlarmListItem::on_checkBox_stateChanged(int arg1)
 {
-    if(arg1==Qt::Checked)
-        this->runTimer();
+    if(this->state==off)
+        this->state=on;
+    else
+        this->state=off;
+    if(arg1==Qt::Checked){
+        this->runTimer();}
 }
 
 void AlarmListItem::alarm()

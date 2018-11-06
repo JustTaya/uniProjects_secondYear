@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->alarmList->setWidget(this->alarmList);
 
     connect(ui->timerFilter,SIGNAL(activated(int)),this,SLOT(showTimerItems(int)));
+     connect(ui->alarmFilter,SIGNAL(activated(int)),this,SLOT(showAlarmItems(int)));
 }
 
 MainWindow::~MainWindow()
@@ -74,26 +75,26 @@ void  MainWindow::showTimerItems(int filter)
 {
     switch(filter){
     case 0:
-        noFilter();
+        noFilter_t();
         break;
     case 1:
-        showEnabled();
+        showEnabled_t();
         break;
     case 2:
-        showDisabled();
+        showDisabled_t();
         break;
     }
 }
 
 
-void MainWindow::noFilter()
+void MainWindow::noFilter_t()
 {
     foreach(TimerListItem* iter,this->timers)
         iter->setVisible(true);
 }
 
 
-void  MainWindow::showEnabled()
+void  MainWindow::showEnabled_t()
 {
     foreach(TimerListItem* iter,this->timers)
     {
@@ -104,7 +105,7 @@ void  MainWindow::showEnabled()
     }
 }
 
-void  MainWindow::showDisabled()
+void  MainWindow::showDisabled_t()
 {
     foreach(TimerListItem* iter,this->timers)
     {
@@ -114,3 +115,49 @@ void  MainWindow::showDisabled()
             iter->setVisible(false);
     }
 }
+
+void  MainWindow::showAlarmItems(int filter)
+{
+    switch(filter){
+    case 0:
+        noFilter_a();
+        break;
+    case 1:
+        showEnabled_a();
+        break;
+    case 2:
+        showDisabled_a();
+        break;
+    }
+}
+
+
+void MainWindow::noFilter_a()
+{
+    foreach(AlarmListItem* iter,this->alarms)
+        iter->setVisible(true);
+}
+
+
+void  MainWindow::showEnabled_a()
+{
+    foreach(AlarmListItem* iter,this->alarms)
+    {
+        if(iter->getState()==on)
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
+    }
+}
+
+void  MainWindow::showDisabled_a()
+{
+    foreach(AlarmListItem* iter,this->alarms)
+    {
+        if(iter->getState()==off)
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
+    }
+}
+

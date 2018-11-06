@@ -38,6 +38,7 @@ private slots:
 
     void on_addAlarmButton_clicked();
     void showTimerItems(int filter);
+    void showAlarmItems(int filter);
 
 private:
     Ui::MainWindow *ui;
@@ -45,9 +46,12 @@ private:
     QWidget* alarmList;
     QList<TimerListItem*> timers;
     QList<AlarmListItem*> alarms;
-    void noFilter();
-    void showEnabled();
-    void showDisabled();
+    void noFilter_t();
+    void showEnabled_t();
+    void showDisabled_t();
+    void noFilter_a();
+    void showEnabled_a();
+    void showDisabled_a();
 };
 
 #endif // MAINWINDOW_H

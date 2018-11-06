@@ -34,6 +34,11 @@ public:
         return this->initTime;
     }
 
+    State getState()
+    {
+        return this->state;
+    }
+
 protected:
     void changeEvent(QEvent *e);
 
