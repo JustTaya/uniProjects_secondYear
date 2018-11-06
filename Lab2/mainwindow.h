@@ -7,8 +7,10 @@
 #include <QtGui/QMainWindow>
 #endif
 
-#include "timerListitem.h"
-#include <QListWidget>
+#include "addtimerdialog.h"
+#include "timerlistitem.h"
+#include <QTime>
+#include <QListWidgetItem>
 
 namespace Ui {
 class MainWindow;
@@ -26,7 +28,9 @@ protected:
     void changeEvent(QEvent *e);
 
 private slots:
-    void on_pushButton_clicked();
+    void on_addTimerButton_clicked();
+
+//    void on_timerList_itemPressed(QListWidgetItem *item);
 
 private:
     Ui::MainWindow *ui;

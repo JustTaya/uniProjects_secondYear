@@ -25,11 +25,19 @@ void MainWindow::changeEvent(QEvent *e)
     }
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_addTimerButton_clicked()
 {
-    QListWidgetItem* listWidgetItem=new QListWidgetItem(ui->listWidget);
-    ui->listWidget->addItem(listWidgetItem);
-    TimerScrollItem* item=new TimerScrollItem;
+    AddTimerDialog* dialog=new AddTimerDialog;
+    dialog->show();
+    QTime time;
+    if(dialog->exec())
+            time=dialog->getValues();
+    QListWidgetItem *listWidgetItem = new QListWidgetItem(ui->timerList);
+    ui->timerList->addItem(listWidgetItem);
+    TimerListItem* item=new TimerListItem;
+    item->setTime(time);
     listWidgetItem->setSizeHint(item->sizeHint());
-    ui->listWidget->setItemWidget(listWidgetItem,item);
+    ui->timerList->setItemWidget(listWidgetItem,item);
 }
+
+
