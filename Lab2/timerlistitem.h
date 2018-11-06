@@ -8,11 +8,13 @@
 #include <QtGui/QMainWindow>
 #endif
 
+#include "timeralarm.h"
 #include <QTime>
 #include <QTimer>
 #include <QListWidgetItem>
 #include <QSound>
 #include <QMediaPlayer>
+#include <QMediaPlaylist>
 
 
 enum State
@@ -52,11 +54,11 @@ private slots:
 
     void on_stopButton_clicked();
 
-    void on_playButton_clicked();
-
     void step();
 
     void alarm();
+
+    void on_playButton_clicked();
 
 private:
     Ui::TimerListItem *ui;
@@ -66,9 +68,10 @@ private:
     QTimer* tmpTimer;
     QTimer* timer;
     QTimer* alarmTimer;
-    QMediaPlayer* alarmPlayer;
-    void run ();
-
-};
+    QMediaPlaylist* alarmPlaylist;
+    void runTimer ();
+    void setPlayMode();
+    void setPauseMode();
+   };
 
 #endif // TIMERLISTITEM_H

@@ -6,6 +6,7 @@ TimerListItem::TimerListItem(QWidget *parent) :
     ui(new Ui::TimerListItem)
 {
     ui->setupUi(this);
+
     ui->pauseButton->setDisabled(true);
     ui->pauseButton->setVisible(false);
     ui->stopButton->setDisabled(true);
@@ -14,8 +15,11 @@ TimerListItem::TimerListItem(QWidget *parent) :
     this->tmpTimer=new QTimer;
     this->timer=new QTimer;
 
-    connect(timer,SIGNAL(timeout()),this, SLOT(alarm()));
     connect(tmpTimer,SIGNAL(timeout()),this,SLOT(step()));
+    connect(timer,SIGNAL(timeout()),this, SLOT(alarm()));
+
+    this->alarmPlaylist=new QMediaPlaylist;
+    this->alarmPlaylist->addMedia(QMediaContent(QUrl("qrc:/Alarm1.mp3")));
 }
 
 TimerListItem::~TimerListItem()
@@ -42,10 +46,10 @@ void TimerListItem::setTime(QTime time)
   this->time=this->initTime;
 }
 
-void TimerListItem::run()
+void TimerListItem::runTimer()
 {
-    this->timer->start(this->initTime);
     this->tmpTimer->start(1000);
+    this->timer->start(this->initTime*1000);
 }
 
 void TimerListItem::on_deleteButton_clicked()
@@ -58,41 +62,17 @@ void TimerListItem::on_pauseButton_clicked()
 {
     this->timer->stop();
     this->tmpTimer->stop();
-    ui->playButton->setEnabled(true);
-    ui->playButton->setVisible(true);
-    ui->pauseButton->setDisabled(true);
-    ui->pauseButton->setVisible(false);
-    ui->stopButton->setDisabled(true);
-    ui->stopButton->setVisible(false);
-    this->state=off;
+    setPauseMode();
 }
 
 void TimerListItem::on_stopButton_clicked()
 {
     this->timer->stop();
     this->tmpTimer->stop();
-    ui->playButton->setEnabled(true);
-    ui->playButton->setVisible(true);
-    ui->pauseButton->setDisabled(true);
-    ui->pauseButton->setVisible(false);
-    ui->stopButton->setDisabled(true);
-    ui->stopButton->setVisible(false);
-    this->state=off;
+    setPauseMode();
     QTime t=QTime(0,0,0).addSecs(this->initTime);
     ui->label->setText(t.toString("hh:mm:ss"));
     this->time=this->initTime;
-}
-
-void TimerListItem::on_playButton_clicked()
-{
-    ui->playButton->setDisabled(true);
-    ui->playButton->setVisible(false);
-    ui->pauseButton->setEnabled(true);
-    ui->pauseButton->setVisible(true);
-    ui->stopButton->setEnabled(true);
-    ui->stopButton->setVisible(true);
-    this->state=on;
-    this->run();
 }
 
 void TimerListItem::step()
@@ -104,5 +84,40 @@ void TimerListItem::step()
 
 void TimerListItem::alarm()
 {
+    this->timer->stop();
+    this->tmpTimer->stop();
+    TimerAlarm* alarmDialog=new TimerAlarm(this->alarmPlaylist);
+    alarmDialog->setTimer();
+    alarmDialog->show();
+    setPauseMode();
+    QTime t=QTime(0,0,0).addSecs(this->initTime);
+    ui->label->setText(t.toString("hh:mm:ss"));
+    this->time=this->initTime;
+}
 
+void TimerListItem::on_playButton_clicked()
+{
+    setPlayMode();
+    runTimer();
+}
+
+void TimerListItem::setPlayMode()
+{
+    ui->playButton->setDisabled(true);
+    ui->playButton->setVisible(false);
+    ui->pauseButton->setEnabled(true);
+    ui->pauseButton->setVisible(true);
+    ui->stopButton->setEnabled(true);
+    ui->stopButton->setVisible(true);
+    this->state=on;
+}
+void TimerListItem::setPauseMode()
+{
+    ui->playButton->setEnabled(true);
+    ui->playButton->setVisible(true);
+    ui->pauseButton->setDisabled(true);
+    ui->pauseButton->setVisible(false);
+    ui->stopButton->setDisabled(true);
+    ui->stopButton->setVisible(false);
+    this->state=off;
 }
