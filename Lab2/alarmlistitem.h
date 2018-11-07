@@ -56,6 +56,14 @@ public:
     void setTimeFormat(QString timeFormat)
     {
         this->timeFormat=timeFormat;
+
+    }
+
+    int getTimeFormat()
+    {
+        if(this->timeFormat=="hh:mm:ss")
+            return 0;
+         return 1;
     }
 protected:
     void changeEvent(QEvent *e);

@@ -31,7 +31,8 @@ SOURCES += \
     timeralarm.cpp \
     alarmlistitem.cpp \
     addalarmdialog.cpp \
-    settingsdialog.cpp
+    settingsdialog.cpp \
+    logmaker.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,7 +41,8 @@ HEADERS += \
     timeralarm.h \
     alarmlistitem.h \
     addalarmdialog.h \
-    settingsdialog.h
+    settingsdialog.h \
+    logmaker.h
 
 FORMS += \
         mainwindow.ui \
@@ -60,3 +62,8 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 RESOURCES += \
     icons/icons.qrc \
     sounds/sounds.qrc
+
+DISTFILES += \
+    Settings_Log.txt \
+    AlarmsLog.txt \
+    TimersLog.txt

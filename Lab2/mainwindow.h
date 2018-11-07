@@ -12,6 +12,7 @@
 #include "timerlistitem.h"
 #include "alarmlistitem.h"
 #include "settingsdialog.h"
+#include "logmaker.h"
 #include <QListWidgetItem>
 #include <memory>
 #include <iostream>
@@ -70,6 +71,7 @@ private:
     QList<TimerListItem*> timers;
     QList<AlarmListItem*> alarms;
     Settings* settings;
+    LogMaker* logMaker;
 };
 
 #endif // MAINWINDOW_H

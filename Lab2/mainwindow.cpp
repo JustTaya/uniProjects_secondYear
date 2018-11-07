@@ -6,13 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->settings=new Settings;
-    this->settings->timeFormat="hh:mm:ss";
-    this->settings->timerPlaylist=new QMediaPlaylist;
-    this->settings->timerPlaylist->addMedia(QMediaContent(QUrl("qrc:/Alarm1.mp3")));
-    this->settings->alarmPlaylist=new QMediaPlaylist;
-    this->settings->alarmPlaylist->addMedia(QMediaContent(QUrl("qrc:/Alarm1.mp3")));
-
+    this->logMaker=new LogMaker;
 
     this->timerList=new QWidget;
     this->timerList->setLayout(new QVBoxLayout);
@@ -23,10 +17,30 @@ MainWindow::MainWindow(QWidget *parent) :
     this->alarmList->setLayout(new QVBoxLayout);
     ui->alarmList->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     ui->alarmList->setWidget(this->alarmList);
+    Logs* logs=this->logMaker->getLogs();
+    if(logs==nullptr){
+        this->settings=new Settings;
+        this->settings->timeFormat="hh:mm:ss";
+        this->settings->timerPlaylist=new QMediaPlaylist;
+        this->settings->timerPlaylist->addMedia(QMediaContent(QUrl("qrc:/Alarm1.mp3")));
+        this->settings->alarmPlaylist=new QMediaPlaylist;
+        this->settings->alarmPlaylist->addMedia(QMediaContent(QUrl("qrc:/Alarm1.mp3")));
+    }
+    else
+    {
+        settings=logs->settings;
+        this->timers=logs->timers;
+        this->alarms=logs->alarms;
+        for(auto iter:logs->timers)
+            this->timerList->layout()->addWidget(iter);
+        for(auto iter:logs->alarms)
+            this->alarmList->layout()->addWidget(iter);
+        }
 }
 
 MainWindow::~MainWindow()
 {
+    this->logMaker->save(this->timers,this->alarms,this->settings);
     delete ui;
 }
 

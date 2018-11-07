@@ -16,6 +16,30 @@ struct Settings
     QString timeFormat;
     QMediaPlaylist* alarmPlaylist;
     QMediaPlaylist* timerPlaylist;
+
+    int getTimeFormat()
+    {
+        if(timeFormat=="hh:mm:ss")
+            return 0;
+        return 1;
+    }
+
+    int getTimerPlaylist()
+    {
+        if(alarmPlaylist->media(0)==QMediaContent(QUrl("qrc:/Alarm1.mp3")))
+            return 0;
+        if(alarmPlaylist->media(0)==QMediaContent(QUrl("qrc:/Alarm2.mp3")))
+            return 1;
+        return 2;
+    }
+    int getAlarmPlaylist()
+    {
+        if(timerPlaylist->media(0)==QMediaContent(QUrl("qrc:/Alarm1.mp3")))
+            return 0;
+        if(timerPlaylist->media(0)==QMediaContent(QUrl("qrc:/Alarm2.mp3")))
+            return 1;
+        return 2;
+    }
 };
 
 namespace Ui {
