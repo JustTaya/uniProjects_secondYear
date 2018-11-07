@@ -6,16 +6,30 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
+    <width>303</width>
     <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Time</string>
+   <string>SmartTimer</string>
   </property>
   <property name="styleSheet">
    <string notr="true">color: rgb(245, 239, 215);
-background-color: rgb(46, 52, 54);</string>
+background-color: rgb(46, 52, 54);
+QMainWindow{
+	min-width:303px;
+	min-height:500px;
+	max-width:303px;
+	max-height:500px;
+}
+
+QWidget#centralWidget
+{
+	min-width:303px;
+	min-height:500px;
+	max-width:303px;
+	max-height:500px;
+}</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <property name="styleSheet">
@@ -35,74 +49,219 @@ QTabBar::tab:selected
 
 QTabBar::tab:!selected:hover{
 	background-color: rgb(77, 15, 15);
+}
+
+QPushButton
+{
+min-height:50px;
+max-height:50px;
+border: 30px;
+}
+
+QPushButton#addTimerButton
+{
+image: url(:/add_icon.svg);
+}
+
+QPushButton#addTimerButton:pressed
+{
+image: url(:/add_clicked_icon.svg);
+}
+
+QPushButton#addAlarmButton
+{
+image: url(:/add_icon.svg);
+}
+
+QPushButton#addAlarmButton:pressed
+{
+image: url(:/add_clicked_icon.svg);
+}
+
+QWiget:pressed
+{
+background-color: rgb(77, 15, 15);
 }</string>
    </property>
-   <widget class="QTabWidget" name="TabBarWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>280</width>
-      <height>461</height>
-     </rect>
-    </property>
-    <property name="focusPolicy">
-     <enum>Qt::TabFocus</enum>
-    </property>
-    <property name="accessibleName">
-     <string>Timer</string>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: rgb(46, 52, 54);
-border: 0pt;</string>
-    </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <widget class="QWidget" name="Timers">
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
-     <attribute name="title">
-      <string>Timers</string>
-     </attribute>
-     <widget class="QPushButton" name="pushButton">
-      <property name="geometry">
-       <rect>
-        <x>180</x>
-        <y>390</y>
-        <width>89</width>
-        <height>25</height>
-       </rect>
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>1</number>
       </property>
-      <property name="text">
-       <string>PushButton</string>
-      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Timers</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QScrollArea" name="timerList">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>261</width>
+             <height>320</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="addTimerButton">
+          <property name="styleSheet">
+           <string notr="true">min-height:50px;
+max-height:50px;
+border: 30px;</string>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Alarms</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QScrollArea" name="alarmList">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>261</width>
+             <height>320</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="addAlarmButton">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
-     <widget class="QListWidget" name="listWidget">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>291</width>
-        <height>431</height>
-       </rect>
-      </property>
-     </widget>
-     <zorder>listWidget</zorder>
-     <zorder>pushButton</zorder>
-    </widget>
-    <widget class="QWidget" name="Alarms">
-     <property name="styleSheet">
-      <string notr="true"/>
-     </property>
-     <attribute name="title">
-      <string>Alarms</string>
-     </attribute>
-    </widget>
-   </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>303</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFilters">
+    <property name="title">
+     <string>Filters</string>
+    </property>
+    <widget class="QMenu" name="menuShow_by_day">
+     <property name="title">
+      <string>Show by day</string>
+     </property>
+     <addaction name="actionSunday"/>
+     <addaction name="actionMonday"/>
+     <addaction name="actionTuesday"/>
+     <addaction name="actionWednesday"/>
+     <addaction name="actionThursday"/>
+     <addaction name="actionFriday"/>
+     <addaction name="actionSaturday"/>
+     <addaction name="actionEveryday"/>
+    </widget>
+    <addaction name="actionNo_filter"/>
+    <addaction name="actionShow_enabled"/>
+    <addaction name="actionShow_disabled"/>
+    <addaction name="separator"/>
+    <addaction name="menuShow_by_day"/>
+   </widget>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionChange"/>
+   </widget>
+   <addaction name="menuFilters"/>
+   <addaction name="menuSettings"/>
+  </widget>
+  <action name="actionNo_filter">
+   <property name="text">
+    <string>No filter</string>
+   </property>
+  </action>
+  <action name="actionShow_enabled">
+   <property name="text">
+    <string>Show enabled</string>
+   </property>
+  </action>
+  <action name="actionShow_disabled">
+   <property name="text">
+    <string>Show disabled</string>
+   </property>
+  </action>
+  <action name="actionSunday">
+   <property name="text">
+    <string>Sunday</string>
+   </property>
+  </action>
+  <action name="actionMonday">
+   <property name="text">
+    <string>Monday</string>
+   </property>
+  </action>
+  <action name="actionTuesday">
+   <property name="text">
+    <string>Tuesday</string>
+   </property>
+  </action>
+  <action name="actionWednesday">
+   <property name="text">
+    <string>Wednesday</string>
+   </property>
+  </action>
+  <action name="actionThursday">
+   <property name="text">
+    <string>Thursday</string>
+   </property>
+  </action>
+  <action name="actionFriday">
+   <property name="text">
+    <string>Friday</string>
+   </property>
+  </action>
+  <action name="actionSaturday">
+   <property name="text">
+    <string>Saturday</string>
+   </property>
+  </action>
+  <action name="actionEveryday">
+   <property name="text">
+    <string>Everyday</string>
+   </property>
+  </action>
+  <action name="actionChange">
+   <property name="text">
+    <string>Change</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

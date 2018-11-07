@@ -1,10 +1,12 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2018-10-13T12:46:00
+# Project created by QtCreator 2018-11-05T13:38:49
 #
 #-------------------------------------------------
 
-QT       += core gui widgets
+QT       += core gui
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Lab2
 TEMPLATE = app
@@ -20,22 +22,48 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    timerlistitem.cpp \
+    addtimerdialog.cpp \
+    timeralarm.cpp \
+    alarmlistitem.cpp \
+    addalarmdialog.cpp \
+    settingsdialog.cpp \
+    logmaker.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    timerlistitem.h \
+    addtimerdialog.h \
+    timeralarm.h \
+    alarmlistitem.h \
+    addalarmdialog.h \
+    settingsdialog.h \
+    logmaker.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    timerlistitem.ui \
+    addtimerdialog.ui \
+    timeralarm.ui \
+    alarmlistitem.ui \
+    addalarmdialog.ui \
+    settingsdialog.ui
 
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+greaterThan(QT_MAJOR_VERSION, 4) {
+        QT += widgets
+        QT += widgets multimedia
+        DEFINES += HAVE_QT5
+    }
 
 RESOURCES += \
-    icons/icons.qrc
+    icons/icons.qrc \
+    sounds/sounds.qrc
+
+DISTFILES += \
+    Settings_Log.txt \
+    AlarmsLog.txt \
+    TimersLog.txt

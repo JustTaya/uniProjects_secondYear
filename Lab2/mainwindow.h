@@ -1,7 +1,21 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
+#ifdef HAVE_QT5
+#include <QtWidgets/QMainWindow>
+#else
+#include <QtGui/QMainWindow>
+#endif
+
+#include "addtimerdialog.h"
+#include "addalarmdialog.h"
+#include "timerlistitem.h"
+#include "alarmlistitem.h"
+#include "settingsdialog.h"
+#include "logmaker.h"
+#include <QListWidgetItem>
+#include <memory>
+#include <iostream>
 
 namespace Ui {
 class MainWindow;
@@ -19,10 +33,45 @@ protected:
     void changeEvent(QEvent *e);
 
 private slots:
-    void on_pushButton_clicked();
+    void on_addTimerButton_clicked();
+    void nonadd(){}
+
+//    void on_timerList_itemPressed(QListWidgetItem *item);
+
+    void on_addAlarmButton_clicked();
+
+    void on_actionNo_filter_triggered();
+
+    void on_actionShow_enabled_triggered();
+
+    void on_actionShow_disabled_triggered();
+
+    void on_actionSunday_triggered();
+
+    void on_actionMonday_triggered();
+
+    void on_actionTuesday_triggered();
+
+    void on_actionWednesday_triggered();
+
+    void on_actionThursday_triggered();
+
+    void on_actionFriday_triggered();
+
+    void on_actionSaturday_triggered();
+
+    void on_actionEveryday_triggered();
+
+    void on_actionChange_triggered();
 
 private:
     Ui::MainWindow *ui;
+    QWidget* timerList;
+    QWidget* alarmList;
+    QList<TimerListItem*> timers;
+    QList<AlarmListItem*> alarms;
+    Settings* settings;
+    LogMaker* logMaker;
 };
 
 #endif // MAINWINDOW_H

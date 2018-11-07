@@ -1,9 +1,31 @@
 <RCC>
     <qresource prefix="/resource"/>
     <qresource prefix="/">
-        <file>add_icon.png</file>
-        <file>pause_icon.png</file>
-        <file>play_icon.png</file>
-        <file>stop_icon.png</file>
+        <file>switch_turn_on.svg</file>
+        <file>switch_turn_off.svg</file>
+        <file>stop_icon.svg</file>
+        <file>stop_clicked_icon.svg</file>
+        <file>play_icon.svg</file>
+        <file>play_clicked_icon.svg</file>
+        <file>pause_icon.svg</file>
+        <file>pause_clicked_icon.svg</file>
+        <file>delete_icon.svg</file>
+        <file>delete_clicked_icon.svg</file>
+        <file>add_icon.svg</file>
+        <file>add_clicked_icon.svg</file>
+        <file>delete_icon.png</file>
+        <file>delete_clicked_icon.png</file>
+        <file>w_icon.svg</file>
+        <file>w_clicked_icon.svg</file>
+        <file>t_icon.svg</file>
+        <file>t_clicked_icon.svg</file>
+        <file>s_icon.svg</file>
+        <file>s_clicked_icon.svg</file>
+        <file>m_icon.svg</file>
+        <file>m_clicked_icon.svg</file>
+        <file>edit_icon.ai.svg</file>
+        <file>edit_clicked_icon.ai.svg</file>
+        <file>f_icon.svg</file>
+        <file>f_clicked_icon.svg</file>
     </qresource>
 </RCC>

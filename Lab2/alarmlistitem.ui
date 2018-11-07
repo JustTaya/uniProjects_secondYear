@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AlarmListItem</class>
+ <widget class="QWidget" name="AlarmListItem">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>263</width>
+    <height>100</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget
+{
+background-color: rgb(46, 52, 54);
+}
+
+QPushButton
+{
+min-height:25px;
+min-width:25px;
+max-height:25px;
+max-width:25px;
+border: 30px;
+border-radius:15px;
+}
+
+QPushButton#deleteButton
+{
+image: url(:/delete_icon.svg);
+}
+
+QPushButton#deleteButton:pressed
+{
+image: url(:/delete_clicked_icon.svg);
+}
+
+QPushButton#editButton
+{
+image: url(:/edit_icon.ai.svg);
+}
+
+QPushButton#editButton:pressed
+{
+image: url(:/edit_clicked_icon.ai.svg);
+}
+
+QChechBox
+{
+max-width:60px;
+min-width:60px;
+}
+
+QCheckBox::indicator:unchecked {
+image: url(:/switch_turn_off.svg);
+}
+
+QCheckBox::indicator:unchecked:pressed {
+image: url(:/switch_turn_on.svg);
+}
+
+QCheckBox::indicator:checked {
+image: url(:/switch_turn_on.svg);
+}
+
+
+QCheckBox::indicator:checked:pressed {
+image: url(:/switch_turn_off.svg);
+}
+
+
+QCheckBox::indicator:indeterminate:pressed {
+image: url(:/switch_turn_on.svg);
+}</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="styleSheet">
+      <string notr="true">font-size:20px;</string>
+     </property>
+     <property name="text">
+      <string>00:00 AM</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="checkBox">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="deleteButton">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="editButton">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
