@@ -13,6 +13,190 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QCheckBox::indicator
+{
+width:22px;
+height:22px;
+border:10px;
+}
+
+QCheckBox#Sunday::indicator:unchecked
+{
+image: url(:/s_icon.svg);
+}
+
+QCheckBox#Monday::indicator:unchecked
+{
+image: url(:/m_icon.svg);
+}
+
+QCheckBox#Tuesday::indicator:unchecked
+{
+image: url(:/t_icon.svg);
+}
+
+QCheckBox#Wednesday::indicator:unchecked
+{
+image: url(:/w_icon.svg);
+}
+
+QCheckBox#Thursday::indicator:unchecked
+{
+image: url(:/t_icon.svg);
+}
+
+QCheckBox#Friday::indicator:unchecked
+{
+image: url(:/f_icon.svg);
+}
+
+QCheckBox#Saturday::indicator:unchecked
+{
+image: url(:/s_icon.svg);
+}
+
+QCheckBox#Sunday::indicator:unchecked:pressed
+{
+image: url(:/s_clicked_icon.svg);
+}
+
+QCheckBox#Monday::indicator:unchecked:pressed
+{
+image: url(:/m_clicked_icon.svg);
+}
+
+QCheckBox#Tuesday::indicator:unchecked:pressed
+{
+image: url(:/t_clicked_icon.svg);
+}
+
+QCheckBox#Wednesday::indicator:unchecked:pressed
+{
+image: url(:/w_clicked_icon.svg);
+}
+
+QCheckBox#Thursday::indicator:unchecked:pressed
+{
+image: url(:/t_clicked_icon.svg);
+}
+
+QCheckBox#Friday::indicator:unchecked:pressed
+{
+image: url(:/f_clicked_icon.svg);
+}
+
+QCheckBox#Saturday::indicator:unchecked:pressed
+{
+image: url(:/s_clicked_icon.svg);
+}
+
+
+QCheckBox#Sunday::indicator:checked
+{
+image: url(:/s_clicked_icon.svg);
+}
+
+QCheckBox#Monday::indicator:checked
+{
+image: url(:/m_clicked_icon.svg);
+}
+
+QCheckBox#Tuesday::indicator:checked
+{
+image: url(:/t_clicked_icon.svg);
+}
+
+QCheckBox#Wednesday::indicator:checked
+{
+image: url(:/w_clicked_icon.svg);
+}
+
+QCheckBox#Thursday::indicator:checked
+{
+image: url(:/t_clicked_icon.svg);
+}
+
+QCheckBox#Friday::indicator:checked
+{
+image: url(:/f_clicked_icon.svg);
+}
+
+QCheckBox#Saturday::indicator:checked
+{
+image: url(:/s_clicked_icon.svg);
+}
+
+QCheckBox#Sunday::indicator:checked:pressed
+{
+image: url(:/s_icon.svg);
+}
+
+QCheckBox#Monday::indicator:checked:pressed
+{
+image: url(:/m_icon.svg);
+}
+
+QCheckBox#Tuesday::indicator:checked:pressed
+{
+image: url(:/t_icon.svg);
+}
+
+QCheckBox#Wednesday::indicator:checked:pressed
+{
+image: url(:/w_icon.svg);
+}
+
+QCheckBox#Thursday::indicator:checked:pressed
+{
+image: url(:/t_icon.svg);
+}
+
+QCheckBox#Friday::indicator:checked:pressed
+{
+image: url(:/f_icon.svg);
+}
+
+QCheckBox#Saturday::indicator:checked:pressed
+{
+image: url(:/s_icon.svg);
+}
+
+QCheckBox#Sunday::indicator:pressed
+{
+image: url(:/s_clicked_icon.svg);
+}
+
+QCheckBox#Monday::indicator:pressed
+{
+image: url(:/m_clicked_icon.svg);
+}
+
+QCheckBox#Tuesday::indicator:pressed
+{
+image: url(:/t_clicked_icon.svg);
+}
+
+QCheckBox#Wednesday::indicator:pressed
+{
+image: url(:/w_clicked_icon.svg);
+}
+
+QCheckBox#Thursday::indicator:pressed
+{
+image: url(:/t_clicked_icon.svg);
+}
+
+QCheckBox#Friday::indicator:pressed
+{
+image: url(:/f_clicked_icon.svg);
+}
+
+QCheckBox#Saturday::indicator:pressed
+{
+image: url(:/s_clicked_icon.svg);
+}</string>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
@@ -33,9 +217,9 @@
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>30</y>
+     <y>20</y>
      <width>221</width>
-     <height>81</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="alignment">
@@ -43,6 +227,97 @@
    </property>
    <property name="displayFormat">
     <string>h:mm AP</string>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Sunday">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>90</y>
+     <width>31</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Monday">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>90</y>
+     <width>31</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Tuesday">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>90</y>
+     <width>31</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Wednesday">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>90</y>
+     <width>31</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Thursday">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>90</y>
+     <width>31</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Friday">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>90</y>
+     <width>31</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Saturday">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>90</y>
+     <width>31</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

@@ -25,5 +25,7 @@
         <file>m_clicked_icon.svg</file>
         <file>edit_icon.ai.svg</file>
         <file>edit_clicked_icon.ai.svg</file>
+        <file>f_icon.svg</file>
+        <file>f_clicked_icon.svg</file>
     </qresource>
 </RCC>
