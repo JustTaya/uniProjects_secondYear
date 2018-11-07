@@ -8,7 +8,6 @@
 #include <QtGui/QDialog>
 #endif
 
-#include <QDialog>
 #include <QTime>
 
 namespace Ui {

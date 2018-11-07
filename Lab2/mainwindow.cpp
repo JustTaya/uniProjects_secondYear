@@ -17,6 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->alarmList->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     ui->alarmList->setWidget(this->alarmList);
 
+    this->settings=new Settings;
+    this->settings->timeFormat="hh:mm:ss";
+    this->settings->timerPlaylist=new QMediaPlaylist;
+    this->settings->alarmPlaylist=new QMediaPlaylist;
 }
 
 MainWindow::~MainWindow()
@@ -42,7 +46,7 @@ void MainWindow::on_addTimerButton_clicked()
     dialog->show();
     if(dialog->exec())
     {
-        connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
+        connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
         TimerListItem* item=new TimerListItem;
         item->setTime(dialog->getValues());
         this->timerList->layout()->addWidget(item);
@@ -57,7 +61,7 @@ void MainWindow::on_addAlarmButton_clicked()
     dialog->show();
     if(dialog->exec())
     {
-        connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
+        connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
         AlarmListItem* item=new AlarmListItem;
         item->setTime(dialog->getValues());
         item->setWeek(dialog->getWeek());
@@ -211,5 +215,15 @@ void MainWindow::on_actionEveryday_triggered()
             iter->setVisible(true);
         else
             iter->setVisible(false);
+    }
+}
+
+void MainWindow::on_actionChange_triggered()
+{
+    SettingsDialog* dialog=new SettingsDialog;
+    if(dialog->exec())
+    {
+        connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
+        this->settings=dialog->getSettings();
     }
 }

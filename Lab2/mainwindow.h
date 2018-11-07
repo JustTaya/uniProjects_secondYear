@@ -11,6 +11,7 @@
 #include "addalarmdialog.h"
 #include "timerlistitem.h"
 #include "alarmlistitem.h"
+#include "settingsdialog.h"
 #include <QListWidgetItem>
 #include <memory>
 #include <iostream>
@@ -60,13 +61,15 @@ private slots:
 
     void on_actionEveryday_triggered();
 
+    void on_actionChange_triggered();
+
 private:
     Ui::MainWindow *ui;
     QWidget* timerList;
     QWidget* alarmList;
     QList<TimerListItem*> timers;
     QList<AlarmListItem*> alarms;
-
+    Settings* settings;
 };
 
 #endif // MAINWINDOW_H
