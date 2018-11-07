@@ -135,7 +135,7 @@ void TimerListItem::on_editButton_clicked()
     QTime time;
     if(dialog->exec())
     {
-        connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
+        connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
         time=dialog->getValues();
         this->delay=QTime(0,0,0).secsTo(dialog->getDelay());
         this->setTime(time);
