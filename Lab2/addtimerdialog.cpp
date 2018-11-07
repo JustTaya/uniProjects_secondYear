@@ -35,3 +35,9 @@ void  AddTimerDialog::setValue(QTime time)
     ui->timeEdit->setTime(time);
 }
 
+QTime AddTimerDialog::getDelay()
+{
+    return ui->Delay->time();
+}
+
+

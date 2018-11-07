@@ -6,6 +6,7 @@ TimerListItem::TimerListItem(QWidget *parent) :
     ui(new Ui::TimerListItem)
 {
     ui->setupUi(this);
+    this->delay=0;
     ui->pauseButton->setDisabled(true);
     ui->pauseButton->setVisible(false);
     ui->stopButton->setDisabled(true);
@@ -16,7 +17,6 @@ TimerListItem::TimerListItem(QWidget *parent) :
 
     connect(tmpTimer,SIGNAL(timeout()),this,SLOT(step()));
     connect(timer,SIGNAL(timeout()),this, SLOT(alarm()));
-
 }
 
 TimerListItem::~TimerListItem()
@@ -46,7 +46,6 @@ void TimerListItem::setTime(QTime time)
 void TimerListItem::runTimer()
 {
     this->tmpTimer->start(1000);
-    this->timer->start(this->initTime*1000);
 }
 
 void TimerListItem::on_deleteButton_clicked()
@@ -74,9 +73,17 @@ void TimerListItem::on_stopButton_clicked()
 
 void TimerListItem::step()
 {
+    if(this->delay<0){
        this->time--;
        QTime t=QTime(0,0,0).addSecs(this->time);
        ui->label->setText(t.toString("hh:mm:ss"));
+    }
+    else if(delay==0){
+        this->timer->start(this->initTime*1000);
+        delay--;
+    }
+    else
+        this->delay--;
 }
 
 void TimerListItem::alarm()
@@ -130,6 +137,12 @@ void TimerListItem::on_editButton_clicked()
     {
         connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
         time=dialog->getValues();
+        this->delay=QTime(0,0,0).secsTo(dialog->getDelay());
         this->setTime(time);
     }
+}
+
+void TimerListItem::setDeley(QTime d)
+{
+    this->delay=QTime(0,0,0).secsTo(d);
 }

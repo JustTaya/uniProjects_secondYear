@@ -22,6 +22,7 @@ public:
     explicit AddTimerDialog(QWidget *parent = nullptr);
     ~AddTimerDialog();
     QTime getValues();
+    QTime getDelay();
     void setValue(QTime);
 
 protected:

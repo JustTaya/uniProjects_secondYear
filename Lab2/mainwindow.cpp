@@ -52,6 +52,7 @@ void MainWindow::on_addTimerButton_clicked()
         TimerListItem* item=new TimerListItem;
         item->setPlaylist(this->settings->timerPlaylist);
         item->setTime(dialog->getValues());
+        item->setDeley(dialog->getDelay());
         this->timerList->layout()->addWidget(item);
         this->timers.push_back(item);
     }

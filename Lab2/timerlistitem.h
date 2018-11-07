@@ -44,6 +44,8 @@ public:
         this->playlist=playlist;
     }
 
+    void setDeley(QTime delay);
+
 protected:
     void changeEvent(QEvent *e);
 
@@ -67,9 +69,10 @@ private:
     State state;
     int initTime;
     int time;
+    int delay;
     QTimer* tmpTimer;
     QTimer* timer;
-    QTimer* alarmTimer;
+    QTimer* delayTimer;
     QMediaPlaylist* playlist;
     void runTimer ();
     void setPlayMode();
