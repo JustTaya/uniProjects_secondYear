@@ -8,8 +8,6 @@ LogMaker::LogMaker(QObject *parent) : QObject(parent)
 void LogMaker::save(QList<TimerListItem*> timers, QList<AlarmListItem*> alarms, Settings* settings)
 {
     QFile logs_t("TimersLog.txt");
-    if (!logs_t.exists())
-        return;
     if(!logs_t.open(QIODevice::WriteOnly))
     {
         std::cerr<<"Check your log files. Can't save data."<<std::endl;
