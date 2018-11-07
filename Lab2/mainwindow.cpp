@@ -6,6 +6,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->settings=new Settings;
+    this->settings->timeFormat="hh:mm:ss";
+    this->settings->timerPlaylist=new QMediaPlaylist;
+    this->settings->timerPlaylist->addMedia(QMediaContent(QUrl("qrc:/Alarm1.mp3")));
+    this->settings->alarmPlaylist=new QMediaPlaylist;
+    this->settings->alarmPlaylist->addMedia(QMediaContent(QUrl("qrc:/Alarm1.mp3")));
+
 
     this->timerList=new QWidget;
     this->timerList->setLayout(new QVBoxLayout);
@@ -16,11 +23,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->alarmList->setLayout(new QVBoxLayout);
     ui->alarmList->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     ui->alarmList->setWidget(this->alarmList);
-
-    this->settings=new Settings;
-    this->settings->timeFormat="hh:mm:ss";
-    this->settings->timerPlaylist=new QMediaPlaylist;
-    this->settings->alarmPlaylist=new QMediaPlaylist;
 }
 
 MainWindow::~MainWindow()
@@ -48,6 +50,7 @@ void MainWindow::on_addTimerButton_clicked()
     {
         connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
         TimerListItem* item=new TimerListItem;
+        item->setPlaylist(this->settings->timerPlaylist);
         item->setTime(dialog->getValues());
         this->timerList->layout()->addWidget(item);
         this->timers.push_back(item);
@@ -63,8 +66,10 @@ void MainWindow::on_addAlarmButton_clicked()
     {
         connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
         AlarmListItem* item=new AlarmListItem;
-        item->setTime(dialog->getValues());
+        item->setTimeFormat(this->settings->timeFormat);
         item->setWeek(dialog->getWeek());
+        item->setPlaylist(this->settings->alarmPlaylist);
+        item->setTime(dialog->getValues());
         this->alarmList->layout()->addWidget(item);
         this->alarms.push_back(item);
     }

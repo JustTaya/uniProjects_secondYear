@@ -47,6 +47,16 @@ public:
 
     bool checkDay(int day);
     bool checkWeek();
+
+    void setPlaylist(QMediaPlaylist* playlist)
+    {
+        this->playlist=playlist;
+    }
+
+    void setTimeFormat(QString timeFormat)
+    {
+        this->timeFormat=timeFormat;
+    }
 protected:
     void changeEvent(QEvent *e);
 
@@ -66,8 +76,9 @@ private:
     int time;
     QTimer* timer;
     QTimer* alarmTimer;
-    QMediaPlaylist* alarmPlaylist;
+    QMediaPlaylist* playlist;
     bool* week;
+    QString timeFormat;
     void runTimer ();
     bool checkDate();
 };

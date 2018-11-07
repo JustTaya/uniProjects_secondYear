@@ -11,9 +11,6 @@ AlarmListItem::AlarmListItem(QWidget *parent) :
     this->timer=new QTimer;
 
     connect(timer,SIGNAL(timeout()),this, SLOT(alarm()));
-
-    this->alarmPlaylist=new QMediaPlaylist;
-    this->alarmPlaylist->addMedia(QMediaContent(QUrl("qrc:/Alarm1.mp3")));
 }
 
 AlarmListItem::~AlarmListItem()
@@ -36,7 +33,7 @@ void AlarmListItem::changeEvent(QEvent *e)
 
 void AlarmListItem::setTime(QTime time)
 {
-  ui->label->setText(time.toString("h:mm AP"));
+  ui->label->setText(time.toString(this->timeFormat));
   this->initTime=abs(QTime(0,0,0).secsTo(time));
   this->time=abs(this->initTime-QTime(0,0,0).secsTo(QTime::currentTime()));
 }
@@ -63,7 +60,7 @@ void AlarmListItem::alarm()
 {
     this->timer->stop();
     if(this->state==on){
-    TimerAlarm* alarmDialog=new TimerAlarm(this->alarmPlaylist);
+    TimerAlarm* alarmDialog=new TimerAlarm(this->playlist);
         alarmDialog->setTimer();
         alarmDialog->show();
     }

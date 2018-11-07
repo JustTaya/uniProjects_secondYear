@@ -17,8 +17,6 @@ TimerListItem::TimerListItem(QWidget *parent) :
     connect(tmpTimer,SIGNAL(timeout()),this,SLOT(step()));
     connect(timer,SIGNAL(timeout()),this, SLOT(alarm()));
 
-    this->alarmPlaylist=new QMediaPlaylist;
-    this->alarmPlaylist->addMedia(QMediaContent(QUrl("qrc:/Alarm1.mp3")));
 }
 
 TimerListItem::~TimerListItem()
@@ -85,7 +83,7 @@ void TimerListItem::alarm()
 {
     this->timer->stop();
     this->tmpTimer->stop();
-    TimerAlarm* alarmDialog=new TimerAlarm(this->alarmPlaylist);
+    TimerAlarm* alarmDialog=new TimerAlarm(this->playlist);
     alarmDialog->setTimer();
     alarmDialog->show();
     setPauseMode();

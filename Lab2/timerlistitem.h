@@ -39,6 +39,11 @@ public:
         return this->state;
     }
 
+    void setPlaylist(QMediaPlaylist* playlist)
+    {
+        this->playlist=playlist;
+    }
+
 protected:
     void changeEvent(QEvent *e);
 
@@ -65,7 +70,7 @@ private:
     QTimer* tmpTimer;
     QTimer* timer;
     QTimer* alarmTimer;
-    QMediaPlaylist* alarmPlaylist;
+    QMediaPlaylist* playlist;
     void runTimer ();
     void setPlayMode();
     void setPauseMode();
