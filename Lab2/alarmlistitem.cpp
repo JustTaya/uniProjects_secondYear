@@ -38,7 +38,7 @@ void AlarmListItem::setTime(QTime time)
 {
   ui->label->setText(time.toString("h:mm AP"));
   this->initTime=abs(QTime(0,0,0).secsTo(time));
-  this->time=this->initTime-QTime(0,0,0).secsTo(QTime::currentTime());
+  this->time=abs(this->initTime-QTime(0,0,0).secsTo(QTime::currentTime()));
 }
 
 void AlarmListItem::on_deleteButton_clicked()
@@ -53,16 +53,20 @@ void AlarmListItem::on_checkBox_stateChanged(int arg1)
         this->state=on;
     else
         this->state=off;
-    if(arg1==Qt::Checked){
-        this->runTimer();}
+    if(arg1==Qt::Checked && this->checkDate())
+            this->runTimer();
+    else
+        this->timer->start(24*60*60*1000);
 }
 
 void AlarmListItem::alarm()
 {
     this->timer->stop();
+    if(this->state==on){
     TimerAlarm* alarmDialog=new TimerAlarm(this->alarmPlaylist);
-    alarmDialog->setTimer();
-    alarmDialog->show();
+        alarmDialog->setTimer();
+        alarmDialog->show();
+    }
     this->time=this->initTime;
 }
 
@@ -81,6 +85,30 @@ void AlarmListItem::on_editButton_clicked()
         QTime time;
         connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
         time=dialog->getValues();
+        this->setWeek(dialog->getWeek());
         this->setTime(time);
     }
+}
+
+bool AlarmListItem::checkDate()
+{
+    QDate date=QDate::currentDate();
+    if(date.dayOfWeek() && this->week[0]==true)
+        return true;
+    if(this->week[date.dayOfWeek()-1]==true)
+        return true;
+    return false;
+}
+
+bool AlarmListItem::checkDay(int day)
+{
+    return this->week[day];
+}
+
+bool AlarmListItem::checkWeek()
+{
+    for(size_t i=0;i<7;i++)
+        if(!this->week[i])
+            return false;
+    return true;
 }

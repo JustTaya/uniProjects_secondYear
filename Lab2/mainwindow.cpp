@@ -40,13 +40,11 @@ void MainWindow::on_addTimerButton_clicked()
 {
     AddTimerDialog* dialog=new AddTimerDialog;
     dialog->show();
-    QTime time;
     if(dialog->exec())
     {
         connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
-        time=dialog->getValues();
         TimerListItem* item=new TimerListItem;
-        item->setTime(time);
+        item->setTime(dialog->getValues());
         this->timerList->layout()->addWidget(item);
         this->timers.push_back(item);
     }
@@ -59,11 +57,10 @@ void MainWindow::on_addAlarmButton_clicked()
     dialog->show();
     if(dialog->exec())
     {
-        QTime time;
         connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
-        time=dialog->getValues();
         AlarmListItem* item=new AlarmListItem;
-        item->setTime(time);
+        item->setTime(dialog->getValues());
+        item->setWeek(dialog->getWeek());
         this->alarmList->layout()->addWidget(item);
         this->alarms.push_back(item);
     }
@@ -107,6 +104,110 @@ void MainWindow::on_actionShow_disabled_triggered()
     foreach(AlarmListItem* iter,this->alarms)
     {
         if(iter->getState()==off)
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
+    }
+}
+
+void MainWindow::on_actionSunday_triggered()
+{
+    foreach(TimerListItem* iter,this->timers)
+        iter->setVisible(true);
+    foreach(AlarmListItem* iter,this->alarms)
+    {
+        if(iter->checkDay(0))
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
+    }
+}
+
+void MainWindow::on_actionMonday_triggered()
+{
+    foreach(TimerListItem* iter,this->timers)
+        iter->setVisible(true);
+    foreach(AlarmListItem* iter,this->alarms)
+    {
+        if(iter->checkDay(1))
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
+    }
+}
+
+void MainWindow::on_actionTuesday_triggered()
+{
+    foreach(TimerListItem* iter,this->timers)
+        iter->setVisible(true);
+    foreach(AlarmListItem* iter,this->alarms)
+    {
+        if(iter->checkDay(2))
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
+    }
+}
+
+void MainWindow::on_actionWednesday_triggered()
+{
+    foreach(TimerListItem* iter,this->timers)
+        iter->setVisible(true);
+    foreach(AlarmListItem* iter,this->alarms)
+    {
+        if(iter->checkDay(3))
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
+    }
+}
+
+void MainWindow::on_actionThursday_triggered()
+{
+    foreach(TimerListItem* iter,this->timers)
+        iter->setVisible(true);
+    foreach(AlarmListItem* iter,this->alarms)
+    {
+        if(iter->checkDay(4))
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
+    }
+}
+
+void MainWindow::on_actionFriday_triggered()
+{
+    foreach(TimerListItem* iter,this->timers)
+        iter->setVisible(true);
+    foreach(AlarmListItem* iter,this->alarms)
+    {
+        if(iter->checkDay(5))
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
+    }
+}
+
+void MainWindow::on_actionSaturday_triggered()
+{
+    foreach(TimerListItem* iter,this->timers)
+        iter->setVisible(true);
+    foreach(AlarmListItem* iter,this->alarms)
+    {
+        if(iter->checkDay(6))
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
+    }
+}
+
+void MainWindow::on_actionEveryday_triggered()
+{
+    foreach(TimerListItem* iter,this->timers)
+        iter->setVisible(true);
+    foreach(AlarmListItem* iter,this->alarms)
+    {
+        if(iter->checkWeek())
             iter->setVisible(true);
         else
             iter->setVisible(false);

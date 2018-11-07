@@ -44,6 +44,22 @@ private slots:
 
     void on_actionShow_disabled_triggered();
 
+    void on_actionSunday_triggered();
+
+    void on_actionMonday_triggered();
+
+    void on_actionTuesday_triggered();
+
+    void on_actionWednesday_triggered();
+
+    void on_actionThursday_triggered();
+
+    void on_actionFriday_triggered();
+
+    void on_actionSaturday_triggered();
+
+    void on_actionEveryday_triggered();
+
 private:
     Ui::MainWindow *ui;
     QWidget* timerList;

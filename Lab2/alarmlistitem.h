@@ -15,6 +15,7 @@
 #include <QSound>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
+#include <QDate>
 
 
 namespace Ui {
@@ -39,6 +40,13 @@ public:
         return this->state;
     }
 
+    void setWeek(bool* week)
+    {
+        this->week=week;
+    }
+
+    bool checkDay(int day);
+    bool checkWeek();
 protected:
     void changeEvent(QEvent *e);
 
@@ -59,7 +67,9 @@ private:
     QTimer* timer;
     QTimer* alarmTimer;
     QMediaPlaylist* alarmPlaylist;
+    bool* week;
     void runTimer ();
+    bool checkDate();
 };
 
 #endif // ALARMLISTITEM_H
