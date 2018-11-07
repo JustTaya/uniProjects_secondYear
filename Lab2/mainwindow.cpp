@@ -76,6 +76,7 @@ void MainWindow::on_addTimerButton_clicked()
 void MainWindow::on_addAlarmButton_clicked()
 {
     AddAlarmDialog* dialog=new AddAlarmDialog;
+    dialog->setFormat(this->settings->timeFormat);
     dialog->show();
     if(dialog->exec())
     {

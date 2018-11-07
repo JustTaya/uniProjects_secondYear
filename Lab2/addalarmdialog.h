@@ -24,7 +24,7 @@ public:
     {
         return this->week;
     }
-
+    void setFormat(QString format);
 protected:
     void changeEvent(QEvent *e);
 

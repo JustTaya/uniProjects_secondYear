@@ -76,6 +76,7 @@ void AlarmListItem::runTimer()
 void AlarmListItem::on_editButton_clicked()
 {
     AddAlarmDialog* dialog=new AddAlarmDialog;
+    dialog->setFormat(this->timeFormat);
     dialog->show();
     if(dialog->exec())
     {

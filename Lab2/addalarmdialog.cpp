@@ -81,3 +81,7 @@ void AddAlarmDialog::setDay(int arg1,int day)
         this->week[day]=false;
 }
 
+ void AddAlarmDialog::setFormat(QString format)
+ {
+     ui->timeEdit->setDisplayFormat(format);
+ }
