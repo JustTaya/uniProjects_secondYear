@@ -87,32 +87,13 @@ background-color: rgb(77, 15, 15);
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
         <string>Timers</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QComboBox" name="timerFilter">
-          <item>
-           <property name="text">
-            <string>No filter</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Show enabled</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Show disabled</string>
-           </property>
-          </item>
-         </widget>
-        </item>
         <item>
          <widget class="QScrollArea" name="timerList">
           <property name="widgetResizable">
@@ -124,7 +105,7 @@ background-color: rgb(77, 15, 15);
              <x>0</x>
              <y>0</y>
              <width>261</width>
-             <height>311</height>
+             <height>320</height>
             </rect>
            </property>
           </widget>
@@ -150,30 +131,6 @@ border: 30px;</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QComboBox" name="alarmFilter">
-          <item>
-           <property name="text">
-            <string>No filter</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Show enabled</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Show disabled</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Sunday</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
          <widget class="QScrollArea" name="alarmList">
           <property name="widgetResizable">
            <bool>true</bool>
@@ -184,7 +141,7 @@ border: 30px;</string>
              <x>0</x>
              <y>0</y>
              <width>261</width>
-             <height>311</height>
+             <height>320</height>
             </rect>
            </property>
           </widget>
@@ -204,6 +161,95 @@ border: 30px;</string>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>303</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFilters">
+    <property name="title">
+     <string>Filters</string>
+    </property>
+    <widget class="QMenu" name="menuShow_by_day">
+     <property name="title">
+      <string>Show by day</string>
+     </property>
+     <addaction name="actionSunday"/>
+     <addaction name="actionMonday"/>
+     <addaction name="actionTuesday"/>
+     <addaction name="actionWednesday"/>
+     <addaction name="actionThursday"/>
+     <addaction name="actionFriday"/>
+     <addaction name="actionSaturday"/>
+     <addaction name="actionEveryday"/>
+    </widget>
+    <addaction name="actionNo_filter"/>
+    <addaction name="actionShow_enabled"/>
+    <addaction name="actionShow_disabled"/>
+    <addaction name="separator"/>
+    <addaction name="menuShow_by_day"/>
+   </widget>
+   <addaction name="menuFilters"/>
+  </widget>
+  <action name="actionNo_filter">
+   <property name="text">
+    <string>No filter</string>
+   </property>
+  </action>
+  <action name="actionShow_enabled">
+   <property name="text">
+    <string>Show enabled</string>
+   </property>
+  </action>
+  <action name="actionShow_disabled">
+   <property name="text">
+    <string>Show disabled</string>
+   </property>
+  </action>
+  <action name="actionSunday">
+   <property name="text">
+    <string>Sunday</string>
+   </property>
+  </action>
+  <action name="actionMonday">
+   <property name="text">
+    <string>Monday</string>
+   </property>
+  </action>
+  <action name="actionTuesday">
+   <property name="text">
+    <string>Tuesday</string>
+   </property>
+  </action>
+  <action name="actionWednesday">
+   <property name="text">
+    <string>Wednesday</string>
+   </property>
+  </action>
+  <action name="actionThursday">
+   <property name="text">
+    <string>Thursday</string>
+   </property>
+  </action>
+  <action name="actionFriday">
+   <property name="text">
+    <string>Friday</string>
+   </property>
+  </action>
+  <action name="actionSaturday">
+   <property name="text">
+    <string>Saturday</string>
+   </property>
+  </action>
+  <action name="actionEveryday">
+   <property name="text">
+    <string>Everyday</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

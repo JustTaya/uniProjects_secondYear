@@ -17,8 +17,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->alarmList->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     ui->alarmList->setWidget(this->alarmList);
 
-    connect(ui->timerFilter,SIGNAL(activated(int)),this,SLOT(showTimerItems(int)));
-     connect(ui->alarmFilter,SIGNAL(activated(int)),this,SLOT(showAlarmItems(int)));
 }
 
 MainWindow::~MainWindow()
@@ -71,30 +69,15 @@ void MainWindow::on_addAlarmButton_clicked()
     }
 }
 
-void  MainWindow::showTimerItems(int filter)
-{
-    switch(filter){
-    case 0:
-        noFilter_t();
-        break;
-    case 1:
-        showEnabled_t();
-        break;
-    case 2:
-        showDisabled_t();
-        break;
-    }
-}
-
-
-void MainWindow::noFilter_t()
+void MainWindow::on_actionNo_filter_triggered()
 {
     foreach(TimerListItem* iter,this->timers)
         iter->setVisible(true);
+    foreach(AlarmListItem* iter,this->alarms)
+        iter->setVisible(true);
 }
 
-
-void  MainWindow::showEnabled_t()
+void MainWindow::on_actionShow_enabled_triggered()
 {
     foreach(TimerListItem* iter,this->timers)
     {
@@ -103,44 +86,6 @@ void  MainWindow::showEnabled_t()
         else
             iter->setVisible(false);
     }
-}
-
-void  MainWindow::showDisabled_t()
-{
-    foreach(TimerListItem* iter,this->timers)
-    {
-        if(iter->getState()==off)
-            iter->setVisible(true);
-        else
-            iter->setVisible(false);
-    }
-}
-
-void  MainWindow::showAlarmItems(int filter)
-{
-    switch(filter){
-    case 0:
-        noFilter_a();
-        break;
-    case 1:
-        showEnabled_a();
-        break;
-    case 2:
-        showDisabled_a();
-        break;
-    }
-}
-
-
-void MainWindow::noFilter_a()
-{
-    foreach(AlarmListItem* iter,this->alarms)
-        iter->setVisible(true);
-}
-
-
-void  MainWindow::showEnabled_a()
-{
     foreach(AlarmListItem* iter,this->alarms)
     {
         if(iter->getState()==on)
@@ -150,8 +95,15 @@ void  MainWindow::showEnabled_a()
     }
 }
 
-void  MainWindow::showDisabled_a()
+void MainWindow::on_actionShow_disabled_triggered()
 {
+    foreach(TimerListItem* iter,this->timers)
+    {
+        if(iter->getState()==off)
+            iter->setVisible(true);
+        else
+            iter->setVisible(false);
+    }
     foreach(AlarmListItem* iter,this->alarms)
     {
         if(iter->getState()==off)
@@ -160,4 +112,3 @@ void  MainWindow::showDisabled_a()
             iter->setVisible(false);
     }
 }
-
