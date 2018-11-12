@@ -31,7 +31,6 @@ SOURCES += \
     timeralarm.cpp \
     alarmlistitem.cpp \
     addalarmdialog.cpp \
-    settingsdialog.cpp \
     logmaker.cpp
 
 HEADERS += \
@@ -41,7 +40,6 @@ HEADERS += \
     timeralarm.h \
     alarmlistitem.h \
     addalarmdialog.h \
-    settingsdialog.h \
     logmaker.h
 
 FORMS += \
@@ -50,8 +48,7 @@ FORMS += \
     addtimerdialog.ui \
     timeralarm.ui \
     alarmlistitem.ui \
-    addalarmdialog.ui \
-    settingsdialog.ui
+    addalarmdialog.ui
 
 greaterThan(QT_MAJOR_VERSION, 4) {
         QT += widgets

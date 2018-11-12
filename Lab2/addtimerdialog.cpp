@@ -1,11 +1,26 @@
 #include "addtimerdialog.h"
 #include "ui_addtimerdialog.h"
 
-AddTimerDialog::AddTimerDialog(QWidget *parent) :
+AddTimerDialog::AddTimerDialog(int numb,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddTimerDialog)
 {
     ui->setupUi(this);
+
+    ui->timerName->setText("Timer "+QString::number(numb));
+    this->setStartData(numb);
+}
+
+AddTimerDialog::AddTimerDialog(int numb, QTime timer, QTime delay,QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::AddTimerDialog)
+{
+    ui->setupUi(this);
+
+    ui->timerName->setText("Timer "+QString::number(numb));
+    ui->timeEdit->setTime(timer);
+    ui->Delay->setTime(delay);
+    this->setStartData(numb);
 }
 
 AddTimerDialog::~AddTimerDialog()
@@ -25,19 +40,45 @@ void AddTimerDialog::changeEvent(QEvent *e)
     }
 }
 
-QTime AddTimerDialog::getValues()
+TimerData* AddTimerDialog::getData()
 {
-    return ui->timeEdit->time();
+    return this->data;
 }
 
-void  AddTimerDialog::setValue(QTime time)
+void AddTimerDialog::setStartData(int numb)
 {
-    ui->timeEdit->setTime(time);
+    this->data=new TimerData;
+    data->name="Timer "+QString::number(numb);
+    data->index=numb;
+    data->time=QTime::fromString("00:00:00");
+    data->delay=QTime::fromString("00:00:00");
+    data->sound=0;
+    data->triggerAfter=0;
 }
 
-QTime AddTimerDialog::getDelay()
+
+
+void AddTimerDialog::on_timeEdit_userTimeChanged(const QTime &time)
 {
-    return ui->Delay->time();
+    data->time=time;
 }
 
+void AddTimerDialog::on_Delay_userTimeChanged(const QTime &time)
+{
+    data->delay=time;
+}
 
+void AddTimerDialog::on_Alarms_currentIndexChanged(int index)
+{
+    data->sound=index;
+}
+
+void AddTimerDialog::on_Timers_currentIndexChanged(int index)
+{
+    data->triggerAfter=index;
+}
+
+void AddTimerDialog::on_timerName_textChanged()
+{
+    data->name=ui->timerName->toPlainText();
+}

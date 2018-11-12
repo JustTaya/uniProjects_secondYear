@@ -11,7 +11,6 @@
 #include "addalarmdialog.h"
 #include "timerlistitem.h"
 #include "alarmlistitem.h"
-#include "settingsdialog.h"
 #include "logmaker.h"
 #include <QListWidgetItem>
 #include <memory>
@@ -33,11 +32,11 @@ protected:
     void changeEvent(QEvent *e);
 
 private slots:
-    void on_addTimerButton_clicked();
     void nonadd(){}
 
-//    void on_timerList_itemPressed(QListWidgetItem *item);
 
+    void on_addTimerButton_clicked();
+/*
     void on_addAlarmButton_clicked();
 
     void on_actionNo_filter_triggered();
@@ -63,14 +62,16 @@ private slots:
     void on_actionEveryday_triggered();
 
     void on_actionChange_triggered();
+*/
+    void on_comboBox_2_currentIndexChanged(int index);
 
 private:
     Ui::MainWindow *ui;
     QWidget* timerList;
     QWidget* alarmList;
     QList<TimerListItem*> timers;
+    int timer_numb;
     QList<AlarmListItem*> alarms;
-    Settings* settings;
     LogMaker* logMaker;
 };
 

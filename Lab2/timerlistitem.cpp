@@ -1,22 +1,20 @@
 #include "timerlistitem.h"
 #include "ui_timerlistitem.h"
 
-TimerListItem::TimerListItem(QWidget *parent) :
+TimerListItem::TimerListItem(QList<TimerListItem*> list,TimerData* data,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TimerListItem)
 {
     ui->setupUi(this);
-    this->delay=0;
-    ui->pauseButton->setDisabled(true);
-    ui->pauseButton->setVisible(false);
-    ui->stopButton->setDisabled(true);
-    ui->stopButton->setVisible(false);
-    this->state=off;
+    this->setPauseMode();
     this->tmpTimer=new QTimer;
     this->timer=new QTimer;
 
+    this->setData(data);
+
+    connect(delayTimer,SIGNAL(timeout()),this,SLOT());
     connect(tmpTimer,SIGNAL(timeout()),this,SLOT(step()));
-    connect(timer,SIGNAL(timeout()),this, SLOT(alarm()));
+    connect(timer,SIGNAL(timeout()),this, SLOT(alarm())); 
 }
 
 TimerListItem::~TimerListItem()
@@ -24,23 +22,16 @@ TimerListItem::~TimerListItem()
     delete ui;
 }
 
-void TimerListItem::changeEvent(QEvent *e)
-{
-    QWidget::changeEvent(e);
-    switch (e->type()) {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
-}
 
-void TimerListItem::setTime(QTime time)
+void TimerListItem::setData(TimerData* data)
 {
-  ui->label->setText(time.toString("hh:mm:ss"));
-  this->initTime=QTime(0,0,0).secsTo(time);
-  this->time=this->initTime;
+    ui->Name_label->setText(data->name);
+    ui->timerTime->setText(data->time.toString("hh:mm:ss"));
+    if(data->triggerAfter!=-1)
+    {
+        ui->timerTime->setVisible(false);
+        ui->
+    }
 }
 
 void TimerListItem::runTimer()
@@ -130,7 +121,7 @@ void TimerListItem::on_editButton_clicked()
 {
     setPauseMode();
 
-    AddTimerDialog* dialog=new AddTimerDialog;
+    AddTimerDialog* dialog=new AddTimerDialog(0);
     dialog->show();
     QTime time;
     if(dialog->exec())

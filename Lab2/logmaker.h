@@ -3,7 +3,6 @@
 
 #include "timerlistitem.h"
 #include "alarmlistitem.h"
-#include "settingsdialog.h"
 
 #include <QtCore/QObject>
 #include <QtCore/qglobal.h>
@@ -19,7 +18,6 @@ struct Logs
 {
     QList<TimerListItem*> timers;
     QList<AlarmListItem*> alarms;
-    Settings* settings;
 };
 
 class LogMaker : public QObject
@@ -27,9 +25,9 @@ class LogMaker : public QObject
     Q_OBJECT
 public:
     explicit LogMaker(QObject *parent = nullptr);
-    void save(QList<TimerListItem*> timers, QList<AlarmListItem*> alarms, Settings* settings);
-    void read();
-    Logs* getLogs();
+   // void save(QList<TimerListItem*> timers, QList<AlarmListItem*> alarms);
+  //  void read();
+    //Logs* getLogs();
 
 signals:
 
