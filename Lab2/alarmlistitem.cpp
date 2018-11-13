@@ -81,7 +81,7 @@ void AlarmListItem::on_editButton_clicked()
     if(dialog->exec())
     {
         QTime time;
-        connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
+        connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
         time=dialog->getValues();
         this->setWeek(dialog->getWeek());
         this->setTime(time);
