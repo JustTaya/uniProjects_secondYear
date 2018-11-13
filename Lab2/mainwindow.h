@@ -11,7 +11,6 @@
 #include "addalarmdialog.h"
 #include "timerlistitem.h"
 #include "alarmlistitem.h"
-#include "logmaker.h"
 #include <QListWidgetItem>
 #include <memory>
 #include <iostream>
@@ -72,7 +71,6 @@ private:
     QList<TimerListItem*> timers;
     int timer_numb;
     QList<AlarmListItem*> alarms;
-    LogMaker* logMaker;
 };
 
 #endif // MAINWINDOW_H
