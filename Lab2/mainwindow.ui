@@ -111,6 +111,16 @@ background-color: rgb(77, 15, 15);
             <string>Disabled</string>
            </property>
           </item>
+          <item>
+           <property name="text">
+            <string>Delayed</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Not delayed</string>
+           </property>
+          </item>
          </widget>
         </item>
         <item>

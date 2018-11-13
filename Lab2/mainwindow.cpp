@@ -44,7 +44,7 @@ void MainWindow::on_addTimerButton_clicked()
     foreach(auto iter,timers)
     {
         if(iter->getState()!=del)
-            dialog->addTimer(iter->getName());
+            dialog->addTimer(iter->getName(),iter->getIndex());
     }
     dialog->show();
     if(dialog->exec())
@@ -56,6 +56,8 @@ void MainWindow::on_addTimerButton_clicked()
         this->timers.push_back(item);
         ++this->timer_numb;
     }
+    foreach(auto iter,timers)
+        iter->setTimerList(this->timers);
 }
 
 /*
@@ -249,6 +251,28 @@ void MainWindow::on_comboBox_2_currentIndexChanged(int index)
         foreach(TimerListItem* iter,this->timers)
         {
             if(iter->getState()==off)
+                iter->setVisible(true);
+            else
+                iter->setVisible(false);
+        }
+        break;
+    }
+    case 3:
+    {
+        foreach(TimerListItem* iter,this->timers)
+        {
+            if(iter->getType()!=0)
+                iter->setVisible(true);
+            else
+                iter->setVisible(false);
+        }
+        break;
+    }
+    case 4:
+    {
+        foreach(TimerListItem* iter,this->timers)
+        {
+            if(iter->getType()==0)
                 iter->setVisible(true);
             else
                 iter->setVisible(false);

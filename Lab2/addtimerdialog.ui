@@ -65,21 +65,21 @@ color:rgb(238, 238, 236);</string>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>170</x>
+     <x>160</x>
      <y>60</y>
      <width>111</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>Delay:</string>
+    <string>Type:</string>
    </property>
   </widget>
   <widget class="QTimeEdit" name="Delay">
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>100</y>
+     <x>160</x>
+     <y>140</y>
      <width>121</width>
      <height>61</height>
     </rect>
@@ -94,7 +94,7 @@ color:rgb(238, 238, 236);</string>
   <widget class="QComboBox" name="Alarms">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>10</x>
      <y>220</y>
      <width>111</width>
      <height>25</height>
@@ -145,7 +145,7 @@ color:rgb(238, 238, 236);</string>
   <widget class="QComboBox" name="Timers">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>10</x>
      <y>310</y>
      <width>111</width>
      <height>25</height>
@@ -179,6 +179,31 @@ color:rgb(238, 238, 236);</string>
      <height>41</height>
     </rect>
    </property>
+  </widget>
+  <widget class="QComboBox" name="Type">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>100</y>
+     <width>111</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>None</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Delay for</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Play after time</string>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources/>
