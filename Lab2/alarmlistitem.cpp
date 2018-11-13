@@ -33,7 +33,7 @@ void AlarmListItem::changeEvent(QEvent *e)
 
 void AlarmListItem::setTime(QTime time)
 {
-  ui->label->setText(time.toString(this->timeFormat));
+  ui->time_Label->setText(time.toString(this->timeFormat));
   this->initTime=abs(QTime(0,0,0).secsTo(time));
   this->time=abs(this->initTime-QTime(0,0,0).secsTo(QTime::currentTime()));
 }
@@ -60,9 +60,9 @@ void AlarmListItem::alarm()
 {
     this->timer->stop();
     if(this->state==on){
-    TimerAlarm* alarmDialog=new TimerAlarm(this->playlist);
-        alarmDialog->setTimer();
-        alarmDialog->show();
+    //TimerAlarm* alarmDialog=new TimerAlarm(this->playlist);
+      //  alarmDialog->setTimer();
+        //alarmDialog->show();
     }
     this->time=this->initTime;
 }
@@ -81,7 +81,7 @@ void AlarmListItem::on_editButton_clicked()
     if(dialog->exec())
     {
         QTime time;
-        connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
+        connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
         time=dialog->getValues();
         this->setWeek(dialog->getWeek());
         this->setTime(time);

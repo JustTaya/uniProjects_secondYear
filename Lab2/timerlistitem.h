@@ -15,6 +15,7 @@
 #include <QSound>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
+#include <QtMath>
 
 
 namespace Ui {
@@ -26,28 +27,24 @@ class TimerListItem : public QWidget
     Q_OBJECT
 
 public:
-    explicit TimerListItem(QWidget *parent = nullptr);
+    explicit TimerListItem(const QList<TimerListItem*>& list, TimerData* data,QWidget *parent = nullptr);
     ~TimerListItem();
-    void setTime(QTime time);
-    int getInitTime()
-    {
-        return this->initTime;
-    }
 
-    State getState()
-    {
-        return this->state;
-    }
+    QString getName();
 
-    void setPlaylist(QMediaPlaylist* playlist)
-    {
-        this->playlist=playlist;
-    }
+    int getIndex();
 
-    void setDeley(QTime delay);
+    State getState();
 
-protected:
-    void changeEvent(QEvent *e);
+    int getType();
+
+    void setTimerList(const QList<TimerListItem*>& list);
+
+public slots:
+
+    void run();
+
+    void nonadd(){}
 
 private slots:
     void on_deleteButton_clicked();
@@ -56,27 +53,32 @@ private slots:
 
     void on_stopButton_clicked();
 
+    void delayTimeOut();
+
     void step();
 
     void alarm();
-
-    void on_playButton_clicked();
 
     void on_editButton_clicked();
 
 private:
     Ui::TimerListItem *ui;
     State state;
-    int initTime;
-    int time;
-    int delay;
+    int index;
+    TimerData* data;
+    QList<TimerListItem*> timers;
+    int initTime;   int time;
+    int initDelay;  int delay;
     QTimer* tmpTimer;
     QTimer* timer;
     QTimer* delayTimer;
+    QTimer* alarmTimer;
     QMediaPlaylist* playlist;
     void runTimer ();
     void setPlayMode();
     void setPauseMode();
+    void setData(const QList<TimerListItem*>& list,TimerData* data);
+    void runAlarmTimer();
    };
 
 #endif // TIMERLISTITEM_H
