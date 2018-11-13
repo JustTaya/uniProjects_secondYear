@@ -213,9 +213,9 @@ void TimerListItem::alarm()
     QTime t=QTime(0,0,0).addSecs(this->initTime);
     ui->timerTime->setText(t.toString("hh:mm:ss"));
 
-    //TimerAlarm* alarmDialog=new TimerAlarm(this->playlist);
-    //alarmDialog->setTimer();
-    //alarmDialog->show();
+    TimerAlarm* alarmDialog=new TimerAlarm(this->playlist,data->name);
+    alarmDialog->setTimer();
+    alarmDialog->show();
     if(this->data->type==2)
     {
         runAlarmTimer();

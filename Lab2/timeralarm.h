@@ -26,7 +26,7 @@ class TimerAlarm : public QDialog
     Q_OBJECT
 
 public:
-    explicit TimerAlarm(QMediaPlaylist* playlist, QWidget *parent = nullptr);
+    TimerAlarm(QMediaPlaylist* playlist,QString name, QWidget *parent = nullptr);
     ~TimerAlarm();
     void setTimer();
 

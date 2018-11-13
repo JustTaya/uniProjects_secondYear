@@ -1,13 +1,14 @@
 #include "timeralarm.h"
 #include "ui_timeralarm.h"
 
-TimerAlarm::TimerAlarm(QMediaPlaylist* playlist, QWidget *parent) :
+TimerAlarm::TimerAlarm(QMediaPlaylist* playlist,QString name, QWidget *parent) :
     QDialog(parent),
     ui(new Ui::TimerAlarm)
 {
     ui->setupUi(this);
 
     this->counter=0;
+    ui->Name->setText(name);
 
     playlist->setPlaybackMode(QMediaPlaylist::Loop);
     this->player=new QMediaPlayer;
@@ -46,7 +47,7 @@ void TimerAlarm::runAlarm()
 {
   ++this->counter;
   QTime t=QTime(0,0,0).addSecs(this->counter);
-  ui->label->setText("-"+t.toString("hh:mm:ss"));
+  ui->Time->setText("-"+t.toString("hh:mm:ss"));
 }
 
 void TimerAlarm::setTimer(){

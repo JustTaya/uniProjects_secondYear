@@ -60,9 +60,9 @@ void AlarmListItem::alarm()
 {
     this->timer->stop();
     if(this->state==on){
-    TimerAlarm* alarmDialog=new TimerAlarm(this->playlist);
-        alarmDialog->setTimer();
-        alarmDialog->show();
+    //TimerAlarm* alarmDialog=new TimerAlarm(this->playlist);
+      //  alarmDialog->setTimer();
+        //alarmDialog->show();
     }
     this->time=this->initTime;
 }
