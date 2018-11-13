@@ -268,8 +268,14 @@ void TimerListItem::on_editButton_clicked()
     if(dialog->exec())
     {
         connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
+<<<<<<< HEAD
         this->data=dialog->getData();
         this->setData(this->timers,dialog->getData());
+=======
+        time=dialog->getValues();
+        this->delay=QTime(0,0,0).secsTo(dialog->getDelay());
+        this->setTime(time);
+>>>>>>> master
     }
 }
 
