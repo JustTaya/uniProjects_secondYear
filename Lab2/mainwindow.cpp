@@ -40,12 +40,17 @@ void MainWindow::changeEvent(QEvent *e)
 
 void MainWindow::on_addTimerButton_clicked()
 {
-    AddTimerDialog* dialog=new AddTimerDialog(0);
+    AddTimerDialog* dialog=new AddTimerDialog(this->timer_numb);
+    foreach(auto iter,timers)
+    {
+        if(iter->getState()!=del)
+            dialog->addTimer(iter->getName());
+    }
     dialog->show();
     if(dialog->exec())
     {
         connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
-        TimerListItem* item=new TimerListItem;
+        TimerListItem* item=new TimerListItem(this->timers,dialog->getData());
 
         this->timerList->layout()->addWidget(item);
         this->timers.push_back(item);

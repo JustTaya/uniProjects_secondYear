@@ -26,8 +26,19 @@ class TimerListItem : public QWidget
     Q_OBJECT
 
 public:
-    explicit TimerListItem(QList<TimerListItem*> list, TimerData* data,QWidget *parent = nullptr);
+    explicit TimerListItem(const QList<TimerListItem*>& list, TimerData* data,QWidget *parent = nullptr);
     ~TimerListItem();
+
+    QString getName();
+
+    int getIndex();
+
+    State getState();
+
+public slots:
+
+    void run();
+
 private slots:
     void on_deleteButton_clicked();
 
@@ -35,27 +46,28 @@ private slots:
 
     void on_stopButton_clicked();
 
+    void delayTimeOut();
+
     void step();
 
     void alarm();
-
-    void on_playButton_clicked();
 
     void on_editButton_clicked();
 
 private:
     Ui::TimerListItem *ui;
     State state;
-    int initTime;
-    int time;
-    int delay;
+    int index;
+    int initTime;   int time;
+    int initDelay;  int delay;
     QTimer* tmpTimer;
     QTimer* timer;
     QTimer* delayTimer;
+    QMediaPlaylist* playlist;
     void runTimer ();
     void setPlayMode();
     void setPauseMode();
-    void setData(TimerData* data);
+    void setData(const QList<TimerListItem*>& list,TimerData* data);
    };
 
 #endif // TIMERLISTITEM_H

@@ -33,6 +33,7 @@ public:
     explicit AddTimerDialog(int numb, QTime timer, QTime delay, QWidget *parent = nullptr);
     ~AddTimerDialog();
     TimerData* getData();
+    void addTimer(QString name);
 protected:
     void changeEvent(QEvent *e);
 
@@ -45,9 +46,6 @@ private slots:
     void on_Alarms_currentIndexChanged(int index);
 
     void on_Timers_currentIndexChanged(int index);
-
-    void on_timerName_textChanged();
-
 private:
     Ui::AddTimerDialog *ui;
     TimerData* data;

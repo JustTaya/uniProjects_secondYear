@@ -42,6 +42,7 @@ void AddTimerDialog::changeEvent(QEvent *e)
 
 TimerData* AddTimerDialog::getData()
 {
+    data->name=ui->timerName->toPlainText();
     return this->data;
 }
 
@@ -78,7 +79,8 @@ void AddTimerDialog::on_Timers_currentIndexChanged(int index)
     data->triggerAfter=index;
 }
 
-void AddTimerDialog::on_timerName_textChanged()
+void AddTimerDialog::addTimer(QString name)
 {
-    data->name=ui->timerName->toPlainText();
+    ui->Timers->addItem(name);
 }
+

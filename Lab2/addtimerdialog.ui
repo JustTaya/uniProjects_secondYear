@@ -151,6 +151,11 @@ color:rgb(238, 238, 236);</string>
      <height>25</height>
     </rect>
    </property>
+   <item>
+    <property name="text">
+     <string>None</string>
+    </property>
+   </item>
   </widget>
   <widget class="QLabel" name="Name_Label">
    <property name="geometry">

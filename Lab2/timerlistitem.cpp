@@ -1,7 +1,7 @@
 #include "timerlistitem.h"
 #include "ui_timerlistitem.h"
 
-TimerListItem::TimerListItem(QList<TimerListItem*> list,TimerData* data,QWidget *parent) :
+TimerListItem::TimerListItem(const QList<TimerListItem*>& list,TimerData* data,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::TimerListItem)
 {
@@ -9,12 +9,15 @@ TimerListItem::TimerListItem(QList<TimerListItem*> list,TimerData* data,QWidget 
     this->setPauseMode();
     this->tmpTimer=new QTimer;
     this->timer=new QTimer;
+    this->delayTimer=new QTimer;
 
-    this->setData(data);
+    this->setData(list,data);
 
-    connect(delayTimer,SIGNAL(timeout()),this,SLOT());
-    connect(tmpTimer,SIGNAL(timeout()),this,SLOT(step()));
-    connect(timer,SIGNAL(timeout()),this, SLOT(alarm())); 
+    connect(timer,SIGNAL(timeout()),this,SLOT(alarm()));
+    connect(this->delayTimer,SIGNAL(timeout()),this,SLOT(delayTimeOut()));
+    connect(this->tmpTimer,SIGNAL(timeout()),this,SLOT(step()));
+    connect(ui->playButton,SIGNAL(clicked()),this,SLOT(run()));
+
 }
 
 TimerListItem::~TimerListItem()
@@ -23,20 +26,109 @@ TimerListItem::~TimerListItem()
 }
 
 
-void TimerListItem::setData(TimerData* data)
+void TimerListItem::setData( const QList<TimerListItem*>& list,TimerData* data)
 {
     ui->Name_label->setText(data->name);
+
     ui->timerTime->setText(data->time.toString("hh:mm:ss"));
-    if(data->triggerAfter!=-1)
+    this->initTime=QTime(0,0,0).secsTo(data->time);
+    this->time=this->initTime;
+    ui->delayedTime->setText(data->delay.toString("hh:mm:ss"));
+    this->initDelay=QTime(0,0,0).secsTo(data->delay);
+    this->delay=this->initDelay;
+
+    if(delay==0)
     {
-        ui->timerTime->setVisible(false);
-        ui->
+        ui->delayedLabel->setVisible(false);
+        ui->delayedTime->setVisible(false);
+    }
+
+    if(data->triggerAfter!=0)
+    {
+        int i=0;
+        foreach(auto iter,list)
+        {
+            ++i;
+            if(i==data->triggerAfter)
+            {
+                ui->delayedLabel->setText("Trigger after "+iter->getName());
+                connect(iter->timer,SIGNAL(timeout()),this,SLOT(run()));
+                break;
+            }
+        }
+    }
+
+    this->playlist=new QMediaPlaylist;
+
+    switch(data->sound)
+    {
+    case 0:
+        this->playlist->addMedia(QMediaContent(QUrl("qrc:/Alarm1.mp3")));
+        break;
+    case 1:
+        this->playlist->addMedia(QMediaContent(QUrl("qrc:/Alarm2.mp3")));
+        break;
+    case 2:
+        this->playlist->addMedia(QMediaContent(QUrl("qrc:/Alarm3.wav")));
+        break;
     }
 }
 
-void TimerListItem::runTimer()
+QString TimerListItem::getName()
 {
+    return ui->Name_label->text();
+}
+
+int TimerListItem::getIndex()
+{
+    return this->index;
+}
+
+State TimerListItem::getState()
+{
+    return this->state;
+}
+
+void TimerListItem::run()
+{
+    setPlayMode();
+    if(this->delay>0)
+    {
+        this->tmpTimer->start(1000);
+        this->delayTimer->start(this->delay*1000);
+    }
+    else
+    {
+        this->tmpTimer->start(1000);
+        this->timer->start(this->time*1000);
+    }
+}
+
+void TimerListItem::delayTimeOut()
+{
+    this->tmpTimer->stop();
+    this->delayTimer->stop();
+    ui->delayedTime->setVisible(false);
+    ui->delayedLabel->setVisible(false);
+    delay=-1;
     this->tmpTimer->start(1000);
+    this->timer->start(this->time*1000);
+}
+
+void TimerListItem::step()
+{
+    if(delay>0)
+    {
+        this->delay--;
+        QTime t=QTime(0,0,0).addSecs(this->delay);
+        ui->delayedTime->setText(t.toString("hh:mm:ss"));
+    }
+    else
+    {
+       this->time--;
+       QTime t=QTime(0,0,0).addSecs(this->time);
+       ui->timerTime->setText(t.toString("hh:mm:ss"));
+    }
 }
 
 void TimerListItem::on_deleteButton_clicked()
@@ -47,53 +139,57 @@ void TimerListItem::on_deleteButton_clicked()
 
 void TimerListItem::on_pauseButton_clicked()
 {
-    this->timer->stop();
+    if(this->delay>0)
+        this->delayTimer->stop();
+    else
+        this->timer->stop();
     this->tmpTimer->stop();
     setPauseMode();
 }
 
 void TimerListItem::on_stopButton_clicked()
 {
-    this->timer->stop();
     this->tmpTimer->stop();
     setPauseMode();
-    QTime t=QTime(0,0,0).addSecs(this->initTime);
-    ui->label->setText(t.toString("hh:mm:ss"));
-    this->time=this->initTime;
-}
-
-void TimerListItem::step()
-{
-    if(this->delay<0){
-       this->time--;
-       QTime t=QTime(0,0,0).addSecs(this->time);
-       ui->label->setText(t.toString("hh:mm:ss"));
-    }
-    else if(delay==0){
-        this->timer->start(this->initTime*1000);
-        delay--;
+    if(initDelay!=0)
+    {
+        this->delayTimer->stop();
+        QTime t=QTime(0,0,0).addSecs(this->initDelay);
+        ui->delayedTime->setText(t.toString("hh:mm:ss"));
+        this->delay=this->initDelay;
     }
     else
-        this->delay--;
+    {
+        this->timer->stop();
+        QTime t=QTime(0,0,0).addSecs(this->initTime);
+        ui->timerTime->setText(t.toString("hh:mm:ss"));
+        this->time=this->initTime;
+    }
 }
+
 
 void TimerListItem::alarm()
 {
-    this->timer->stop();
     this->tmpTimer->stop();
-    TimerAlarm* alarmDialog=new TimerAlarm(this->playlist);
-    alarmDialog->setTimer();
-    alarmDialog->show();
-    setPauseMode();
-    QTime t=QTime(0,0,0).addSecs(this->initTime);
-    ui->label->setText(t.toString("hh:mm:ss"));
+    this->timer->stop();
+    this->delay=this->initDelay;
     this->time=this->initTime;
-}
 
-void TimerListItem::on_playButton_clicked()
-{
-    setPlayMode();
-    runTimer();
+    if(initDelay>0)
+    {
+        ui->delayedLabel->setVisible(true);
+        ui->delayedTime->setVisible(true);
+        QTime t=QTime(0,0,0).addSecs(this->initDelay);
+        ui->delayedTime->setText(t.toString("hh:mm:ss"));
+    }
+
+    QTime t=QTime(0,0,0).addSecs(this->initTime);
+    ui->timerTime->setText(t.toString("hh:mm:ss"));
+
+    //TimerAlarm* alarmDialog=new TimerAlarm(this->playlist);
+    //alarmDialog->setTimer();
+    //alarmDialog->show();
+    setPauseMode();
 }
 
 void TimerListItem::setPlayMode()
@@ -126,14 +222,7 @@ void TimerListItem::on_editButton_clicked()
     QTime time;
     if(dialog->exec())
     {
-        connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
-        time=dialog->getValues();
-        this->delay=QTime(0,0,0).secsTo(dialog->getDelay());
-        this->setTime(time);
+
     }
 }
 
-void TimerListItem::setDeley(QTime d)
-{
-    this->delay=QTime(0,0,0).secsTo(d);
-}

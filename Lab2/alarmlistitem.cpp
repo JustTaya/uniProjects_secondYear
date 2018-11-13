@@ -33,7 +33,7 @@ void AlarmListItem::changeEvent(QEvent *e)
 
 void AlarmListItem::setTime(QTime time)
 {
-  ui->label->setText(time.toString(this->timeFormat));
+  ui->time_Label->setText(time.toString(this->timeFormat));
   this->initTime=abs(QTime(0,0,0).secsTo(time));
   this->time=abs(this->initTime-QTime(0,0,0).secsTo(QTime::currentTime()));
 }
