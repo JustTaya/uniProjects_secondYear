@@ -30,8 +30,7 @@ SOURCES += \
     addtimerdialog.cpp \
     timeralarm.cpp \
     alarmlistitem.cpp \
-    addalarmdialog.cpp \
-    logmaker.cpp
+    addalarmdialog.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,8 +38,7 @@ HEADERS += \
     addtimerdialog.h \
     timeralarm.h \
     alarmlistitem.h \
-    addalarmdialog.h \
-    logmaker.h
+    addalarmdialog.h
 
 FORMS += \
         mainwindow.ui \
