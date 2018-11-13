@@ -7,8 +7,9 @@ AddTimerDialog::AddTimerDialog(int numb,QWidget *parent) :
 {
     ui->setupUi(this);
     this->data=new TimerData;
+    data->index=numb;
 
-    ui->timerName->setText("Timer "+QString::number(numb));
+    ui->timerName->setText("Timer "+QString::number(data->index));
     this->setStartData(numb);
     ui->Delay->setVisible(false);
     ui->Delay->setDisabled(true);
@@ -22,6 +23,7 @@ AddTimerDialog::AddTimerDialog(TimerData* data,QWidget *parent) :
     ui->setupUi(this);
     this->data=new TimerData;
 
+    this->data->index=data->index;
     ui->timerName->setText(data->name);
     ui->timeEdit->setTime(data->time);
     ui->Type->setCurrentIndex(data->type);
@@ -47,7 +49,9 @@ AddTimerDialog::AddTimerDialog(int numb, QTime timer, QTime delay,QWidget *paren
     ui->setupUi(this);
     this->data=new TimerData;
 
-    ui->timerName->setText("Timer "+QString::number(numb));
+    data->index=numb;
+
+    ui->timerName->setText("Timer "+QString::number(data->index));
     ui->timeEdit->setTime(timer);
     ui->Delay->setTime(delay);
     this->setStartData(numb);
@@ -85,7 +89,6 @@ TimerData* AddTimerDialog::getData()
 void AddTimerDialog::setStartData(int numb)
 {
     data->name="Timer "+QString::number(numb);
-    data->index=numb;
     data->time=QTime::fromString("00:00:00");
     data->type=0;
     data->delay=QTime::fromString("00:00:00");

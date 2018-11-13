@@ -50,11 +50,11 @@ void MainWindow::on_addTimerButton_clicked()
     if(dialog->exec())
     {
         connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
-        TimerListItem* item=new TimerListItem(this->timers,dialog->getData());
 
+        ++this->timer_numb;
+        TimerListItem* item=new TimerListItem(this->timers,dialog->getData());
         this->timerList->layout()->addWidget(item);
         this->timers.push_back(item);
-        ++this->timer_numb;
     }
     foreach(auto iter,timers)
         iter->setTimerList(this->timers);

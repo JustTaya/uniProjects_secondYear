@@ -99,7 +99,7 @@ QString TimerListItem::getName()
 
 int TimerListItem::getIndex()
 {
-    return this->index;
+    return this->data->index;
 }
 
 State TimerListItem::getState()
