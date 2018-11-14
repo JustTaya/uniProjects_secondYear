@@ -37,31 +37,7 @@ private slots:
     void on_addTimerButton_clicked();
 
     void on_addAlarmButton_clicked();
-/*
-    void on_actionNo_filter_triggered();
 
-    void on_actionShow_enabled_triggered();
-
-    void on_actionShow_disabled_triggered();
-
-    void on_actionSunday_triggered();
-
-    void on_actionMonday_triggered();
-
-    void on_actionTuesday_triggered();
-
-    void on_actionWednesday_triggered();
-
-    void on_actionThursday_triggered();
-
-    void on_actionFriday_triggered();
-
-    void on_actionSaturday_triggered();
-
-    void on_actionEveryday_triggered();
-
-    void on_actionChange_triggered();
-*/
     void on_comboBox_2_currentIndexChanged(int index);
 
     void on_comboBox_currentIndexChanged(int index);

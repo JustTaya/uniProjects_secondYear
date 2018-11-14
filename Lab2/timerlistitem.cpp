@@ -72,15 +72,16 @@ void TimerListItem::setData( const QList<TimerListItem*>& list,TimerData* data)
     }
     }
 
-    if(data->triggerAfter!=-1)
+    if(data->triggerAfter!=-1 && data->triggerAfter!=this->getIndex())
     {
         foreach(auto iter,list)
         {
-            if(iter->getIndex()==data->triggerAfter)
+              disconnect(iter->timer,SIGNAL(timeout()),this,SLOT(run()));
+
+                if(iter->getIndex()==data->triggerAfter)
             {
-                ui->delayedLabel->setText("Trigger after "+iter->getName());
-                connect(iter->timer,SIGNAL(timeout()),this,SLOT(run()));
-                break;
+                    ui->delayedLabel->setText("Trigger after "+iter->getName());
+                    connect(iter->timer,SIGNAL(timeout()),this,SLOT(run()));
             }
         }
     }
@@ -100,6 +101,7 @@ void TimerListItem::setData( const QList<TimerListItem*>& list,TimerData* data)
         break;
     }
 }
+
 
 QString TimerListItem::getName()
 {
@@ -185,11 +187,11 @@ void TimerListItem::on_pauseButton_clicked()
     setPauseMode();
 }
 
-void TimerListItem::on_stopButton_clicked()
+void TimerListItem::stop()
 {
     this->tmpTimer->stop();
     setPauseMode();
-    if(initDelay!=0)
+    if(initDelay>0)
     {
         this->delayTimer->stop();
         QTime t=QTime(0,0,0).addSecs(this->initDelay);
@@ -205,12 +207,19 @@ void TimerListItem::on_stopButton_clicked()
     }
 }
 
+void TimerListItem::on_stopButton_clicked()
+{
+    stop();
+}
+
 
 void TimerListItem::alarm()
 {
     setPauseMode();
+
     this->tmpTimer->stop();
     this->timer->stop();
+
     this->delay=this->initDelay;
     this->time=this->initTime;
     if(initDelay>0)
@@ -263,9 +272,7 @@ void TimerListItem::setPauseMode()
 
 void TimerListItem::on_editButton_clicked()
 {
-    setPauseMode();
-    timer->stop();
-    tmpTimer->stop();
+    stop();
 
     AddTimerDialog* dialog=new AddTimerDialog(this->data);
     foreach(auto iter,timers)
@@ -278,7 +285,7 @@ void TimerListItem::on_editButton_clicked()
     {
         connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
         this->data=dialog->getData();
-        this->setData(this->timers,this->data);
+        this->setData(this->timers,dialog->getData());
     }
 }
 

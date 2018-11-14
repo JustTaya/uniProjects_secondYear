@@ -79,6 +79,7 @@ private:
     void setPauseMode();
     void setData(const QList<TimerListItem*>& list,TimerData* data);
     void runAlarmTimer();
-   };
+    void stop();
+};
 
 #endif // TIMERLISTITEM_H
