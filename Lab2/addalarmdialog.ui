@@ -18,6 +18,11 @@
 	color: white;
 }
 
+QPushButton
+{
+background-color: rgb(46, 52, 54);
+}
+
 QTextEdit {
 	background-color: rgb(46, 52, 54);
 }
