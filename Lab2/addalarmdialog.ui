@@ -14,7 +14,15 @@
    <string>Dialog</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QDialog
+   <string notr="true">QWidget {
+	color: white;
+}
+
+QTextEdit {
+	background-color: rgb(46, 52, 54);
+}
+
+QDialog
 {
 background-color: rgb(46, 52, 54);
 }
