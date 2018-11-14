@@ -87,7 +87,7 @@ background-color: rgb(77, 15, 15);
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="timersTab">
        <attribute name="title">
@@ -184,6 +184,11 @@ background-color: rgb(77, 15, 15);
           </item>
           <item>
            <property name="text">
+            <string>Sunday</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Monday</string>
            </property>
           </item>
@@ -210,11 +215,6 @@ background-color: rgb(77, 15, 15);
           <item>
            <property name="text">
             <string>Saturday</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Sunday</string>
            </property>
           </item>
          </widget>

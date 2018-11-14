@@ -15,7 +15,7 @@ struct AlarmData
     int index;
     int timeFormat;
     QTime time;
-    bool* days;
+    bool days[7];
     int sound;
 };
 
@@ -56,7 +56,7 @@ private slots:
 
 private:
     Ui::AddAlarmDialog *ui;
-    bool* week;
+    bool week[7];
     AlarmData* data;
     void setDay(int arg1,int day);
   };

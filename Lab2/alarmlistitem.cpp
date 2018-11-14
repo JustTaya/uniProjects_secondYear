@@ -8,9 +8,9 @@ AlarmListItem::AlarmListItem(AlarmData* data,QWidget *parent) :
     ui->setupUi(this);
     this->data=data;
     this->state=off;
-    this->alarmTimer=new QTimer;
+    this->playlist=new QMediaPlaylist;
 
-    connect(alarmTimer,SIGNAL(timeout()),this, SLOT(alarm()));
+    this->setData();
 }
 
 AlarmListItem::~AlarmListItem()
@@ -32,18 +32,39 @@ void AlarmListItem::changeEvent(QEvent *e)
 
 void AlarmListItem::setData()
 {
+    ui->Name_label->setText(this->data->name);
+
+    for(size_t i=0;i<7;i++)
+        this->week[i]=this->data->days[i];
     switch(data->timeFormat){
-    case 0:
+   case 0:
         ui->time_Label->setText(data->time.toString("h:mm AP"));
         break;
     case 1:
         ui->time_Label->setText(data->time.toString("hh:mm:ss"));
         break;
     }
-    ui->time_Label->setText(data->time.toString(this->timeFormat));
+
     this->initTime=abs(QTime(0,0,0).secsTo(data->time));
-    this->time=abs(this->initTime-QTime(0,0,0).secsTo(QTime::currentTime()));
+    this->alarmTimer=new QTimer;
+    this->delayTimer=new QTimer;
+    connect(alarmTimer,SIGNAL(timeout()),this, SLOT(alarm()));
+    connect(delayTimer,SIGNAL(timeout()),this, SLOT(newDay()));
+
+    switch(data->sound)
+    {
+    case 0:
+        this->playlist->addMedia(QMediaContent(QUrl("qrc:/Alarm1.mp3")));
+        break;
+    case 1:
+        this->playlist->addMedia(QMediaContent(QUrl("qrc:/Alarm2.mp3")));
+        break;
+    case 2:
+        this->playlist->addMedia(QMediaContent(QUrl("qrc:/Alarm3.wav")));
+        break;
+    }
 }
+
 
 void AlarmListItem::on_deleteButton_clicked()
 {
@@ -57,8 +78,8 @@ void AlarmListItem::on_checkBox_stateChanged(int arg1)
         this->state=on;
     else
         this->state=off;
-    if(arg1==Qt::Checked && this->checkDate())
-            this->runTimer();
+    if(arg1==Qt::Checked)
+            this->checkDate();
  }
 
 void AlarmListItem::alarm()
@@ -69,12 +90,16 @@ void AlarmListItem::alarm()
         alarmDialog->setTimer();
         alarmDialog->show();
     }
+    delete this->alarmTimer;
+    delete this->delayTimer;
+    this->setData();
     this->time=this->initTime;
 }
 
 void AlarmListItem::runTimer()
 {
-    this->alarmTimer->start(this->time*1000);
+    this->time=abs(this->initTime-QTime(0,0,0).secsTo(QTime::currentTime()));
+    this->alarmTimer->start(1000*this->time);
 }
 
 
@@ -84,20 +109,22 @@ void AlarmListItem::on_editButton_clicked()
     dialog->show();
     if(dialog->exec())
     {
-        connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
+        connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
+        delete alarmTimer;
+        delete delayTimer;
         this->data=dialog->getData();
         this->setData();
     }  
 }
 
-bool AlarmListItem::checkDate()
+void AlarmListItem::checkDate()
 {
-    QDate date=QDate::currentDate();
-    if(date.dayOfWeek() && this->week[0]==true)
-        return true;
-    if(this->week[date.dayOfWeek()-1]==true)
-        return true;
-    return false;
+    int day=QDate::currentDate().dayOfWeek();
+
+    if(this->week[day])
+            runTimer();
+
+    delayTimer->start(24*60*60*1000);
 }
 
 bool AlarmListItem::checkDay(int day)
@@ -111,4 +138,10 @@ bool AlarmListItem::checkWeek()
         if(!this->week[i])
             return false;
     return true;
+}
+
+void AlarmListItem::newDay()
+{
+    alarmTimer->stop();
+    checkDate();
 }

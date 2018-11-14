@@ -249,7 +249,7 @@ image: url(:/s_clicked_icon.svg);
     <string>h:mm AP</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="timerName">
+  <widget class="QTextEdit" name="alarmName">
    <property name="geometry">
     <rect>
      <x>70</x>

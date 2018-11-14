@@ -6,11 +6,12 @@ AddAlarmDialog::AddAlarmDialog(int index,QWidget *parent) :
     ui(new Ui::AddAlarmDialog)
 {
     ui->setupUi(this);
-    this->week=new bool[7];
     for(size_t i=0;i<7;i++)
         this->week[i]=false;
     this->data=new AlarmData;
     this->data->index=index;
+    ui->alarmName->setText("Alarm "+QString::number(data->index));
+
 }
 
 AddAlarmDialog::AddAlarmDialog(AlarmData* data,QWidget *parent) :
@@ -18,10 +19,11 @@ AddAlarmDialog::AddAlarmDialog(AlarmData* data,QWidget *parent) :
     ui(new Ui::AddAlarmDialog)
 {
     ui->setupUi(this);
-    this->data=new AlarmData;
+    this->data=data;
 
-    this->week=data->days;
-   if(week[0])
+    for(size_t i=0;i<7;i++)
+        this->week[i]=this->data->days[i];
+    if(week[0])
        ui->Sunday->setCheckState(Qt::Checked);
    if(week[1])
        ui->Monday->setCheckState(Qt::Checked);
@@ -61,10 +63,11 @@ void AddAlarmDialog::changeEvent(QEvent *e)
 
 AlarmData* AddAlarmDialog::getData()
 {
-    this->data->name=ui->timerName->toPlainText();
+    this->data->name=ui->alarmName->toPlainText();
     this->data->timeFormat=ui->timeFormat->currentIndex();
     this->data->time=ui->timeEdit->time();
-    this->data->days=this->week;
+    for(size_t i=0;i<7;i++)
+        this->data->days[i]=this->week[i];
     this->data->sound=ui->Alarms->currentIndex();
     return this->data;
 }

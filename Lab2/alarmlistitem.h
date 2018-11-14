@@ -42,7 +42,8 @@ public:
 
     void setWeek(bool* week)
     {
-        this->week=week;
+        for(size_t i=0;i<7;i++)
+            this->week[i]=week[i];
     }
 
     bool checkDay(int day);
@@ -77,6 +78,10 @@ private slots:
 
     void on_editButton_clicked();
 
+    void newDay();
+
+    void nonadd(){}
+
 private:
     Ui::AlarmListItem *ui;
     State state;
@@ -85,11 +90,11 @@ private:
     QTimer* delayTimer;
     QTimer* alarmTimer;
     QMediaPlaylist* playlist;
-    bool* week;
+    bool week[7];
     QString timeFormat;
     AlarmData* data;
     void runTimer ();
-    bool checkDate();
+    void checkDate();
     void setData();
 };
 
