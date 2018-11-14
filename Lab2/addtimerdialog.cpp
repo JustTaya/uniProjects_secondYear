@@ -29,7 +29,6 @@ AddTimerDialog::AddTimerDialog(TimerData* data,QWidget *parent) :
     this->data=new TimerData;
 
     this->data->index=data->index;
-    ui->timerName->setText(data->name);
     ui->timeEdit->setTime(data->time);
     ui->Type->setCurrentIndex(data->type);
     ui->Alarms->setCurrentIndex(data->sound);
@@ -45,6 +44,12 @@ AddTimerDialog::AddTimerDialog(TimerData* data,QWidget *parent) :
         ui->Delay->setVisible(false);
         ui->Delay->setDisabled(true);
     }
+
+    QRegExp rx("[A-Z,a-z,0-9, ]{1,19}");
+    QValidator *validator = new QRegExpValidator(rx, this);
+    ui->timerName->setValidator(validator);
+    ui->timerName->setText(data->name);
+
 }
 
 AddTimerDialog::AddTimerDialog(int numb, QTime timer, QTime delay,QWidget *parent) :
@@ -60,6 +65,12 @@ AddTimerDialog::AddTimerDialog(int numb, QTime timer, QTime delay,QWidget *paren
     ui->timeEdit->setTime(timer);
     ui->Delay->setTime(delay);
     this->setStartData(numb);
+
+    QRegExp rx("[A-Z,a-z,0-9, ]{1,19}");
+    QValidator *validator = new QRegExpValidator(rx, this);
+    ui->timerName->setValidator(validator);
+    ui->timerName->setText("Timer "+QString::number(data->index));
+
 }
 
 AddTimerDialog::~AddTimerDialog()

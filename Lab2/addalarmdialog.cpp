@@ -10,6 +10,9 @@ AddAlarmDialog::AddAlarmDialog(int index,QWidget *parent) :
         this->week[i]=false;
     this->data=new AlarmData;
     this->data->index=index;
+    QRegExp rx("[A-Z,a-z,0-9, ]{1,19}");
+    QValidator *validator = new QRegExpValidator(rx, this);
+    ui->alarmName->setValidator(validator);
     ui->alarmName->setText("Alarm "+QString::number(data->index));
     ui->timeEdit->setDisplayFormat("h:mm AP");
 }
@@ -42,6 +45,12 @@ AddAlarmDialog::AddAlarmDialog(AlarmData* data,QWidget *parent) :
    ui->timeFormat->setCurrentIndex(data->timeFormat);
    ui->Alarms->setCurrentIndex(data->sound);
    ui->timeEdit->setTime(data->time);
+
+   QRegExp rx("[A-Z,a-z,0-9, ]{1,19}");
+   QValidator *validator = new QRegExpValidator(rx, this);
+   ui->alarmName->setValidator(validator);
+   ui->alarmName->setText(data->name);
+   ui->timeEdit->setDisplayFormat("h:mm AP");
 }
 
 AddAlarmDialog::~AddAlarmDialog()
@@ -63,7 +72,7 @@ void AddAlarmDialog::changeEvent(QEvent *e)
 
 AlarmData* AddAlarmDialog::getData()
 {
-    this->data->name=ui->alarmName->toPlainText();
+    this->data->name=ui->alarmName->text();
     this->data->timeFormat=ui->timeFormat->currentIndex();
     this->data->time=ui->timeEdit->time();
     for(size_t i=0;i<7;i++)
