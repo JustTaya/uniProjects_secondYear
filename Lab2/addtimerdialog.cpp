@@ -9,10 +9,15 @@ AddTimerDialog::AddTimerDialog(int numb,QWidget *parent) :
     this->data=new TimerData;
     data->index=numb;
 
-    ui->timerName->setText("Timer "+QString::number(data->index));
     this->setStartData(numb);
     ui->Delay->setVisible(false);
     ui->Delay->setDisabled(true);
+
+    QRegExp rx("[A-Z,a-z,0-9, ]{1,19}");
+    QValidator *validator = new QRegExpValidator(rx, this);
+    ui->timerName->setValidator(validator);
+    ui->timerName->setText("Timer "+QString::number(data->index));
+
 }
 
 
@@ -104,9 +109,9 @@ void AddTimerDialog::addTimer(QString name,int index)
     this->timers.insert(name,index);
 }
 
-void AddTimerDialog::on_timerName_textChanged()
+void AddTimerDialog::on_timerName_textChanged(const QString &arg1)
 {
-    data->name=ui->timerName->toPlainText();
+    data->name=arg1;
 }
 
 void AddTimerDialog::on_Type_currentIndexChanged(int index)
@@ -122,3 +127,5 @@ void AddTimerDialog::on_Type_currentIndexChanged(int index)
         ui->Delay->setEnabled(true);
     }
 }
+
+

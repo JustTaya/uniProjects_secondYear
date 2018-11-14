@@ -176,16 +176,6 @@ color:rgb(238, 238, 236);</string>
     <string>Name:</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="timerName">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>10</y>
-     <width>141</width>
-     <height>41</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QComboBox" name="Type">
    <property name="geometry">
     <rect>
@@ -210,6 +200,16 @@ color:rgb(238, 238, 236);</string>
      <string>Play after time</string>
     </property>
    </item>
+  </widget>
+  <widget class="QLineEdit" name="timerName">
+   <property name="geometry">
+    <rect>
+     <x>150</x>
+     <y>10</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>

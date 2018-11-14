@@ -264,6 +264,8 @@ void TimerListItem::setPauseMode()
 void TimerListItem::on_editButton_clicked()
 {
     setPauseMode();
+    timer->stop();
+    tmpTimer->stop();
 
     AddTimerDialog* dialog=new AddTimerDialog(this->data);
     foreach(auto iter,timers)

@@ -40,9 +40,9 @@ public:
 protected:
     void changeEvent(QEvent *e);
 private slots:
-    void on_timerName_textChanged();
-
     void on_Type_currentIndexChanged(int index);
+
+    void on_timerName_textChanged(const QString &arg1);
 
 private:
     Ui::AddTimerDialog *ui;
