@@ -75,64 +75,6 @@ void MainWindow::on_addAlarmButton_clicked()
         alarm_numb++;
     }
 }
-/*
-
-
-void MainWindow::on_actionWednesday_triggered()
-{
-
-}
-
-void MainWindow::on_actionThursday_triggered()
-{
-    foreach(TimerListItem* iter,this->timers)
-        iter->setVisible(true);
-    foreach(AlarmListItem* iter,this->alarms)
-    {
-        if(iter->checkDay(4))
-            iter->setVisible(true);
-        else
-            iter->setVisible(false);
-    }
-}
-
-void MainWindow::on_actionFriday_triggered()
-{
-    foreach(TimerListItem* iter,this->timers)
-        iter->setVisible(true);
-    foreach(AlarmListItem* iter,this->alarms)
-    {
-        if(iter->checkDay(5))
-            iter->setVisible(true);
-        else
-            iter->setVisible(false);
-    }
-}
-
-void MainWindow::on_actionSaturday_triggered()
-{
-    foreach(TimerListItem* iter,this->timers)
-        iter->setVisible(true);
-    foreach(AlarmListItem* iter,this->alarms)
-    {
-        if(iter->checkDay(6))
-            iter->setVisible(true);
-        else
-            iter->setVisible(false);
-    }
-}
-
-
-void MainWindow::on_actionChange_triggered()
-{
-    SettingsDialog* dialog=new SettingsDialog;
-    if(dialog->exec())
-    {
-        connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
-        this->settings=dialog->getSettings();
-    }
-}
-*/
 
 void MainWindow::on_comboBox_2_currentIndexChanged(int index)
 {
@@ -141,7 +83,10 @@ void MainWindow::on_comboBox_2_currentIndexChanged(int index)
     case 0:
     {
         foreach(TimerListItem* iter,this->timers)
-            iter->setVisible(true);
+        {
+            if(iter->getState()!=del)
+                iter->setVisible(true);
+        }
         break;
     }
     case 1:
@@ -170,10 +115,12 @@ void MainWindow::on_comboBox_2_currentIndexChanged(int index)
     {
         foreach(TimerListItem* iter,this->timers)
         {
-            if(iter->getType()!=0)
-                iter->setVisible(true);
-            else
-                iter->setVisible(false);
+            if(iter->getState()!=del){
+                if(iter->getType()!=0)
+                    iter->setVisible(true);
+                else
+                    iter->setVisible(false);
+            }
         }
         break;
     }
@@ -181,10 +128,12 @@ void MainWindow::on_comboBox_2_currentIndexChanged(int index)
     {
         foreach(TimerListItem* iter,this->timers)
         {
-            if(iter->getType()==0)
-                iter->setVisible(true);
-            else
-                iter->setVisible(false);
+            if(iter->getState()!=del){
+                if(iter->getType()==0)
+                    iter->setVisible(true);
+                else
+                    iter->setVisible(false);
+            }
         }
         break;
     }
@@ -198,7 +147,10 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
     case 0:
     {
         foreach(AlarmListItem* iter,this->alarms)
-            iter->setVisible(true);
+        {
+            if(iter->getState()!=del)
+                iter->setVisible(true);
+        }
         break;
     }
     case 1:
@@ -227,10 +179,12 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
     {
         foreach(AlarmListItem* iter,this->alarms)
         {
-            if(iter->checkWeek())
-                iter->setVisible(true);
-            else
-                iter->setVisible(false);
+            if(iter->getState()!=del){
+                if(iter->checkWeek())
+                    iter->setVisible(true);
+                else
+                    iter->setVisible(false);
+            }
         }
         break;
     }
@@ -238,88 +192,90 @@ void MainWindow::on_comboBox_currentIndexChanged(int index)
     {
         foreach(AlarmListItem* iter,this->alarms)
         {
-            if(iter->checkDay(0))
-                iter->setVisible(true);
-            else
-                iter->setVisible(false);
+            if(iter->getState()!=del){
+                if(iter->checkDay(0))
+                    iter->setVisible(true);
+                else
+                    iter->setVisible(false);
+            }
         }
         break;
     }
     case 5:
     {
-        foreach(TimerListItem* iter,this->timers)
-            iter->setVisible(true);
         foreach(AlarmListItem* iter,this->alarms)
         {
-            if(iter->checkDay(1))
-                iter->setVisible(true);
-            else
-                iter->setVisible(false);
+            if(iter->getState()!=del){
+                if(iter->checkDay(1))
+                    iter->setVisible(true);
+                else
+                    iter->setVisible(false);
+            }
         }
         break;
     }
     case 6:
     {
-        foreach(TimerListItem* iter,this->timers)
-            iter->setVisible(true);
         foreach(AlarmListItem* iter,this->alarms)
         {
-            if(iter->checkDay(2))
-                iter->setVisible(true);
-            else
-                iter->setVisible(false);
+            if(iter->getState()!=del){
+                if(iter->checkDay(2))
+                    iter->setVisible(true);
+                else
+                    iter->setVisible(false);
+            }
         }
         break;
     }
     case 7:
     {
-        foreach(TimerListItem* iter,this->timers)
-            iter->setVisible(true);
         foreach(AlarmListItem* iter,this->alarms)
         {
-            if(iter->checkDay(3))
-                iter->setVisible(true);
-            else
-                iter->setVisible(false);
+            if(iter->getState()!=del){
+                if(iter->checkDay(3))
+                    iter->setVisible(true);
+                else
+                    iter->setVisible(false);
+            }
         }
         break;
     }
     case 8:
     {
-        foreach(TimerListItem* iter,this->timers)
-            iter->setVisible(true);
         foreach(AlarmListItem* iter,this->alarms)
         {
-            if(iter->checkDay(4))
-                iter->setVisible(true);
-            else
-                iter->setVisible(false);
+            if(iter->getState()!=del){
+                if(iter->checkDay(4))
+                    iter->setVisible(true);
+                else
+                    iter->setVisible(false);
+            }
         }
         break;
     }
     case 9:
     {
-        foreach(TimerListItem* iter,this->timers)
-            iter->setVisible(true);
         foreach(AlarmListItem* iter,this->alarms)
         {
-            if(iter->checkDay(5))
-                iter->setVisible(true);
-            else
-                iter->setVisible(false);
+            if(iter->getState()!=del){
+                if(iter->checkDay(5))
+                    iter->setVisible(true);
+                else
+                    iter->setVisible(false);
+            }
         }
         break;
     }
     case 10:
     {
-        foreach(TimerListItem* iter,this->timers)
-            iter->setVisible(true);
         foreach(AlarmListItem* iter,this->alarms)
         {
-            if(iter->checkDay(6))
-                iter->setVisible(true);
-            else
-                iter->setVisible(false);
+            if(iter->getState()!=del){
+                if(iter->checkDay(6))
+                    iter->setVisible(true);
+                else
+                    iter->setVisible(false);
+            }
         }
         break;
     }
