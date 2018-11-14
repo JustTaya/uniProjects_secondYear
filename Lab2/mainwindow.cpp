@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->timerList->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     ui->timerList->setWidget(this->timerList);
     this->timer_numb=0;
+    this->alarm_numb=0;
 
     this->alarmList=new QWidget;
     this->alarmList->setLayout(new QVBoxLayout);
@@ -60,25 +61,21 @@ void MainWindow::on_addTimerButton_clicked()
         iter->setTimerList(this->timers);
 }
 
-/*
+
 void MainWindow::on_addAlarmButton_clicked()
 {
-    AddAlarmDialog* dialog=new AddAlarmDialog;
-    dialog->setFormat(this->settings->timeFormat);
+    AddAlarmDialog* dialog=new AddAlarmDialog(this->alarm_numb);
     dialog->show();
     if(dialog->exec())
     {
         connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
-        AlarmListItem* item=new AlarmListItem;
-        item->setTimeFormat(this->settings->timeFormat);
-        item->setWeek(dialog->getWeek());
-        item->setPlaylist(this->settings->alarmPlaylist);
-        item->setTime(dialog->getValues());
+        AlarmListItem* item=new AlarmListItem(dialog->getData());
         this->alarmList->layout()->addWidget(item);
         this->alarms.push_back(item);
+        alarm_numb++;
     }
 }
-
+/*
 void MainWindow::on_actionNo_filter_triggered()
 {
 

@@ -27,7 +27,7 @@ class AlarmListItem : public QWidget
     Q_OBJECT
 
 public:
-    explicit AlarmListItem(QWidget *parent = nullptr);
+    explicit AlarmListItem(AlarmData* data,QWidget *parent = nullptr);
     ~AlarmListItem();
     void setTime(QTime time);
     int getInitTime()
@@ -82,13 +82,15 @@ private:
     State state;
     int initTime;
     int time;
-    QTimer* timer;
+    QTimer* delayTimer;
     QTimer* alarmTimer;
     QMediaPlaylist* playlist;
     bool* week;
     QString timeFormat;
+    AlarmData* data;
     void runTimer ();
     bool checkDate();
+    void setData();
 };
 
 #endif // ALARMLISTITEM_H

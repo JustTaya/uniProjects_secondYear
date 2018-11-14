@@ -1,7 +1,7 @@
 #include "addalarmdialog.h"
 #include "ui_addalarmdialog.h"
 
-AddAlarmDialog::AddAlarmDialog(QWidget *parent) :
+AddAlarmDialog::AddAlarmDialog(int index,QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AddAlarmDialog)
 {
@@ -9,6 +9,37 @@ AddAlarmDialog::AddAlarmDialog(QWidget *parent) :
     this->week=new bool[7];
     for(size_t i=0;i<7;i++)
         this->week[i]=false;
+    this->data=new AlarmData;
+    this->data->index=index;
+}
+
+AddAlarmDialog::AddAlarmDialog(AlarmData* data,QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::AddAlarmDialog)
+{
+    ui->setupUi(this);
+    this->data=new AlarmData;
+
+    this->week=data->days;
+   if(week[0])
+       ui->Sunday->setCheckState(Qt::Checked);
+   if(week[1])
+       ui->Monday->setCheckState(Qt::Checked);
+   if(week[2])
+       ui->Tuesday->setCheckState(Qt::Checked);
+   if(week[3])
+       ui->Wednesday->setCheckState(Qt::Checked);
+   if(week[4])
+       ui->Thursday->setCheckState(Qt::Checked);
+   if(week[5])
+       ui->Friday->setCheckState(Qt::Checked);
+   if(week[6])
+       ui->Saturday->setCheckState(Qt::Checked);
+    this->data->index=data->index;
+
+   ui->timeFormat->setCurrentIndex(data->timeFormat);
+   ui->Alarms->setCurrentIndex(data->sound);
+   ui->timeEdit->setTime(data->time);
 }
 
 AddAlarmDialog::~AddAlarmDialog()
@@ -28,14 +59,14 @@ void AddAlarmDialog::changeEvent(QEvent *e)
     }
 }
 
-QTime AddAlarmDialog::getValues()
+AlarmData* AddAlarmDialog::getData()
 {
-    return ui->timeEdit->time();
-}
-
-void  AddAlarmDialog::setValue(QTime time)
-{
-    ui->timeEdit->setTime(time);
+    this->data->name=ui->timerName->toPlainText();
+    this->data->timeFormat=ui->timeFormat->currentIndex();
+    this->data->time=ui->timeEdit->time();
+    this->data->days=this->week;
+    this->data->sound=ui->Alarms->currentIndex();
+    return this->data;
 }
 
 void AddAlarmDialog::on_Sunday_stateChanged(int arg1)
@@ -81,7 +112,15 @@ void AddAlarmDialog::setDay(int arg1,int day)
         this->week[day]=false;
 }
 
- void AddAlarmDialog::setFormat(QString format)
- {
-     ui->timeEdit->setDisplayFormat(format);
- }
+
+void AddAlarmDialog::on_timeFormat_currentIndexChanged(int index)
+{
+    switch (index) {
+    case 0:
+        ui->timeEdit->setDisplayFormat("h:mm AP");
+        break;
+    case 1:
+        ui->timeEdit->setDisplayFormat("hh:mm:ss");
+        break;
+    }
+}

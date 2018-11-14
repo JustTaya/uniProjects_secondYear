@@ -82,6 +82,8 @@ TimerData* AddTimerDialog::getData()
     data->sound=ui->Alarms->currentIndex();
     if(ui->Timers->currentIndex()!=0)
         data->triggerAfter=this->timers[ui->Timers->currentText()];
+    else
+        data->triggerAfter=-1;
     return this->data;
 }
 

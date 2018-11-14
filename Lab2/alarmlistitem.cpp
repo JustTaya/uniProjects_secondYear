@@ -1,16 +1,16 @@
 #include "alarmlistitem.h"
 #include "ui_alarmlistitem.h"
 
-AlarmListItem::AlarmListItem(QWidget *parent) :
+AlarmListItem::AlarmListItem(AlarmData* data,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AlarmListItem)
 {
     ui->setupUi(this);
-
+    this->data=data;
     this->state=off;
-    this->timer=new QTimer;
+    this->alarmTimer=new QTimer;
 
-    connect(timer,SIGNAL(timeout()),this, SLOT(alarm()));
+    connect(alarmTimer,SIGNAL(timeout()),this, SLOT(alarm()));
 }
 
 AlarmListItem::~AlarmListItem()
@@ -30,12 +30,19 @@ void AlarmListItem::changeEvent(QEvent *e)
     }
 }
 
-
-void AlarmListItem::setTime(QTime time)
+void AlarmListItem::setData()
 {
-  ui->time_Label->setText(time.toString(this->timeFormat));
-  this->initTime=abs(QTime(0,0,0).secsTo(time));
-  this->time=abs(this->initTime-QTime(0,0,0).secsTo(QTime::currentTime()));
+    switch(data->timeFormat){
+    case 0:
+        ui->time_Label->setText(data->time.toString("h:mm AP"));
+        break;
+    case 1:
+        ui->time_Label->setText(data->time.toString("hh:mm:ss"));
+        break;
+    }
+    ui->time_Label->setText(data->time.toString(this->timeFormat));
+    this->initTime=abs(QTime(0,0,0).secsTo(data->time));
+    this->time=abs(this->initTime-QTime(0,0,0).secsTo(QTime::currentTime()));
 }
 
 void AlarmListItem::on_deleteButton_clicked()
@@ -52,40 +59,35 @@ void AlarmListItem::on_checkBox_stateChanged(int arg1)
         this->state=off;
     if(arg1==Qt::Checked && this->checkDate())
             this->runTimer();
-    else
-        this->timer->start(24*60*60*1000);
-}
+ }
 
 void AlarmListItem::alarm()
 {
-    this->timer->stop();
+    this->alarmTimer->stop();
     if(this->state==on){
-    //TimerAlarm* alarmDialog=new TimerAlarm(this->playlist);
-      //  alarmDialog->setTimer();
-        //alarmDialog->show();
+    TimerAlarm* alarmDialog=new TimerAlarm(this->playlist,this->data->name);
+        alarmDialog->setTimer();
+        alarmDialog->show();
     }
     this->time=this->initTime;
 }
 
 void AlarmListItem::runTimer()
 {
-    this->timer->start(this->time*1000);
+    this->alarmTimer->start(this->time*1000);
 }
 
 
 void AlarmListItem::on_editButton_clicked()
 {
-    AddAlarmDialog* dialog=new AddAlarmDialog;
-    dialog->setFormat(this->timeFormat);
+    AddAlarmDialog* dialog=new AddAlarmDialog(this->data);
     dialog->show();
     if(dialog->exec())
     {
-        QTime time;
         connect(dialog,SIGNAL(accepted(QTime)),this,SLOT(nonadd()));
-        time=dialog->getValues();
-        this->setWeek(dialog->getWeek());
-        this->setTime(time);
-    }
+        this->data=dialog->getData();
+        this->setData();
+    }  
 }
 
 bool AlarmListItem::checkDate()

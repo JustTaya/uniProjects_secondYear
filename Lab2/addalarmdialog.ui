@@ -19,6 +19,21 @@
 background-color: rgb(46, 52, 54);
 }
 
+QTimeEdit
+{
+background-color: rgb(46, 52, 54);
+}
+
+QComboBox
+{
+background-color: rgb(46, 52, 54);
+}
+
+QTimeEdit
+{
+background-color: rgb(46, 52, 54);
+}
+
 QCheckBox::indicator
 {
 width:22px;
@@ -222,7 +237,7 @@ image: url(:/s_clicked_icon.svg);
    <property name="geometry">
     <rect>
      <x>40</x>
-     <y>100</y>
+     <y>170</y>
      <width>221</width>
      <height>41</height>
     </rect>
@@ -237,7 +252,7 @@ image: url(:/s_clicked_icon.svg);
   <widget class="QTextEdit" name="timerName">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>70</x>
      <y>10</y>
      <width>141</width>
      <height>41</height>
@@ -254,7 +269,7 @@ image: url(:/s_clicked_icon.svg);
     </rect>
    </property>
    <property name="text">
-    <string>Alarm:</string>
+    <string>Time format:</string>
    </property>
   </widget>
   <widget class="QLabel" name="Name_Label">
@@ -274,7 +289,7 @@ image: url(:/s_clicked_icon.svg);
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>210</y>
+     <y>270</y>
      <width>121</width>
      <height>31</height>
     </rect>
@@ -287,7 +302,7 @@ image: url(:/s_clicked_icon.svg);
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>260</y>
+     <y>310</y>
      <width>111</width>
      <height>25</height>
     </rect>
@@ -308,78 +323,128 @@ image: url(:/s_clicked_icon.svg);
     </property>
    </item>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>160</y>
-     <width>261</width>
+     <x>10</x>
+     <y>130</y>
+     <width>121</width>
      <height>31</height>
     </rect>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QCheckBox" name="Sunday">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QCheckBox" name="Monday">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="2">
-     <widget class="QCheckBox" name="Tuesday">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="3">
-     <widget class="QCheckBox" name="Wednesday">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="4">
-     <widget class="QCheckBox" name="Thursday">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="5">
-     <widget class="QCheckBox" name="Friday">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="6">
-     <widget class="QCheckBox" name="Saturday">
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-    </item>
-   </layout>
+   <property name="text">
+    <string>Alarm:</string>
+   </property>
   </widget>
-  <widget class="QLabel" name="label">
+  <widget class="QComboBox" name="timeFormat">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>70</y>
-     <width>67</width>
-     <height>17</height>
+     <x>10</x>
+     <y>100</y>
+     <width>121</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <item>
+    <property name="text">
+     <string>&quot;h:mm AP&quot;</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>&quot;hh:mm:ss&quot;</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QCheckBox" name="Sunday">
+   <property name="geometry">
+    <rect>
+     <x>21</x>
+     <y>241</y>
+     <width>28</width>
+     <height>22</height>
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Monday">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
+     <y>241</y>
+     <width>28</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Tuesday">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>241</y>
+     <width>28</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Wednesday">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>241</y>
+     <width>28</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Thursday">
+   <property name="geometry">
+    <rect>
+     <x>180</x>
+     <y>241</y>
+     <width>28</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Friday">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>241</y>
+     <width>28</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="Saturday">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>241</y>
+     <width>28</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

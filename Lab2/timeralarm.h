@@ -29,6 +29,7 @@ public:
     TimerAlarm(QMediaPlaylist* playlist,QString name, QWidget *parent = nullptr);
     ~TimerAlarm();
     void setTimer();
+    void closeEvent(QCloseEvent *event);
 
 protected:
     void changeEvent(QEvent *e);

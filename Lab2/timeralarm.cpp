@@ -54,3 +54,7 @@ void TimerAlarm::setTimer(){
     this->timerAlarm->start(1000);
 }
 
+void TimerAlarm::closeEvent(QCloseEvent *event) {
+    this->timerAlarm->stop();
+    this->player->stop();
+}

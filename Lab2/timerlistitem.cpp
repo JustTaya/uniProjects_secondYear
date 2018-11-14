@@ -6,6 +6,7 @@ TimerListItem::TimerListItem(const QList<TimerListItem*>& list,TimerData* data,Q
     ui(new Ui::TimerListItem)
 {
     ui->setupUi(this);
+    this->state=on;
     this->setPauseMode();
     this->tmpTimer=new QTimer;
     this->timer=new QTimer;
@@ -18,7 +19,6 @@ TimerListItem::TimerListItem(const QList<TimerListItem*>& list,TimerData* data,Q
     connect(this->timer,SIGNAL(timeout()),this,SLOT(alarm()));
     connect(this->delayTimer,SIGNAL(timeout()),this,SLOT(delayTimeOut()));
     connect(this->tmpTimer,SIGNAL(timeout()),this,SLOT(step()));
-    connect(this->alarmTimer,SIGNAL(timeout()),this,SLOT(run()));
     connect(ui->playButton,SIGNAL(clicked()),this,SLOT(run()));
 }
 
@@ -47,23 +47,32 @@ void TimerListItem::setData( const QList<TimerListItem*>& list,TimerData* data)
     }
     case 1:
     {
+        ui->delayedLabel->setVisible(true);
+        ui->delayedTime->setVisible(true);
         ui->delayedTime->setText(data->delay.toString("hh:mm:ss"));
+        ui->delayedLabel->setText("Delayed for:");
         this->initDelay=QTime(0,0,0).secsTo(data->delay);
         this->delay=this->initDelay;
         break;
     }
     case 2:
     {
+        ui->delayedLabel->setVisible(true);
+        ui->delayedTime->setVisible(true);
         this->delay=0;
         this->initDelay=0;
         ui->delayedLabel->setText("Run at:");
         ui->delayedTime->setText(data->delay.toString("hh:mm:ss"));
-        delete alarmTimer;
+
+            delete alarmTimer;
+            alarmTimer=nullptr;
+
         runAlarmTimer();
+        connect(this->alarmTimer,SIGNAL(timeout()),this,SLOT(run()));
     }
     }
 
-    if(data->triggerAfter!=0)
+    if(data->triggerAfter!=-1)
     {
         foreach(auto iter,list)
         {
@@ -115,10 +124,11 @@ int TimerListItem::getType()
 void TimerListItem::run()
 {
     setPlayMode();
-    if(this->data->type==2)
+    if(this->data->type==2 && alarmTimer!=nullptr)
     {
         alarmTimer->stop();
         delete this->alarmTimer;
+        this->alarmTimer=nullptr;
     }
     if(this->delay>0)
     {
@@ -198,6 +208,7 @@ void TimerListItem::on_stopButton_clicked()
 
 void TimerListItem::alarm()
 {
+    setPauseMode();
     this->tmpTimer->stop();
     this->timer->stop();
     this->delay=this->initDelay;
@@ -220,17 +231,13 @@ void TimerListItem::alarm()
     {
         runAlarmTimer();
     }
-    setPauseMode();
 }
 
 void TimerListItem::runAlarmTimer()
 {
-    if(this->alarmTimer==nullptr)
-    {
-        this->alarmTimer=new QTimer;
-        alarmTimer->start(abs(QTime(0,0,0).secsTo(data->delay)-
-                            QTime(0,0,0).secsTo(QTime::currentTime()))*1000);
-    }
+    this->alarmTimer=new QTimer;
+    alarmTimer->start(abs(QTime(0,0,0).secsTo(data->delay)-
+                          QTime(0,0,0).secsTo(QTime::currentTime()))*1000);
 }
 
 void TimerListItem::setPlayMode()
@@ -269,7 +276,7 @@ void TimerListItem::on_editButton_clicked()
     {
         connect(dialog,SIGNAL(accepted()),this,SLOT(nonadd()));
         this->data=dialog->getData();
-        this->setData(this->timers,dialog->getData());
+        this->setData(this->timers,this->data);
     }
 }
 

@@ -35,9 +35,9 @@ private slots:
 
 
     void on_addTimerButton_clicked();
-/*
-    void on_addAlarmButton_clicked();
 
+    void on_addAlarmButton_clicked();
+/*
     void on_actionNo_filter_triggered();
 
     void on_actionShow_enabled_triggered();
@@ -70,6 +70,7 @@ private:
     QWidget* alarmList;
     QList<TimerListItem*> timers;
     int timer_numb;
+    int alarm_numb;
     QList<AlarmListItem*> alarms;
 };
 
