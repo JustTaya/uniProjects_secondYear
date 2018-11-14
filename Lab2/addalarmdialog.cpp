@@ -11,7 +11,7 @@ AddAlarmDialog::AddAlarmDialog(int index,QWidget *parent) :
     this->data=new AlarmData;
     this->data->index=index;
     ui->alarmName->setText("Alarm "+QString::number(data->index));
-
+    ui->timeEdit->setDisplayFormat("h:mm AP");
 }
 
 AddAlarmDialog::AddAlarmDialog(AlarmData* data,QWidget *parent) :

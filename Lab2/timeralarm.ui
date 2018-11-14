@@ -16,6 +16,12 @@
   <property name="styleSheet">
    <string notr="true">QDialog{
 background-color: rgb(77, 15, 15);
+color:rgb(238, 238, 236);
+}
+
+QLabel
+{
+color:rgb(238, 238, 236);
 }
 
 QPushButton
