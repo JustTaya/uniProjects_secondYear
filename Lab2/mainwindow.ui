@@ -28,11 +28,18 @@
   <property name="styleSheet">
    <string notr="true">color: rgb(245, 239, 215);
 background-color: rgb(46, 52, 54);
+
 QMainWindow{
 	min-width:303px;
 	min-height:500px;
 	max-width:303px;
 	max-height:500px;
+}
+
+QIcon
+{
+	image: url(:/t_icon.svg);
+
 }
 
 QWidget#centralWidget
