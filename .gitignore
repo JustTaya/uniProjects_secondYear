@@ -45,3 +45,5 @@ target_wrapper.*
 # QtCreator CMake
 CMakeLists.txt.user*
 *.stash
+
+Lab3/todoer-bot/__pycache__/
