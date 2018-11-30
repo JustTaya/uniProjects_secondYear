@@ -6,19 +6,22 @@ import db
 
 token = os.environ.get('TOKEN')
 bot = telebot.TeleBot(token)
-MAIN_MENU = types.ReplyKeyboardMarkup(resize_keyboard=True)
-MAIN_MENU.row('New list')
-MAIN_MENU.row('Show lists')
-MAIN_MENU.row('FAQ')
-db.init_db()
+database = db.Database()
+database.init_tables()
 
 server = Flask(__name__)
 
+
 @bot.message_handler(commands=['start'])
 def start(message):
-    custom_keyboard = [['New list', 'Show lists'],
-                       ['F']]
-    bot.send_message(message.chat_id, 'Hello, ' + message.from_user.first_name)
+    # db.cur.execute(
+    #    """INSERT INTO Users (userID,first_name,State) VALUES (%s, %s, %s)",(message.char.id, message.chat.first_name, 0)""")
+    markup = types.ReplyKeyboardMarkup(row_width=2)
+    add_button = types.KeyboardButton('New list')
+    show_button = types.KeyboardButton('Show lists')
+    faq_button = types.KeyboardButton('FAQ')
+    markup.add(add_button, show_button, faq_button)
+    bot.send_message(message.chat.id, 'Hello, ' + message.from_user.first_name)
 
 
 @bot.message_handler(func=lambda message: True, content_types=['text'])
