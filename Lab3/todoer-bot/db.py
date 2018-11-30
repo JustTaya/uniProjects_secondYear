@@ -23,10 +23,11 @@ class Database:
         self.cur.execute("""CREATE TABLE IF NOT EXISTS Lists(
                 UserID integer NOT NULL,
                 ListName varchar(50) NOT NULL,
-                ListID UUID PRIMARY KEY,
+                ListID UUID DEFAULT uuid_generate_v4 (),
+                PRIMARY KEY (ListID),
                 FOREIGN KEY (UserID) REFERENCES Users(UserID))""")
         self.cur.execute("""CREATE TABLE IF NOT EXISTS Notes (
-                NoteID UUID,
+                NoteID UUID DEFAULT uuid_generate_v4 (),
                 ListID UUID,
                 NoteName varchar(50) NOT NULL ,
                 ListName  varchar(50),
@@ -48,6 +49,20 @@ class Database:
             self.cur.execute(
                 "INSERT INTO Users (userID,first_name,State) VALUES (%s,%s,%s) ", (id, username, state))
         self.conn.commit()
+
+    def new_list(self, id, name):
+        self.cur.execute(
+            "INSERT INTO Lists (userID,ListName) VALUES (%s,%s) ", (id, name))
+        self.conn.commit()
+
+    def set_state(self, id, new_state):
+        self.cur.execute("UPDATE Users SET State=%s WHERE userID=%s", (id, new_state))
+        self.conn.commit()
+
+    def get_state(self, id):
+        self.cur.execute("SELECT State FROM Users WHERE UserID = %s", (id,))
+        state = self.cur.fetchone()
+        return state
 
     def close(self):
         self.conn.close()

@@ -30,6 +30,10 @@ states = {'init_state': 0,
 server = Flask(__name__)
 
 
+def add_list(name, id):
+    database.addList(id, name)
+
+
 # message handlers
 @bot.message_handler(commands=['start'])
 def start(message):
@@ -44,7 +48,11 @@ def start(message):
 
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == 'New list')
 def new_list(message):
-    bot.send_message(message.chat.id, 'Print the name of new list')
+    if not database.get_state(message.chat.id) == states['wait_list_name']:
+        database.set_state(message.chat.id, states['wait_list_name'])
+        bot.send_message(message.chat.id, 'Print the name of new list', reply_markup=None)
+    else:
+        add_list(message.chat.id, message.text)
 
 
 @server.route('/' + token, methods=['POST'])
