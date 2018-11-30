@@ -36,10 +36,17 @@ class Database:
                 NoteVoice varchar(256),
                 NoteAudio varchar(256),
                 FOREIGN KEY (ListID) REFERENCES Lists(ListID))""")
-        self.cur.execute("""CREATE TABLE IF NOT EXISTS State(
-                userID integer, 
-                State integer,
-                FOREIGN KEY (UserID) REFERENCES Users(UserID))""")
+        self.conn.commit()
+
+    def user_exists(self, id):
+        cur = self.conn.cursor()
+        cur.execute("SELECT * FROM Users WHERE UserID = %s", (id,))
+        return cur.fetchone() is not None
+
+    def new_user(self, id, username, state):
+        if not self.user_exists(id):
+            self.cur.execute(
+                "INSERT INTO Users (userID,first_name,State) VALUES (%s,%s,%s) ", (id, username, state))
         self.conn.commit()
 
     def close(self):
