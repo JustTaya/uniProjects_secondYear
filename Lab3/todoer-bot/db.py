@@ -55,8 +55,13 @@ class Database:
             "INSERT INTO Lists (userID,ListName) VALUES (%s,%s) ", (id, name))
         self.conn.commit()
 
+    def get_lists(self, id):
+        self.cur.execute("SELECT ListName FROM Lists WHERE UserID = %s", (id,))
+        lists = self.cur.fetchall()
+        return lists
+
     def set_state(self, id, new_state):
-        self.cur.execute("UPDATE Users SET State=%s WHERE userID=%s", (id, new_state))
+        self.cur.execute("UPDATE Users SET State=%s WHERE userID=%s", (new_state, id))
         self.conn.commit()
 
     def get_state(self, id):
