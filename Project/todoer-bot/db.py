@@ -84,6 +84,12 @@ class Database:
         self.cur.execute("DELETE FROM Lists WHERE ListID=%s", (listID,))
         self.conn.commit()
 
+    def edit_list(self, id, name):
+        self.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (id,))
+        listID = self.cur.fetchone()[0]
+        self.cur.execute("UPDATE Lists SET ListName = %s WHERE ListID = %s", (name, listID))
+        self.conn.commit()
+
     def delete_note(self, id, number):
         self.cur.execute("SELECT ListID, NoteID FROM Users WHERE userID=%s", (id,))
         data = self.cur.fetchone()

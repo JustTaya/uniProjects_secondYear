@@ -8,7 +8,7 @@ init_markup.add(add_button, show_button, faq_button)
 
 none_markup = types.ReplyKeyboardMarkup(row_width=1)
 back_button = types.KeyboardButton('Go back')
-none_markup.add(add_button, back_button)
+none_markup.add(back_button)
 
 list_chosen_markup = types.ReplyKeyboardMarkup(row_width=1)
 add_button = types.KeyboardButton('New note')

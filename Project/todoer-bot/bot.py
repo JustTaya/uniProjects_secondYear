@@ -25,7 +25,8 @@ states = {'init_state': 0,
           'wait_image': 8,
           'wait_file': 9,
           'wait_voice': 10,
-          'wait_audio': 11
+          'wait_audio': 11,
+          'edit_list': 12
           }
 
 server = Flask(__name__)
@@ -37,8 +38,9 @@ def add_list(id, name):
                          reply_markup=markups.none_markup)
     else:
         database.new_list(id, name)
-        database.set_state(id, states['init_state'])
+        database.set_state(id, states['list_menu'])
         bot.send_message(id, 'List added', reply_markup=markups.init_markup)
+        show_l(id)
 
 
 def show_l(id):
@@ -53,6 +55,17 @@ def show_l(id):
     bot.send_message(id, 'Your lists: ')
     for text in splitted_text:
         bot.send_message(id, res, reply_markup=markups.init_markup)
+
+
+def new_name(id, name):
+    if '/' in name:
+        bot.send_message(id, 'Invalid list name. Print another name of the list.',
+                         reply_markup=markups.none_markup)
+    else:
+        database.edit_list(id, name)
+        database.set_state(id, states['list_menu'])
+        bot.send_message(id, 'List name edited', reply_markup=markups.init_markup)
+        show_l(id)
 
 
 # message handlers
@@ -71,7 +84,7 @@ def new_list(message):
         add_list(message.chat.id, message.text)
     else:
         database.set_state(message.chat.id, states['wait_list_name'])
-        bot.send_message(message.chat.id, 'Print the name of new list',
+        bot.send_message(message.chat.id, 'Enter the name of new list',
                          reply_markup=markups.none_markup)
 
 
@@ -85,6 +98,8 @@ def go_back(message):
     state = database.get_state(message.chat.id)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
+    elif state[0] == states['edit_list']:
+        new_name(message.chat.id, message.text)
     elif state[0] == states['list_chosen']:
         database.set_state(message.chat.id, states['list_menu'])
         show_l(message.chat.id)
@@ -95,10 +110,25 @@ def delete_list(message):
     state = database.get_state(message.chat.id)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
+    elif state[0] == states['edit_list']:
+        new_name(message.chat.id, message.text)
     elif state[0] == states['list_chosen']:
         database.delete_list(message.chat.id)
         database.set_state(message.chat.id, states['list_menu'])
         show_l(message.chat.id)
+
+
+@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == 'Edit name')
+def edit_name(message):
+    state = database.get_state(message.chat.id)
+    if state[0] == states['wait_list_name']:
+        add_list(message.chat.id, message.text)
+    elif state[0] == states['edit_list']:
+        new_name(message.chat.id, message.text)
+    elif state[0] == states['list_chosen']:
+        database.set_state(message.chat.id, states['edit_list'])
+        bot.send_message(message.chat.id, 'Enter new name:',
+                         reply_markup=markups.none_markup)
 
 
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text[0] == '/')
@@ -133,6 +163,8 @@ def get_message(message):
     state = database.get_state(message.chat.id)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
+    elif state[0] == states['edit_list']:
+        new_name(message.chat.id, message.text)
 
 
 @server.route('/' + token, methods=['POST'])
