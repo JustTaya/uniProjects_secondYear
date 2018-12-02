@@ -43,6 +43,17 @@ def add_list(id, name):
         show_l(id)
 
 
+def add_note(id, name):
+    if '/' in name:
+        bot.send_message(id, 'Invalid note name. Print another name of the list.',
+                         reply_markup=markups.none_markup)
+    else:
+        database.new_note(id, name)
+        database.set_state(id, states['list_chosen'])
+        bot.send_message(id, 'Note added', reply_markup=markups.init_markup)
+        show_n(id)
+
+
 def show_l(id):
     database.set_state(id, states['list_menu'])
     lists = database.get_lists(id)
@@ -55,6 +66,30 @@ def show_l(id):
     bot.send_message(id, 'Your lists: ')
     for text in splitted_text:
         bot.send_message(id, res, reply_markup=markups.init_markup)
+
+
+def show_n(message):
+    tmp = message.text[1:]
+    bot.send_message(message.chat.id, tmp, reply_markup=markups.none_markup)
+    if not tmp.isdigit():
+        bot.send_message(message.chat.id, tmp, reply_markup=markups.none_markup)
+    else:
+        database.set_state(message.chat.id, states['list_chosen'])
+        list = database.get_list(message.chat.id, int(tmp))[0]
+        if list:
+            bot.send_message(message.chat.id, "Notes in list " + list)
+            notes = database.get_notes(message.chat.id, int(tmp))
+            res = ''
+            numb = 0
+            for i in notes:
+                res += '/' + str(numb) + ' ' + str(i[0]) + '\n'
+                numb += 1
+            if res == "":
+                bot.send_message(message.chat.id, "No notes yet.", reply_markup=markups.list_chosen_markup)
+            else:
+                splitted_text = util.split_string(res, 3000)
+                for text in splitted_text:
+                    bot.send_message(message.chat.id, text, reply_markup=markups.list_chosen_markup)
 
 
 def new_name(id, name):
@@ -82,6 +117,8 @@ def new_list(message):
     bot.send_message(message.chat.id, state)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
     else:
         database.set_state(message.chat.id, states['wait_list_name'])
         bot.send_message(message.chat.id, 'Enter the name of new list',
@@ -98,6 +135,8 @@ def go_back(message):
     state = database.get_state(message.chat.id)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
     elif state[0] == states['edit_list']:
         new_name(message.chat.id, message.text)
     elif state[0] == states['list_chosen']:
@@ -110,6 +149,8 @@ def delete_list(message):
     state = database.get_state(message.chat.id)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
     elif state[0] == states['edit_list']:
         new_name(message.chat.id, message.text)
     elif state[0] == states['list_chosen']:
@@ -123,6 +164,8 @@ def edit_name(message):
     state = database.get_state(message.chat.id)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
     elif state[0] == states['edit_list']:
         new_name(message.chat.id, message.text)
     elif state[0] == states['list_chosen']:
@@ -131,31 +174,25 @@ def edit_name(message):
                          reply_markup=markups.none_markup)
 
 
+@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == 'New note')
+def new_note(message):
+    state = database.get_state(message.chat.id)
+    bot.send_message(message.chat.id, state)
+    if state[0] == states['wait_list_name']:
+        add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
+    else:
+        database.set_state(message.chat.id, states['wait_note_name'])
+        bot.send_message(message.chat.id, 'Enter the name of new list',
+                         reply_markup=markups.none_markup)
+
+
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text[0] == '/')
 def get_message(message):
     state = database.get_state(message.chat.id)
     if state[0] == states['list_menu']:
-        tmp = message.text[1:]
-        bot.send_message(message.chat.id, tmp, reply_markup=markups.none_markup)
-        if not tmp.isdigit():
-            bot.send_message(message.chat.id, tmp, reply_markup=markups.none_markup)
-        else:
-            database.set_state(message.chat.id, states['list_chosen'])
-            list = database.get_list(message.chat.id, int(tmp))[0]
-            if list:
-                bot.send_message(message.chat.id, "Notes in list " + list)
-                notes = database.get_notes(message.chat.id, int(tmp))
-                res = ''
-                numb = 0
-                for i in notes:
-                    res += '/' + str(numb) + ' ' + str(i[0]) + '\n'
-                    numb += 1
-                if res == "":
-                    bot.send_message(message.chat.id, "No notes yet.", reply_markup=markups.list_chosen_markup)
-                else:
-                    splitted_text = util.split_string(res, 3000)
-                    for text in splitted_text:
-                        bot.send_message(message.chat.id, text, reply_markup=markups.list_chosen_markup)
+        show_n(message)
 
 
 @bot.message_handler(func=lambda message: message.content_type == 'text')
@@ -163,6 +200,8 @@ def get_message(message):
     state = database.get_state(message.chat.id)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
     elif state[0] == states['edit_list']:
         new_name(message.chat.id, message.text)
 
