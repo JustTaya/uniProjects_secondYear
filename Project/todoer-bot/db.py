@@ -37,13 +37,33 @@ class Database:
                 userID INTEGER,
                 numb INTEGER , 
                 NoteName VARCHAR (50) NOT NULL ,
-                ListName VARCHAR(50),
                 NoteText TEXT,
-                NoteImage VARCHAR(256),
-                NoteFile VARCHAR(256),
-                NoteVoice VARCHAR(256),
-                NoteAudio VARCHAR(256),
+                ImageNumb INTEGER,
+                FileNumb INTEGER,
+                VoiceNumb INTEGER,
+                NoteNumb INTEGER, 
+                PRIMARY KEY (NoteID),
                 FOREIGN KEY (ListID) REFERENCES Lists(ListID))""")
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS Images(
+                NoteImage VARCHAR(256),
+                numb INTEGER,
+                NoteID UUID,
+                FOREIGN KEY (NoteID) REFERENCES Notes(NoteID))""")
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS Files(
+                NoteFile VARCHAR(256),
+                numb INTEGER,
+                NoteID UUID,
+                FOREIGN KEY (NoteID) REFERENCES Notes(NoteID))""")
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS Voices(
+                NoteVoice VARCHAR(256),
+                numb INTEGER,
+                NoteID UUID,
+                FOREIGN KEY (NoteID) REFERENCES Notes(NoteID))""")
+        self.cur.execute("""CREATE TABLE IF NOT EXISTS Audio(
+                NoteAudio VARCHAR(256),
+                numb INTEGER,
+                NoteID UUID,
+                FOREIGN KEY (NoteID) REFERENCES Notes(NoteID))""")
         self.conn.commit()
 
     def user_exists(self, id):
@@ -72,7 +92,7 @@ class Database:
         note_numb = self.cur.fetchone()[0] + 1
         self.cur.execute("UPDATE Lists SET notesNumber=%s WHERE ListID=%s", (note_numb, listID))
         self.cur.execute(
-            "INSERT INTO Notes (ListID,NoteName,userID) VALUES (%s,%s,%s) ", (listID, name, id))
+            "INSERT INTO Notes (ListID,NoteName,userID, numb) VALUES (%s,%s,%s,%s) ", (listID, name, id, note_numb - 1))
         self.conn.commit()
 
     def delete_list(self, id):
@@ -115,15 +135,16 @@ class Database:
 
     def get_notes(self, userID, list_numb):
         self.cur.execute("SELECT ListID FROM Lists WHERE userID = %s AND numb = %s", (userID, list_numb))
-        data = self.cur.fetchone()
-        listID = data[0]
+        listID = self.cur.fetchone()[0]
         self.cur.execute("UPDATE Users SET ListID=%s WHERE userID=%s", (listID, userID))
         self.cur.execute("SELECT NoteName FROM Notes WHERE ListID = %s", (listID,))
         notes = self.cur.fetchall()
         return notes
 
-    def get_note(self, id, numb):
-        self.cur.execute("SELECT NoteName FROM Notes WHERE UserID = %s AND numb = %s", (id, numb))
+    def get_note(self, id):
+        self.cur.execute("SELECT NoteID FROM Users WHERE userID = %s", (id,))
+        noteID = self.cur.fetchone()[0]
+        self.cur.execute("SELECT NoteName FROM Notes WHERE NoteID = %s", (noteID,))
         note = self.cur.fetchone()
         return note
 
@@ -138,10 +159,14 @@ class Database:
 
     def set_list(self, id, list_numb):
         self.cur.execute("SELECT ListID FROM Lists WHERE userID = %s AND numb = %s", (id, list_numb))
-        listID = self.cur.fetchall()
+        listID = self.cur.fetchone()[0]
         self.cur.execute("UPDATE Users SET ListID=%s WHERE userID=%s", (listID, id))
 
-    def set_note(self, id, noteID):
+    def set_note(self, id, numb):
+        self.cur.execute("SELECT ListID FROM Users WHERE userID = %s", (id,))
+        listID = self.cur.fetchone()[0]
+        self.cur.execute("SELECT NoteID FROM Notes WHERE ListID = %s AND numb = %s", (listID, numb))
+        noteID = self.cur.fetchone()[0]
         self.cur.execute("UPDATE Users SET NoteID=%s WHERE userID=%s", (noteID, id))
         self.conn.commit()
 
