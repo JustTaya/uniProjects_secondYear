@@ -7,14 +7,14 @@ faq_button = types.KeyboardButton('FAQ')
 init_markup.add(add_button, show_button, faq_button)
 
 none_markup = types.ReplyKeyboardMarkup(row_width=1)
-cancel_button = types.KeyboardButton('Cancel')
-none_markup.add(cancel_button)
+back_button = types.KeyboardButton('Go back')
+none_markup.add(back_button)
 
 list_chosen_markup = types.ReplyKeyboardMarkup(row_width=1)
 add_button = types.KeyboardButton('New note')
 edit_button = types.KeyboardButton('Edit name')
 delete_button = types.KeyboardButton('Delete list')
-back_button = types.KeyboardButton('Go back')
+# back_button = types.KeyboardButton('Go back')
 list_chosen_markup.add(add_button, edit_button, delete_button, back_button)
 
 note_chosen_markup = types.ReplyKeyboardMarkup(row_width=1)
