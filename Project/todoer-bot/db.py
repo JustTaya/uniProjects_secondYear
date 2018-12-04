@@ -34,6 +34,7 @@ class Database:
         self.cur.execute("""CREATE TABLE IF NOT EXISTS Notes (
                 NoteID UUID DEFAULT uuid_generate_v4 (),
                 ListID UUID,
+                userID INTEGER,
                 numb INTEGER , 
                 NoteName VARCHAR (50) NOT NULL ,
                 ListName VARCHAR(50),
@@ -71,7 +72,7 @@ class Database:
         note_numb = self.cur.fetchone()[0] + 1
         self.cur.execute("UPDATE Lists SET notesNumber=%s WHERE ListID=%s", (note_numb, listID))
         self.cur.execute(
-            "INSERT INTO Notes (ListID,NoteName) VALUES (%s,%s) ", (listID, name))
+            "INSERT INTO Notes (ListID,NoteName,userID) VALUES (%s,%s,%s) ", (listID, name, id))
         self.conn.commit()
 
     def delete_list(self, id):
@@ -103,17 +104,17 @@ class Database:
         self.conn.commit()
 
     def get_lists(self, id):
-        self.cur.execute("SELECT ListName FROM Lists WHERE UserID = %s", (id,))
+        self.cur.execute("SELECT ListName FROM Lists WHERE userID = %s", (id,))
         lists = self.cur.fetchall()
         return lists
 
     def get_list(self, id, numb):
-        self.cur.execute("SELECT ListName FROM Lists WHERE UserID = %s AND numb = %s", (id, numb))
+        self.cur.execute("SELECT ListName FROM Lists WHERE userID = %s AND numb = %s", (id, numb))
         list = self.cur.fetchone()
         return list
 
     def get_notes(self, userID, list_numb):
-        self.cur.execute("SELECT ListID FROM Lists WHERE UserID = %s AND numb = %s", (userID, list_numb))
+        self.cur.execute("SELECT ListID FROM Lists WHERE userID = %s AND numb = %s", (userID, list_numb))
         data = self.cur.fetchone()
         listID = data[0]
         self.cur.execute("UPDATE Users SET ListID=%s WHERE userID=%s", (listID, userID))
@@ -121,8 +122,8 @@ class Database:
         notes = self.cur.fetchall()
         return notes
 
-    def get_note(self, id):
-        self.cur.execute("SELECT NoteName FROM Users WHERE UserID = %s", (id,))
+    def get_note(self, id, numb):
+        self.cur.execute("SELECT NoteName FROM Notes WHERE UserID = %s AND numb = %s", (id, numb))
         note = self.cur.fetchone()
         return note
 
@@ -136,7 +137,7 @@ class Database:
         self.conn.commit()
 
     def set_list(self, id, list_numb):
-        self.cur.execute("SELECT ListID FROM Lists WHERE UserID = %s AND numb = %s", (id, list_numb))
+        self.cur.execute("SELECT ListID FROM Lists WHERE userID = %s AND numb = %s", (id, list_numb))
         listID = self.cur.fetchall()
         self.cur.execute("UPDATE Users SET ListID=%s WHERE userID=%s", (listID, id))
 
@@ -145,9 +146,16 @@ class Database:
         self.conn.commit()
 
     def get_state(self, id):
-        self.cur.execute("SELECT State FROM Users WHERE UserID = %s", (id,))
+        self.cur.execute("SELECT State FROM Users WHERE userID = %s", (id,))
         state = self.cur.fetchone()
         return state
+
+    def get_cur_list_numb(self, id):
+        self.cur.execute("SELECT ListID FROM Users WHERE userID = %s", (id,))
+        listID = self.cur.fetchone()[0]
+        self.cur.execute("SELECT numb FROM Lists WHERE ListID = %s", (listID,))
+        name = self.cur.fetchone()
+        return name
 
     def close(self):
         self.conn.close()
