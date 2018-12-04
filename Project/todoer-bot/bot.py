@@ -14,20 +14,20 @@ database = db.Database()
 database.init_tables()
 
 # dictionary for bot states
-states = {'init_state': 0,
-          'list_menu': 1,
-          'wait_list_name': 2,
-          'list_chosen': 3,
-          'note_menu': 4,
-          'wait_note_name': 5,
-          'note_chosen': 6,
-          'wait_text': 7,
-          'wait_image': 8,
-          'wait_file': 9,
-          'wait_voice': 10,
-          'wait_audio': 11,
-          'edit_list': 12
-          }
+states = {
+    'list_menu': 0,
+    'wait_list_name': 1,
+    'list_chosen': 2,
+    'wait_note_name': 3,
+    'note_chosen': 4,
+    'wait_text': 5,
+    'wait_image': 6,
+    'wait_file': 7,
+    'wait_voice': 8,
+    'wait_audio': 9,
+    'edit_list': 10,
+    'edit_note': 11
+}
 
 server = Flask(__name__)
 
@@ -123,7 +123,7 @@ def new_name(id, name):
 # message handlers
 @bot.message_handler(commands=['start'])
 def start(message):
-    database.new_user(message.chat.id, message.from_user.first_name, states['init_state'])
+    database.new_user(message.chat.id, message.from_user.first_name, states['list_menu'])
     bot.send_message(message.chat.id, 'Hello, ' + message.from_user.first_name,
                      reply_markup=markups.init_markup)
 
@@ -221,7 +221,7 @@ def new_note(message):
         add_list(message.chat.id, message.text)
     elif state[0] == states['wait_note_name']:
         add_note(message.chat.id, message.text)
-    else:
+    elif state[0] == states['list_chosen']:
         database.set_state(message.chat.id, states['wait_note_name'])
         bot.send_message(message.chat.id, 'Enter the name of new note',
                          reply_markup=markups.none_markup)
