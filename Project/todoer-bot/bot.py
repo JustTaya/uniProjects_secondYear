@@ -51,7 +51,6 @@ def add_note(message):
     else:
         database.new_note(message.chat.id, message.text)
         bot.send_message(message.chat.id, 'Note added', reply_markup=markups.list_chosen_markup)
-        bot.send_message(message.chat.id, database.get_cur_list_numb(message.chat.id)[0])
         show_cur_n(message.chat.id, int(database.get_cur_list_numb(message.chat.id)[0]))
 
 
@@ -83,7 +82,10 @@ def show_l(id):
         res += '/' + str(numb) + ' ' + str(i[0]) + '\n'
         numb += 1
     bot.send_message(id, 'Your lists: ')
-    bot.send_message(id, res, reply_markup=markups.init_markup)
+    if res == "":
+        bot.send_message(id, "No lists yet.", reply_markup=markups.init_markup)
+    else:
+        bot.send_message(id, res, reply_markup=markups.init_markup)
 
 
 def show_n(message):
@@ -126,7 +128,7 @@ def show_n_inside(message):
 
 
 def new_list_name(id, name):
-    if '/' in name:
+    if '/' in name or len(name) >= 50:
         bot.send_message(id, 'Invalid list name. Print another name of the list.',
                          reply_markup=markups.none_markup)
     else:
@@ -137,7 +139,7 @@ def new_list_name(id, name):
 
 
 def new_note_name(id, name):
-    if '/' in name:
+    if '/' in name or len(name) >= 50:
         bot.send_message(id, 'Invalid note name. Print another name of the note.',
                          reply_markup=markups.none_markup)
     else:

@@ -30,7 +30,7 @@ class Database:
                 numb INTEGER,
                 notesNumber INTEGER DEFAULT 0,
                 PRIMARY KEY (ListID),
-                FOREIGN KEY (UserID) REFERENCES Users(UserID))""")
+                FOREIGN KEY (UserID) REFERENCES Users(UserID) on delete cascade on update cascade)""")
         self.cur.execute("""CREATE TABLE IF NOT EXISTS Notes (
                 NoteID UUID DEFAULT uuid_generate_v4 (),
                 ListID UUID,
@@ -39,23 +39,23 @@ class Database:
                 NoteName VARCHAR (50) NOT NULL ,
                 NoteText TEXT,
                 PRIMARY KEY (NoteID),
-                FOREIGN KEY (ListID) REFERENCES Lists(ListID))""")
+                FOREIGN KEY (ListID) REFERENCES Lists(ListID) on delete cascade on update cascade)""")
         self.cur.execute("""CREATE TABLE IF NOT EXISTS Images(
                 NoteImage VARCHAR(256),
                 NoteID UUID,
-                FOREIGN KEY (NoteID) REFERENCES Notes(NoteID))""")
+                FOREIGN KEY (NoteID) REFERENCES Notes(NoteID) on delete cascade on update cascade)""")
         self.cur.execute("""CREATE TABLE IF NOT EXISTS Files(
                 NoteFile VARCHAR(256),
                 NoteID UUID,
-                FOREIGN KEY (NoteID) REFERENCES Notes(NoteID))""")
+                FOREIGN KEY (NoteID) REFERENCES Notes(NoteID) on delete cascade on update cascade)""")
         self.cur.execute("""CREATE TABLE IF NOT EXISTS Voices(
                 NoteVoice VARCHAR(256),
                 NoteID UUID,
-                FOREIGN KEY (NoteID) REFERENCES Notes(NoteID))""")
+                FOREIGN KEY (NoteID) REFERENCES Notes(NoteID) on delete cascade on update cascade)""")
         self.cur.execute("""CREATE TABLE IF NOT EXISTS Audio(
                 NoteAudio VARCHAR(256),
                 NoteID UUID,
-                FOREIGN KEY (NoteID) REFERENCES Notes(NoteID))""")
+                FOREIGN KEY (NoteID) REFERENCES Notes(NoteID) on delete cascade on update cascade)""")
         self.conn.commit()
 
     def user_exists(self, id):
