@@ -14,12 +14,10 @@ class Database:
         self.cur = self.conn.cursor()
 
     def init_tables(self):
-        self.cur.execute("""CREATE EXTENSION IF NOT EXISTS "uuid-ossp" """)
-        self.cur.execute("""CREATE EXTENSION IF NOT EXISTS pgcrypto """)
         self.cur.execute("""CREATE TABLE IF NOT EXISTS Users(
                 userID INTEGER PRIMARY KEY,
                 first_name VARCHAR(80),
-                State INTEGER DEFAULT 0,
+                State INTEGER ,
                 listsNumber INTEGER DEFAULT 0,
                 ListID UUID,
                 NoteID UUID)""")
@@ -61,7 +59,7 @@ class Database:
         list_numb = self.cur.fetchone()[0] + 1
         self.cur.execute("UPDATE Users SET listsNumber=%s WHERE userID=%s", (list_numb, id))
         self.cur.execute(
-            "INSERT INTO Lists (userID,ListName, numb) VALUES (%s,%s, %s) ", (id, name, list_numb - 1))
+            "INSERT INTO Lists (userID,ListName) VALUES (%s,%s) ", (id, name))
         self.conn.commit()
 
     def new_note(self, id, name):
@@ -77,9 +75,9 @@ class Database:
     def delete_list(self, id):
         self.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (id,))
         listID = self.cur.fetchone()[0]
-        self.cur.execute("SELECT numb FROM Lists WHERE ListID=%s", (listID,))
+        self.cur.execute("SELECT number FROM Lists WHERE ListID=%s", (listID,))
         number = self.cur.fetchone()[0]
-        self.cur.execute("UPDATE Lists SET numb=numb-1 WHERE numb>%s", (number,))
+        self.cur.execute("UPDATE Lists SET number=number-1 WHERE number>%s", (number,))
         self.cur.execute("UPDATE Users SET listsNumber=listsNumber-1 WHERE userID=%s", (id,))
         self.cur.execute("DELETE FROM Lists WHERE ListID=%s", (listID,))
         self.conn.commit()
@@ -89,9 +87,9 @@ class Database:
         data = self.cur.fetchone()
         listID = data[0]
         noteID = data[1]
-        self.cur.execute("SELECT numb FROM Notes WHERE NoteID=%s", (noteID,))
+        self.cur.execute("SELECT number FROM Notes WHERE NoteID=%s", (noteID,))
         number = self.cur.fetchone()[0]
-        self.cur.execute("UPDATE Notes SET numb=numb-1 WHERE numb>%s", (number,))
+        self.cur.execute("UPDATE Notes SET number=number-1 WHERE number>%s", (number,))
         self.cur.execute("UPDATE Lists SET notesNumber=notesNumber-1 WHERE ListID=%s", (listID,))
         self.cur.execute("DELETE FROM Notes WHERE ListID=%s", (listID,))
         self.conn.commit()
@@ -101,13 +99,13 @@ class Database:
         lists = self.cur.fetchall()
         return lists
 
-    def get_list(self, id, numb):
-        self.cur.execute("SELECT ListName FROM Lists WHERE UserID = %s AND numb = %s", (id, numb))
+    def get_list(self, id):
+        self.cur.execute("SELECT ListName FROM Users WHERE UserID = %s", (id,))
         list = self.cur.fetchone()
         return list
 
     def get_notes(self, userID, list_numb):
-        self.cur.execute("SELECT ListID FROM Lists WHERE UserID = %s AND numb = %s", (userID, list_numb))
+        self.cur.execute("SELECT ListID FROM Lists WHERE userID=%s AND number=%s", (userID, list_numb))
         data = self.cur.fetchone()
         listID = data[0]
         self.cur.execute("UPDATE Users SET ListID=%s WHERE userID=%s", (listID, userID))
@@ -129,9 +127,7 @@ class Database:
                          (0, None, None, id))
         self.conn.commit()
 
-    def set_list(self, id, list_numb):
-        self.cur.execute("SELECT ListID FROM Lists WHERE UserID = %s AND numb = %s", (id, list_numb))
-        listID = self.cur.fetchall()
+    def set_list(self, id, listID):
         self.cur.execute("UPDATE Users SET ListID=%s WHERE userID=%s", (listID, id))
 
     def set_note(self, id, noteID):
@@ -143,5 +139,21 @@ class Database:
         state = self.cur.fetchone()
         return state
 
+<<<<<<< HEAD
+    def get_cur_list_numb(self, id):
+        self.cur.execute("SELECT ListID FROM Users WHERE userID = %s", (id,))
+        listID = self.cur.fetchone()[0]
+        self.cur.execute("SELECT numb FROM Lists WHERE ListID = %s", (listID,))
+        name = self.cur.fetchone()
+        return name
+
+    def edit_note(self, id, name):
+        self.cur.execute("SELECT NoteID FROM Users WHERE userID=%s", (id,))
+        noteID = self.cur.fetchone()[0]
+        self.cur.execute("UPDATE Notes SET NoteName = %s WHERE NoteID = %s", (name, noteID))
+        self.conn.commit()
+
+=======
+>>>>>>> Database
     def close(self):
         self.conn.close()
