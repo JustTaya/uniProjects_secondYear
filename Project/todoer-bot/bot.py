@@ -14,7 +14,6 @@ database = db.Database()
 database.init_tables()
 
 # dictionary for bot states
-<<<<<<< HEAD
 states = {
     'list_menu': 0,
     'wait_list_name': 1,
@@ -27,23 +26,9 @@ states = {
     'wait_voice': 8,
     'wait_audio': 9,
     'edit_list': 10,
-    'edit_note': 11
+    'edit_note': 11,
+    'attach_menu': 12
 }
-=======
-states = {'init_state': 0,
-          'list_menu': 1,
-          'wait_list_name': 2,
-          'list_chosen': 3,
-          # 'note_menu': 4,
-          'wait_note_name': 5,
-          'note_chosen': 6,
-          'wait_text': 7,
-          'wait_image': 8,
-          'wait_file': 9,
-          'wait_voice': 10,
-          'wait_audio': 11
-          }
->>>>>>> Database
 
 server = Flask(__name__)
 
@@ -54,28 +39,42 @@ def add_list(id, name):
                          reply_markup=markups.none_markup)
     else:
         database.new_list(id, name)
-        database.set_state(id, states['init_state'])
+        database.set_state(id, states['list_menu'])
         bot.send_message(id, 'List added', reply_markup=markups.init_markup)
+        show_l(id)
 
 
-def add_note(id, name):
-    if '/' in name:
-        bot.send_message(id, 'Invalid note name. Print another name of the list.',
+def add_note(message):
+    if '/' in message.text or len(message.text) > 50:
+        bot.send_message(message.chat.id, 'Invalid note name. Print another name of the list.',
                          reply_markup=markups.none_markup)
     else:
-<<<<<<< HEAD
         database.new_note(message.chat.id, message.text)
         bot.send_message(message.chat.id, 'Note added', reply_markup=markups.list_chosen_markup)
         bot.send_message(message.chat.id, database.get_cur_list_numb(message.chat.id)[0])
         show_cur_n(message.chat.id, int(database.get_cur_list_numb(message.chat.id)[0]))
-=======
-        database.new_note(id, name)
-        database.set_state(id, states['init_state'])
-        bot.send_message(id, 'List added', reply_markup=markups.init_markup)
->>>>>>> Database
 
 
-def show_lists(id):
+def show_items(id):
+    bot.send_message(id, 'Images: ')
+    images = database.get_images(id)
+    for i in images:
+        bot.send_photo(id, images[0][0])
+    bot.send_message(id, 'Files: ')
+    files = database.get_files(id)
+    for i in files:
+        bot.send_document(id, files[0][0])
+    bot.send_message(id, 'Voices: ')
+    voices = database.get_voices(id)
+    for i in voices:
+        bot.send_voice(id, voices[0][0])
+    bot.send_message(id, 'Audio: ')
+    audio = database.get_audio(id)
+    for i in audio:
+        bot.send_audio(id, audio[0][0])
+
+
+def show_l(id):
     database.set_state(id, states['list_menu'])
     lists = database.get_lists(id)
     res = ''
@@ -84,9 +83,7 @@ def show_lists(id):
         res += '/' + str(numb) + ' ' + str(i[0]) + '\n'
         numb += 1
     bot.send_message(id, 'Your lists: ')
-<<<<<<< HEAD
-    if numb <= 30:
-        bot.send_message(id, res, reply_markup=markups.init_markup)
+    bot.send_message(id, res, reply_markup=markups.init_markup)
 
 
 def show_n(message):
@@ -114,28 +111,20 @@ def show_cur_n(id, tmp):
             bot.send_message(id, res, reply_markup=markups.list_chosen_markup)
     else:
         bot.send_message(id, tmp, reply_markup=markups.none_markup)
-=======
-    for text in splitted_text:
-        bot.send_message(id, text)
->>>>>>> Database
 
 
-def show_notes(id):
-    database.set_state(id, states['list_chosen'])
-    notes = database.get_notes(id)
-    list = database.get_cur_list(id)
-    res = ''
-    numb = 0
-    for i in notes:
-        res += '/' + str(numb) + ' ' + str(i[0]) + '\n'
-        numb += 1
-    splitted_text = util.split_string(res, 3000)
-    bot.send_message(id, 'Notes in:' + str(list[0]))
-    for text in splitted_text:
-        bot.send_message(id, splitted_text)
+def show_n_inside(message):
+    tmp = message.text[1:]
+    if not tmp.isdigit():
+        bot.send_message(message.chat.id, "Invalid command", reply_markup=markups.none_markup)
+    else:
+        database.set_note(message.chat.id, int(tmp))
+        note = database.get_note(message.chat.id)[0]
+        if note:
+            database.set_state(message.chat.id, states['note_chosen'])
+            bot.send_message(message.chat.id, "Note:" + note, reply_markup=markups.note_chosen_markup)
 
 
-<<<<<<< HEAD
 def new_list_name(id, name):
     if '/' in name:
         bot.send_message(id, 'Invalid list name. Print another name of the list.',
@@ -145,11 +134,6 @@ def new_list_name(id, name):
         database.set_state(id, states['list_menu'])
         bot.send_message(id, 'List name edited', reply_markup=markups.init_markup)
         show_l(id)
-=======
-def init_state(id):
-    database.set_state(id, states['init_state'])
-    bot.send_message(id, 'Chose action', reply_markup=markups.init_markup)
->>>>>>> Database
 
 
 def new_note_name(id, name):
@@ -170,37 +154,51 @@ def start(message):
                      reply_markup=markups.init_markup)
 
 
-<<<<<<< HEAD
-@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '➕ New list')
-=======
-@bot.message_handler(func=lambda message: message.text[0] == '/')
-def get_message(message):
+@bot.message_handler(content_types=["photo"])
+def add_image(message):
+    bot.send_message(message.chat.id, "Image", reply_markup=markups.list_chosen_markup)
+    # state = database.get_state(message.chat.id)
+    # if state == states['wait_image']:
+    bot.send_message(message.chat.id, "Image1", reply_markup=markups.list_chosen_markup)
+    database.new_image(message.chat.id, message.photo[0].file_id)
+    bot.send_message(message.chat.id, "Image2", reply_markup=markups.list_chosen_markup)
+    database.set_state(message.chat.id, states['note_chosen'])
+    bot.send_message(message.chat.id, "Image added", reply_markup=markups.list_chosen_markup)
+    show_cur_n(message.chat.id, int(database.get_cur_list_numb(message.chat.id)[0]))
+
+
+@bot.message_handler(content_types=["document"])
+def add_file(message):
     state = database.get_state(message.chat.id)
-    if state[0] == states['wait_list_name']:
-        add_list(message.chat.id, message.text)
-    else:
-        text = message.text
-        text.replace("/", "")
-        if not text.isdigit():
-            bot.send_message(id, 'Invalid command', reply_markup=markups.none_markup)
-        else:
-            if state[0] == states['list_menu']:
-                notes = database.get_notes(message.chat.id, int(text))
-                res = ''
-                numb = 0
-                for i in notes:
-                    res += '/' + str(numb) + ' ' + str(i[0]) + '\n'
-                    numb += 1
-                splitted_text = util.split_string(res, 3000)
-                bot.send_message(message.chat.id, 'Your lists: ')
-                for text in splitted_text:
-                    bot.send_message(message.chat.id, splitted_text)
-            if state[0] == states['list_chosen']:
-                res = ''
+    if state == states['wait_file']:
+        database.set_state(message.chat.id, states['note_chosen'])
+        database.new_file(message.chat.id, message.document.file_id)
+        bot.send_message(message.chat.id, "File added", reply_markup=markups.list_chosen_markup)
+        show_cur_n(message.chat.id, int(database.get_cur_list_numb(message.chat.id)[0]))
 
 
-@bot.message_handler(func=lambda message: message.text == 'New list')
->>>>>>> Database
+@bot.message_handler(content_types=["voice"])
+def add_voice(message):
+    state = database.get_state(message.chat.id)
+    if state == states['wait_voice']:
+        database.new_image(message.chat.id, message.voice.file_id)
+        database.set_state(message.chat.id, states['note_chosen'])
+
+        bot.send_message(message.chat.id, "Voice added", reply_markup=markups.list_chosen_markup)
+        show_cur_n(message.chat.id, int(database.get_cur_list_numb(message.chat.id)[0]))
+
+
+@bot.message_handler(content_types=["audio"])
+def add_audio(message):
+    state = database.get_state(message.chat.id)
+    if state == states['wait_audio']:
+        database.new_image(message.chat.id, message.audio.file_id)
+        database.set_state(message.chat.id, states['note_chosen'])
+        bot.send_message(message.chat.id, "Audio added", reply_markup=markups.list_chosen_markup)
+        show_cur_n(message.chat.id, int(database.get_cur_list_numb(message.chat.id)[0]))
+
+
+@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '➕ New list')
 def new_list(message):
     state = database.get_state(message.chat.id)
     if state[0] == states['wait_list_name']:
@@ -209,11 +207,10 @@ def new_list(message):
         add_note(message.chat.id, message.text)
     else:
         database.set_state(message.chat.id, states['wait_list_name'])
-        bot.send_message(message.chat.id, 'Print the name of new list',
+        bot.send_message(message.chat.id, 'Enter the name of new list',
                          reply_markup=markups.none_markup)
 
 
-<<<<<<< HEAD
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '◾️ Show lists')
 def show_lists(message):
     show_l(message.chat.id)
@@ -221,16 +218,11 @@ def show_lists(message):
 
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '⬅️ Go back')
 def go_back(message):
-=======
-@bot.message_handler(func=lambda message: message.text == 'New note')
-def new_note(message):
->>>>>>> Database
     state = database.get_state(message.chat.id)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
     elif state[0] == states['wait_note_name']:
         add_note(message.chat.id, message.text)
-<<<<<<< HEAD
     elif state[0] == states['edit_list']:
         new_list_name(message.chat.id, message.text)
     elif state[0] == states['edit_note']:
@@ -264,6 +256,10 @@ def cancel(message):
     elif state[0] == states['note_chosen']:
         database.set_state(message.chat.id, states['list_chosen'])
         show_n(message)
+    elif state == states['wait_image'] or state == states['wait_file'] or state == states['wait_voice'] or state == \
+            states['wait_audio']:
+        database.set_state(message.chat.id, states['note_chosen'])
+        show_cur_n(message.chat.id, int(database.get_cur_list_numb(message.chat.id)[0]))
 
 
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '✖️ Delete list')
@@ -281,6 +277,23 @@ def delete_list(message):
         database.delete_list(message.chat.id)
         database.set_state(message.chat.id, states['list_menu'])
         show_l(message.chat.id)
+
+
+@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '✖️ Delete note')
+def delete_note(message):
+    state = database.get_state(message.chat.id)
+    if state[0] == states['wait_list_name']:
+        add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
+    elif state[0] == states['edit_list']:
+        new_list_name(message.chat.id, message.text)
+    elif state[0] == states['edit_note']:
+        new_note(message.chat.id, message.text)
+    elif state[0] == states['note_chosen']:
+        database.delete_note(message.chat.id)
+        database.set_state(message.chat.id, states['list_menu'])
+        show_cur_n(message.chat.id, int(database.get_cur_list_numb(message.chat.id)[0]))
 
 
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '◾️ Edit name')
@@ -306,44 +319,93 @@ def edit_name(message):
 
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '➕ New note')
 def new_note(message):
-=======
-    else:
-        database.set_state(message.chat.id, states['wait_note_name'])
-        bot.send_message(message.chat.id, 'Print the name of new note',
-                         reply_markup=markups.none_markup)
-
-
-@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == 'Show lists')
-def show_lists(message):
-    show_lists(message.chat.id)
-    database.set_state(message.chat.id, states['list_menu'])
-
-
-@bot.message_handler(func=lambda message: message.text == 'Go back')
-def go_back(message):
-    state = database.get_state(message.chat.id)
-    if state[0] == states['wait_list_name']:
-        add_list(message.chat.id, message.text)
-    elif state[0] == states['list_chosen']:
-        database.setList(message.chat.id, None)
-        show_lists(message.chat.id)
-    elif state[0] == states['note_chosen']:
-        database.set_state(message.chat.id, states['list_chosen'])
-        show_notes(message.chat.id)
-
-
-@bot.message_handler(content_types=['text'])
-def get_message(message):
->>>>>>> Database
     state = database.get_state(message.chat.id)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
     elif state[0] == states['wait_note_name']:
         add_note(message.chat.id, message.text)
-<<<<<<< HEAD
     elif state[0] == states['list_chosen']:
         database.set_state(message.chat.id, states['wait_note_name'])
         bot.send_message(message.chat.id, 'Enter the name of new note',
+                         reply_markup=markups.none_markup)
+
+
+@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '➕ Attach item')
+def attach_item(message):
+    state = database.get_state(message.chat.id)
+    if state[0] == states['wait_list_name']:
+        add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
+    elif state[0] == states['note_chosen']:
+        database.set_state(message.chat.id, states['attach_menu'])
+        bot.send_message(message.chat.id, 'Choose what to attach',
+                         reply_markup=markups.attach_markup)
+
+
+@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '◾️ Get attached items')
+def get_attached(message):
+    state = database.get_state(message.chat.id)
+    if state[0] == states['wait_list_name']:
+        add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
+    elif state[0] == states['note_chosen']:
+        database.set_state(message.chat.id, states['note_chosen'])
+        bot.send_message(message.chat.id, 'Attached items:',
+                         reply_markup=markups.note_chosen_markup)
+        show_items(message.chat.id)
+
+
+@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == 'Image')
+def new_image(message):
+    state = database.get_state(message.chat.id)
+    if state[0] == states['wait_list_name']:
+        add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
+    elif state[0] == states['attach_menu']:
+        database.set_state(message.chat.id, states['wait_image'])
+        bot.send_message(message.chat.id, 'Attached items:',
+                         reply_markup=markups.none_markup)
+
+
+@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == 'File')
+def new_file(message):
+    state = database.get_state(message.chat.id)
+    if state[0] == states['wait_list_name']:
+        add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
+    elif state[0] == states['attach_menu']:
+        database.set_state(message.chat.id, states['wait_file'])
+        bot.send_message(message.chat.id, 'Attached items:',
+                         reply_markup=markups.none_markup)
+
+
+@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == 'Voice')
+def new_voice(message):
+    state = database.get_state(message.chat.id)
+    if state[0] == states['wait_list_name']:
+        add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
+    elif state[0] == states['attach_menu']:
+        database.set_state(message.chat.id, states['wait_voice'])
+        bot.send_message(message.chat.id, 'Attached items:',
+                         reply_markup=markups.none_markup)
+
+
+@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == 'Audio')
+def new_audio(message):
+    state = database.get_state(message.chat.id)
+    if state[0] == states['wait_list_name']:
+        add_list(message.chat.id, message.text)
+    elif state[0] == states['wait_note_name']:
+        add_note(message.chat.id, message.text)
+    elif state[0] == states['attach_menu']:
+        database.set_state(message.chat.id, states['wait_audio'])
+        bot.send_message(message.chat.id, 'Attached items:',
                          reply_markup=markups.none_markup)
 
 
@@ -367,14 +429,6 @@ def get_message(message):
         new_list_name(message.chat.id, message.text)
     elif state[0] == states['edit_note']:
         new_note_name(message.chat.id, message.text)
-=======
-
-
-# Handles all sent documents and audio files
-@bot.message_handler(content_types=['document', 'audio'])
-def handle_docs_audio(message):
-    pass
->>>>>>> Database
 
 
 @server.route('/' + token, methods=['POST'])
@@ -386,7 +440,7 @@ def get_message():
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url='https://todoer-bot.herokuapp.com/')
+    bot.set_webhook(url='https://telesaverbot.herokuapp.com/' + token)
     return "!", 200
 
 
