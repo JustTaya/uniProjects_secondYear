@@ -14,6 +14,7 @@ database = db.Database()
 database.init_tables()
 
 # dictionary for bot states
+<<<<<<< HEAD
 states = {
     'list_menu': 0,
     'wait_list_name': 1,
@@ -28,6 +29,21 @@ states = {
     'edit_list': 10,
     'edit_note': 11
 }
+=======
+states = {'init_state': 0,
+          'list_menu': 1,
+          'wait_list_name': 2,
+          'list_chosen': 3,
+          # 'note_menu': 4,
+          'wait_note_name': 5,
+          'note_chosen': 6,
+          'wait_text': 7,
+          'wait_image': 8,
+          'wait_file': 9,
+          'wait_voice': 10,
+          'wait_audio': 11
+          }
+>>>>>>> Database
 
 server = Flask(__name__)
 
@@ -38,23 +54,28 @@ def add_list(id, name):
                          reply_markup=markups.none_markup)
     else:
         database.new_list(id, name)
-        database.set_state(id, states['list_menu'])
+        database.set_state(id, states['init_state'])
         bot.send_message(id, 'List added', reply_markup=markups.init_markup)
-        show_l(id)
 
 
-def add_note(message):
-    if '/' in message.text or len(message.text) > 50:
-        bot.send_message(message.chat.id, 'Invalid note name. Print another name of the list.',
+def add_note(id, name):
+    if '/' in name:
+        bot.send_message(id, 'Invalid note name. Print another name of the list.',
                          reply_markup=markups.none_markup)
     else:
+<<<<<<< HEAD
         database.new_note(message.chat.id, message.text)
         bot.send_message(message.chat.id, 'Note added', reply_markup=markups.list_chosen_markup)
         bot.send_message(message.chat.id, database.get_cur_list_numb(message.chat.id)[0])
         show_cur_n(message.chat.id, int(database.get_cur_list_numb(message.chat.id)[0]))
+=======
+        database.new_note(id, name)
+        database.set_state(id, states['init_state'])
+        bot.send_message(id, 'List added', reply_markup=markups.init_markup)
+>>>>>>> Database
 
 
-def show_l(id):
+def show_lists(id):
     database.set_state(id, states['list_menu'])
     lists = database.get_lists(id)
     res = ''
@@ -63,6 +84,7 @@ def show_l(id):
         res += '/' + str(numb) + ' ' + str(i[0]) + '\n'
         numb += 1
     bot.send_message(id, 'Your lists: ')
+<<<<<<< HEAD
     if numb <= 30:
         bot.send_message(id, res, reply_markup=markups.init_markup)
 
@@ -92,20 +114,28 @@ def show_cur_n(id, tmp):
             bot.send_message(id, res, reply_markup=markups.list_chosen_markup)
     else:
         bot.send_message(id, tmp, reply_markup=markups.none_markup)
+=======
+    for text in splitted_text:
+        bot.send_message(id, text)
+>>>>>>> Database
 
 
-def show_n_inside(message):
-    tmp = message.text[1:]
-    if not tmp.isdigit():
-        bot.send_message(message.chat.id, "Invalid command", reply_markup=markups.none_markup)
-    else:
-        database.set_note(message.chat.id, int(tmp))
-        note = database.get_note(message.chat.id)[0]
-        if note:
-            database.set_state(message.chat.id, states['note_chosen'])
-            bot.send_message(message.chat.id, "Note:" + note, reply_markup=markups.note_chosen_markup)
+def show_notes(id):
+    database.set_state(id, states['list_chosen'])
+    notes = database.get_notes(id)
+    list = database.get_cur_list(id)
+    res = ''
+    numb = 0
+    for i in notes:
+        res += '/' + str(numb) + ' ' + str(i[0]) + '\n'
+        numb += 1
+    splitted_text = util.split_string(res, 3000)
+    bot.send_message(id, 'Notes in:' + str(list[0]))
+    for text in splitted_text:
+        bot.send_message(id, splitted_text)
 
 
+<<<<<<< HEAD
 def new_list_name(id, name):
     if '/' in name:
         bot.send_message(id, 'Invalid list name. Print another name of the list.',
@@ -115,6 +145,11 @@ def new_list_name(id, name):
         database.set_state(id, states['list_menu'])
         bot.send_message(id, 'List name edited', reply_markup=markups.init_markup)
         show_l(id)
+=======
+def init_state(id):
+    database.set_state(id, states['init_state'])
+    bot.send_message(id, 'Chose action', reply_markup=markups.init_markup)
+>>>>>>> Database
 
 
 def new_note_name(id, name):
@@ -135,20 +170,50 @@ def start(message):
                      reply_markup=markups.init_markup)
 
 
+<<<<<<< HEAD
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '➕ New list')
+=======
+@bot.message_handler(func=lambda message: message.text[0] == '/')
+def get_message(message):
+    state = database.get_state(message.chat.id)
+    if state[0] == states['wait_list_name']:
+        add_list(message.chat.id, message.text)
+    else:
+        text = message.text
+        text.replace("/", "")
+        if not text.isdigit():
+            bot.send_message(id, 'Invalid command', reply_markup=markups.none_markup)
+        else:
+            if state[0] == states['list_menu']:
+                notes = database.get_notes(message.chat.id, int(text))
+                res = ''
+                numb = 0
+                for i in notes:
+                    res += '/' + str(numb) + ' ' + str(i[0]) + '\n'
+                    numb += 1
+                splitted_text = util.split_string(res, 3000)
+                bot.send_message(message.chat.id, 'Your lists: ')
+                for text in splitted_text:
+                    bot.send_message(message.chat.id, splitted_text)
+            if state[0] == states['list_chosen']:
+                res = ''
+
+
+@bot.message_handler(func=lambda message: message.text == 'New list')
+>>>>>>> Database
 def new_list(message):
     state = database.get_state(message.chat.id)
-    bot.send_message(message.chat.id, state)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
     elif state[0] == states['wait_note_name']:
         add_note(message.chat.id, message.text)
     else:
         database.set_state(message.chat.id, states['wait_list_name'])
-        bot.send_message(message.chat.id, 'Enter the name of new list',
+        bot.send_message(message.chat.id, 'Print the name of new list',
                          reply_markup=markups.none_markup)
 
 
+<<<<<<< HEAD
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '◾️ Show lists')
 def show_lists(message):
     show_l(message.chat.id)
@@ -156,11 +221,16 @@ def show_lists(message):
 
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '⬅️ Go back')
 def go_back(message):
+=======
+@bot.message_handler(func=lambda message: message.text == 'New note')
+def new_note(message):
+>>>>>>> Database
     state = database.get_state(message.chat.id)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
     elif state[0] == states['wait_note_name']:
         add_note(message.chat.id, message.text)
+<<<<<<< HEAD
     elif state[0] == states['edit_list']:
         new_list_name(message.chat.id, message.text)
     elif state[0] == states['edit_note']:
@@ -236,12 +306,41 @@ def edit_name(message):
 
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '➕ New note')
 def new_note(message):
+=======
+    else:
+        database.set_state(message.chat.id, states['wait_note_name'])
+        bot.send_message(message.chat.id, 'Print the name of new note',
+                         reply_markup=markups.none_markup)
+
+
+@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == 'Show lists')
+def show_lists(message):
+    show_lists(message.chat.id)
+    database.set_state(message.chat.id, states['list_menu'])
+
+
+@bot.message_handler(func=lambda message: message.text == 'Go back')
+def go_back(message):
     state = database.get_state(message.chat.id)
-    bot.send_message(message.chat.id, state)
+    if state[0] == states['wait_list_name']:
+        add_list(message.chat.id, message.text)
+    elif state[0] == states['list_chosen']:
+        database.setList(message.chat.id, None)
+        show_lists(message.chat.id)
+    elif state[0] == states['note_chosen']:
+        database.set_state(message.chat.id, states['list_chosen'])
+        show_notes(message.chat.id)
+
+
+@bot.message_handler(content_types=['text'])
+def get_message(message):
+>>>>>>> Database
+    state = database.get_state(message.chat.id)
     if state[0] == states['wait_list_name']:
         add_list(message.chat.id, message.text)
     elif state[0] == states['wait_note_name']:
         add_note(message.chat.id, message.text)
+<<<<<<< HEAD
     elif state[0] == states['list_chosen']:
         database.set_state(message.chat.id, states['wait_note_name'])
         bot.send_message(message.chat.id, 'Enter the name of new note',
@@ -268,6 +367,14 @@ def get_message(message):
         new_list_name(message.chat.id, message.text)
     elif state[0] == states['edit_note']:
         new_note_name(message.chat.id, message.text)
+=======
+
+
+# Handles all sent documents and audio files
+@bot.message_handler(content_types=['document', 'audio'])
+def handle_docs_audio(message):
+    pass
+>>>>>>> Database
 
 
 @server.route('/' + token, methods=['POST'])
@@ -279,7 +386,7 @@ def get_message():
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url='https://telesaverbot.herokuapp.com/' + token)
+    bot.set_webhook(url='https://todoer-bot.herokuapp.com/')
     return "!", 200
 
 

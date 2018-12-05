@@ -182,5 +182,11 @@ class Database:
         name = self.cur.fetchone()
         return name
 
+    def edit_note(self, id, name):
+        self.cur.execute("SELECT NoteID FROM Users WHERE userID=%s", (id,))
+        noteID = self.cur.fetchone()[0]
+        self.cur.execute("UPDATE Notes SET NoteName = %s WHERE NoteID = %s", (name, noteID))
+        self.conn.commit()
+
     def close(self):
         self.conn.close()
