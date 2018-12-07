@@ -1,9 +1,13 @@
 import os
 from flask import Flask, request
 import telebot
-from telebot import util
 import markups
 import db
+
+import urllib.parse as urlparse
+import oauth2 as oauth
+import trello
+from trello import TrelloClient
 
 # init bot
 token = os.environ.get('TOKEN')
@@ -12,6 +16,13 @@ bot = telebot.TeleBot(token)
 # init db
 database = db.Database()
 database.init_tables()
+
+consumer_key = os.environ.get('CONSUMER_KEY')
+consumer_secret = os.environ.get('CONSUMER_SECRET')
+request_token_url = 'https://trello.com/1/OAuthGetRequestToken'
+access_token_url = 'https://trello.com/1/OAuthGetAccessToken'
+authorize_url = 'https://trello.com/1/OAuthAuthorizeToken'
+callback_url = 'https://telesaverbot.herokuapp.com/callback'
 
 # dictionary for bot states
 states = {
@@ -58,19 +69,19 @@ def show_items(id):
     bot.send_message(id, 'Images: ')
     images = database.get_images(id)
     for i in images:
-        bot.send_photo(id, images[0][0])
+        bot.send_photo(id, i[0])
     bot.send_message(id, 'Files: ')
     files = database.get_files(id)
     for i in files:
-        bot.send_document(id, files[0][0])
+        bot.send_document(id, i[0])
     bot.send_message(id, 'Voices: ')
     voices = database.get_voices(id)
     for i in voices:
-        bot.send_voice(id, voices[0][0])
+        bot.send_voice(id, i[0])
     bot.send_message(id, 'Audio: ')
     audio = database.get_audio(id)
     for i in audio:
-        bot.send_audio(id, audio[0][0])
+        bot.send_audio(id, i[0])
 
 
 def show_l(id):
@@ -213,6 +224,17 @@ def new_list(message):
                          reply_markup=markups.none_markup)
 
 
+@bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '➕ Log in Trello')
+def trello(message):
+    consumer = oauth.Consumer(consumer_key, consumer_secret)
+    client = oauth.Client(consumer)
+    resp, content = client.request(request_token_url, "GET")
+    if resp['status'] != '200':
+        raise Exception("Invalid response %s." % resp['status'])
+    request_token = dict(urlparse.parse_qsl(content))
+    bot.send_message(message.chat.id, "%s?oauth_token=%s&scope=read,write" % (authorize_url, str(request_token[b'oauth_token'])[2:-1]))
+
+
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '◾️ Show lists')
 def show_lists(message):
     show_l(message.chat.id)
@@ -234,7 +256,7 @@ def go_back(message):
         show_l(message.chat.id)
     elif state[0] == states['note_chosen']:
         database.set_state(message.chat.id, states['list_chosen'])
-        show_n(message)
+        show_cur_n(message.chat.id, int(database.get_cur_list_numb(message.chat.id)[0]))
 
 
 @bot.message_handler(func=lambda message: message.content_type == 'text' and message.text == '✖️ Cancel')
@@ -258,8 +280,8 @@ def cancel(message):
     elif state[0] == states['note_chosen']:
         database.set_state(message.chat.id, states['list_chosen'])
         show_n(message)
-    elif state == states['wait_image'] or state == states['wait_file'] or state == states['wait_voice'] or state == \
-            states['wait_audio']:
+    elif state[0] == states['wait_image'] or state[0] == states['wait_file'] or state[0] == states['wait_voice'] or \
+            state[0] == states['wait_audio']:
         database.set_state(message.chat.id, states['note_chosen'])
         show_cur_n(message.chat.id, int(database.get_cur_list_numb(message.chat.id)[0]))
 

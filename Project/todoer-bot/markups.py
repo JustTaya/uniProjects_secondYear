@@ -2,9 +2,10 @@ from telebot import types
 
 init_markup = types.ReplyKeyboardMarkup(row_width=2)
 add_button = types.KeyboardButton('➕ New list')
+trello_button = types.KeyboardButton('➕ Log in Trello')
 show_button = types.KeyboardButton('◾️ Show lists')
 faq_button = types.KeyboardButton('◾️ FAQ')
-init_markup.add(add_button, show_button, faq_button)
+init_markup.add(add_button, trello_button, show_button, faq_button)
 
 none_markup = types.ReplyKeyboardMarkup(row_width=1)
 cancel_button = types.KeyboardButton('✖️ Cancel')
