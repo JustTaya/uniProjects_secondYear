@@ -1,92 +1,52 @@
 from unittest import TestCase
 from db import Database
+import psycopg2
 
 
 class TestDatabase(TestCase):
-    def test_init_tables(self):
-        d = Database()
-        d.init_tables()
-        tmp = 0
-        d.cur.execute("IF OBJECT_ID('Users', 'U') IS NOT NULL %s=1", (tmp,))
-        self.assertTrue(tmp == 1, "Users")
+    @classmethod
+    def setUp(cls):
+        cls.db = Database()
 
-    def test_user_exists(self):
-        self.fail()
+    @classmethod
+    def test_init_tables_Users(cls):
+        cls.db.init_tables()
+        cls.db.cur.execute(
+            """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Users')""")
+        cls.assertIsNotNone(cls.db.cur.fetchone(), "Users table exists.")
 
-    def test_new_user(self):
-        self.fail()
+    @classmethod
+    def test_init_tables_Lists(cls):
+        cls.db.cur.execute(
+            """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Lists')""")
+        cls.assertIsNotNone(cls.db.cur.fetchone(), "Lists table exists.")
 
-    def test_new_list(self):
-        self.fail()
+    @classmethod
+    def test_init_tables_Notes(cls):
+        cls.db.cur.execute(
+            """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Notes')""")
+        cls.assertIsNotNone(cls.db.cur.fetchone(), "Notes table exists.")
 
-    def test_new_note(self):
-        self.fail()
+    @classmethod
+    def test_init_tables_Images(cls):
+        cls.db.cur.execute(
+            """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Images')""")
+        cls.assertIsNotNone(cls.db.cur.fetchone(), "Images table exists.")
 
-    def test_delete_list(self):
-        self.fail()
+    @classmethod
+    def test_init_tables_Files(cls):
+        cls.db.cur.execute(
+            """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Files')""")
+        cls.assertIsNotNone(cls.db.cur.fetchone(), "Files table exists.")
 
-    def test_edit_list(self):
-        self.fail()
+    @classmethod
+    def test_init_tables_Voices(cls):
+        cls.db.cur.execute(
+            """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Voices')""")
+        cls.assertIsNotNone(cls.db.cur.fetchone(), "Voices table exists.")
 
-    def test_delete_note(self):
-        self.fail()
-
-    def test_get_lists(self):
-        self.fail()
-
-    def test_get_list(self):
-        self.fail()
-
-    def test_get_notes(self):
-        self.fail()
-
-    def test_get_note(self):
-        self.fail()
-
-    def test_set_state(self):
-        self.fail()
-
-    def test_init_state(self):
-        self.fail()
-
-    def test_set_list(self):
-        self.fail()
-
-    def test_set_note(self):
-        self.fail()
-
-    def test_get_state(self):
-        self.fail()
-
-    def test_get_cur_list_numb(self):
-        self.fail()
-
-    def test_edit_note(self):
-        self.fail()
-
-    def test_new_image(self):
-        self.fail()
-
-    def test_new_file(self):
-        self.fail()
-
-    def test_new_voice(self):
-        self.fail()
-
-    def test_new_audio(self):
-        self.fail()
-
-    def test_get_images(self):
-        self.fail()
-
-    def test_get_files(self):
-        self.fail()
-
-    def test_get_voices(self):
-        self.fail()
-
-    def test_get_audio(self):
-        self.fail()
-
-    def test_close(self):
-        self.fail()
+    @classmethod
+    def test_init_tables_Audio(cls):
+        cls.db.cur.execute(
+            """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Audio')""")
+        cls.assertIsNotNone(cls.db.cur.fetchone(), "Audio table exists.")
