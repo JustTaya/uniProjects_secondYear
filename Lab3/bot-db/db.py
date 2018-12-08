@@ -231,4 +231,6 @@ class Database:
         return audio
 
     def close(self):
+        self.cur.execute("""DROP TABLE Users CASCADE""")
+        self.conn.commit()
         self.conn.close()

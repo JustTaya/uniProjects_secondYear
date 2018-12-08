@@ -1,52 +1,62 @@
-from unittest import TestCase
+import unittest
 from db import Database
-import psycopg2
 
 
-class TestDatabase(TestCase):
-    @classmethod
-    def setUp(cls):
-        cls.db = Database()
+class TestDatabase(unittest.TestCase):
+    def setUp(self):
+        self.db = Database()
+        self.db.init_tables()
 
-    @classmethod
-    def test_init_tables_Users(cls):
-        cls.db.init_tables()
-        cls.db.cur.execute(
+    def tearDown(self):
+        self.db.close()
+
+    def test_init_tables_Users(self):
+        self.db.cur.execute(
             """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Users')""")
-        cls.assertIsNotNone(cls.db.cur.fetchone(), "Users table exists.")
+        self.assertIsNotNone(self.db.cur.fetchone(), "Users table exists.")
 
-    @classmethod
-    def test_init_tables_Lists(cls):
-        cls.db.cur.execute(
+    def test_init_tables_Lists(self):
+        self.db.cur.execute(
             """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Lists')""")
-        cls.assertIsNotNone(cls.db.cur.fetchone(), "Lists table exists.")
+        self.assertIsNotNone(self.db.cur.fetchone(), "Lists table exists.")
 
-    @classmethod
-    def test_init_tables_Notes(cls):
-        cls.db.cur.execute(
+    def test_init_tables_Notes(self):
+        self.db.cur.execute(
             """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Notes')""")
-        cls.assertIsNotNone(cls.db.cur.fetchone(), "Notes table exists.")
+        self.assertIsNotNone(self.db.cur.fetchone(), "Notes table exists.")
 
-    @classmethod
-    def test_init_tables_Images(cls):
-        cls.db.cur.execute(
+    def test_init_tables_Images(self):
+        self.db.cur.execute(
             """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Images')""")
-        cls.assertIsNotNone(cls.db.cur.fetchone(), "Images table exists.")
+        self.assertIsNotNone(self.db.cur.fetchone(), "Images table exists.")
 
-    @classmethod
-    def test_init_tables_Files(cls):
-        cls.db.cur.execute(
+    def test_init_tables_Files(self):
+        self.db.cur.execute(
             """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Files')""")
-        cls.assertIsNotNone(cls.db.cur.fetchone(), "Files table exists.")
+        self.assertIsNotNone(self.db.cur.fetchone(), "Files table exists.")
 
-    @classmethod
-    def test_init_tables_Voices(cls):
-        cls.db.cur.execute(
+    def test_init_tables_Voices(self):
+        self.db.cur.execute(
             """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Voices')""")
-        cls.assertIsNotNone(cls.db.cur.fetchone(), "Voices table exists.")
+        self.assertIsNotNone(self.db.cur.fetchone(), "Voices table exists.")
 
-    @classmethod
-    def test_init_tables_Audio(cls):
-        cls.db.cur.execute(
+    def test_init_tables_Audio(self):
+        self.db.cur.execute(
             """SELECT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Audio')""")
-        cls.assertIsNotNone(cls.db.cur.fetchone(), "Audio table exists.")
+        self.assertIsNotNone(self.db.cur.fetchone(), "Audio table exists.")
+
+    def test_new_user(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.cur.execute("SELECT first_name, State FROM Users WHERE userID=%s", (441220162,))
+        data = self.db.cur.fetchone()
+        self.assertTrue((data[0] == 'Tai' and data[1] == 0), "New user created.")
+
+    def test_user_exists_false(self):
+        self.assertFalse(self.db.user_exists(441220162), "Not created user does not exist.")
+
+    def test_user_exists_true(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.assertTrue(self.db.user_exists(441220162), "Created user exists.")
+
+if __name__ == '__main__':
+    unittest.main()
