@@ -74,9 +74,31 @@ class TestDatabase(unittest.TestCase):
 
     def test_get_state(self):
         self.db.new_user(441220162, "Tai", 0)
-        self.db.cur.execute("UPDATE Users SET State=%s WHERE userID=%s", (3, 441220162))
+        self.db.set_state(441220162, 3)
         self.db.cur.execute("SELECT State FROM Users WHERE userID = %s", (441220162,))
-        self.assertEqual(self.db.cur.fetchone()[0], self.db.get_state(441220162)[0], "Init state set.")
+        self.assertEqual(self.db.cur.fetchone()[0], self.db.get_state(441220162)[0], "Get state.")
+
+    def test_new_list(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.cur.execute("SELECT ListName FROM Lists WHERE userID = %s", (441220162,))
+        self.assertEqual(self.db.cur.fetchone()[0], "List", "New list added.")
+
+    def test_set_list(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (441220162,))
+        listID = self.db.cur.fetchone()[0]
+        self.db.cur.execute("SELECT ListName FROM Lists WHERE ListID = %s", (listID,))
+        self.assertEqual(self.db.cur.fetchone()[0], "List", "List set.")
+
+    def test_get_cur_list_numb(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.assertEqual(self.db.get_cur_list_numb(441220162)[0], 0, "Got current list number.")
+
 
 
 if __name__ == '__main__':
