@@ -72,9 +72,11 @@ class TestDatabase(unittest.TestCase):
         self.db.cur.execute("SELECT State FROM Users WHERE userID=%s", (441220162,))
         self.assertEqual(self.db.cur.fetchone()[0], 0, "Init state set.")
 
-
-# def test_get_state(self):
-#   self.fail()
+    def test_get_state(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.cur.execute("UPDATE Users SET State=%s WHERE userID=%s", (3, 441220162))
+        self.db.cur.execute("SELECT State FROM Users WHERE userID = %s", (441220162,))
+        self.assertEqual(self.db.cur.fetchone()[0], self.db.get_state(441220162)[0], "Init state set.")
 
 
 if __name__ == '__main__':
