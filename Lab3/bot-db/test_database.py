@@ -1,4 +1,6 @@
 import unittest
+from unittest import TestCase
+
 from db import Database
 
 
@@ -57,6 +59,20 @@ class TestDatabase(unittest.TestCase):
     def test_user_exists_true(self):
         self.db.new_user(441220162, "Tai", 0)
         self.assertTrue(self.db.user_exists(441220162), "Created user exists.")
+
+    def test_set_state(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.set_state(441220162, 3)
+        self.db.cur.execute("SELECT State FROM Users WHERE userID=%s", (441220162,))
+        self.assertEqual(self.db.cur.fetchone()[0], 3, "Created user exists.")
+
+
+# def test_init_state(self):
+#    self.fail()
+
+# def test_get_state(self):
+#   self.fail()
+
 
 if __name__ == '__main__':
     unittest.main()

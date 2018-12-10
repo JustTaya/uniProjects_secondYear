@@ -95,12 +95,6 @@ class Database:
         self.cur.execute("DELETE FROM Lists WHERE ListID=%s", (listID,))
         self.conn.commit()
 
-    def edit_list(self, id, name):
-        self.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (id,))
-        listID = self.cur.fetchone()[0]
-        self.cur.execute("UPDATE Lists SET ListName = %s WHERE ListID = %s", (name, listID))
-        self.conn.commit()
-
     def delete_note(self, id):
         self.cur.execute("SELECT ListID, NoteID FROM Users WHERE userID=%s", (id,))
         data = self.cur.fetchone()
@@ -113,15 +107,34 @@ class Database:
         self.cur.execute("DELETE FROM Notes WHERE ListID=%s", (listID,))
         self.conn.commit()
 
-    def get_lists(self, id):
-        self.cur.execute("SELECT ListName FROM Lists WHERE userID = %s", (id,))
-        lists = self.cur.fetchall()
-        return lists
+    def edit_list(self, id, name):
+        self.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (id,))
+        listID = self.cur.fetchone()[0]
+        self.cur.execute("UPDATE Lists SET ListName = %s WHERE ListID = %s", (name, listID))
+        self.conn.commit()
+
+    def edit_note(self, id, name):
+        self.cur.execute("SELECT NoteID FROM Users WHERE userID=%s", (id,))
+        noteID = self.cur.fetchone()[0]
+        self.cur.execute("UPDATE Notes SET NoteName = %s WHERE NoteID = %s", (name, noteID))
+        self.conn.commit()
 
     def get_list(self, id, numb):
         self.cur.execute("SELECT ListName FROM Lists WHERE userID = %s AND numb = %s", (id, numb))
         list = self.cur.fetchone()
         return list
+
+    def get_lists(self, id):
+        self.cur.execute("SELECT ListName FROM Lists WHERE userID = %s", (id,))
+        lists = self.cur.fetchall()
+        return lists
+
+    def get_note(self, id):
+        self.cur.execute("SELECT NoteID FROM Users WHERE userID = %s", (id,))
+        noteID = self.cur.fetchone()[0]
+        self.cur.execute("SELECT NoteName FROM Notes WHERE NoteID = %s", (noteID,))
+        note = self.cur.fetchone()
+        return note
 
     def get_notes(self, userID, list_numb):
         self.cur.execute("SELECT ListID FROM Lists WHERE userID = %s AND numb = %s", (userID, list_numb))
@@ -130,13 +143,6 @@ class Database:
         self.cur.execute("SELECT NoteName FROM Notes WHERE ListID = %s", (listID,))
         notes = self.cur.fetchall()
         return notes
-
-    def get_note(self, id):
-        self.cur.execute("SELECT NoteID FROM Users WHERE userID = %s", (id,))
-        noteID = self.cur.fetchone()[0]
-        self.cur.execute("SELECT NoteName FROM Notes WHERE NoteID = %s", (noteID,))
-        note = self.cur.fetchone()
-        return note
 
     def set_state(self, id, new_state):
         self.cur.execute("UPDATE Users SET State=%s WHERE userID=%s", (new_state, id))
@@ -171,12 +177,6 @@ class Database:
         self.cur.execute("SELECT numb FROM Lists WHERE ListID = %s", (listID,))
         name = self.cur.fetchone()
         return name
-
-    def edit_note(self, id, name):
-        self.cur.execute("SELECT NoteID FROM Users WHERE userID=%s", (id,))
-        noteID = self.cur.fetchone()[0]
-        self.cur.execute("UPDATE Notes SET NoteName = %s WHERE NoteID = %s", (name, noteID))
-        self.conn.commit()
 
     def new_image(self, id, imageID):
         self.cur.execute("SELECT NoteID FROM Users WHERE userID=%s", (id,))
