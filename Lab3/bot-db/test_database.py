@@ -64,11 +64,14 @@ class TestDatabase(unittest.TestCase):
         self.db.new_user(441220162, "Tai", 0)
         self.db.set_state(441220162, 3)
         self.db.cur.execute("SELECT State FROM Users WHERE userID=%s", (441220162,))
-        self.assertEqual(self.db.cur.fetchone()[0], 3, "Created user exists.")
+        self.assertEqual(self.db.cur.fetchone()[0], 3, "State set.")
 
+    def test_init_state(self):
+        self.db.new_user(441220162, "Tai", 3)
+        self.db.init_state(441220162)
+        self.db.cur.execute("SELECT State FROM Users WHERE userID=%s", (441220162,))
+        self.assertEqual(self.db.cur.fetchone()[0], 0, "Init state set.")
 
-# def test_init_state(self):
-#    self.fail()
 
 # def test_get_state(self):
 #   self.fail()
