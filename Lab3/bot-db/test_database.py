@@ -141,5 +141,46 @@ class TestDatabase(unittest.TestCase):
         self.db.cur.execute("SELECT * FROM Lists WHERE userID = %s and ListName = %s", (441220162, "List"))
         self.assertIsNotNone(self.db.cur.fetchone(), "The list is not deleted")
 
+    def test_edit_list_Exists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.edit_list(441220162, "New_list")
+        self.db.cur.execute("SELECT * FROM Lists WHERE userID = %s and ListName = %s", (441220162, "New_list"))
+        new_name = self.db.cur.fetchone()
+        self.db.cur.execute("SELECT * FROM Lists WHERE userID = %s and ListName = %s", (441220162, "List"))
+        old_name = self.db.cur.fetchone()
+        self.assertTrue((new_name is not None) and (old_name is None), "The list edited")
+
+    def test_edit_list_NotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.edit_list(441220162, "New_list")
+        self.db.cur.execute("SELECT * FROM Lists WHERE userID = %s and ListName = %s", (441220162, "New_list"))
+        new_name = self.db.cur.fetchone()
+        self.db.cur.execute("SELECT * FROM Lists WHERE userID = %s and ListName = %s", (441220162, "List"))
+        old_name = self.db.cur.fetchone()
+        self.assertTrue((new_name is None) and (old_name is not None), "The list is not edited if not exists")
+
+    def test_set_note_listExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.set_note(441220162, 0)
+        self.db.cur.execute("SELECT NoteID FROM Users WHERE userID=%s", (441220162,))
+        noteID = self.db.cur.fetchone()[0]
+        self.db.cur.execute("SELECT NoteName FROM Notes WHERE NoteID = %s", (noteID,))
+        self.assertEqual(self.db.cur.fetchone()[0], "Note", "Note set.")
+
+    def test_set_note_listNotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.new_note(441220162, "Note")
+        self.db.set_note(441220162, 0)
+        self.db.cur.execute("SELECT NoteID FROM Users WHERE userID=%s", (441220162,))
+        self.assertIsNone(self.db.cur.fetchone()[0], "List set.")
+
+
 if __name__ == '__main__':
     unittest.main()

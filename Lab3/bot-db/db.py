@@ -179,9 +179,11 @@ class Database:
         if data[0] is not None:
             listID = data[0]
             self.cur.execute("SELECT NoteID FROM Notes WHERE ListID = %s AND numb = %s", (listID, numb))
-            noteID = self.cur.fetchone()[0]
-            self.cur.execute("UPDATE Users SET NoteID=%s WHERE userID=%s", (noteID, id))
-            self.conn.commit()
+            data = self.cur.fetchone()
+            if data is not None:
+                noteID = data[0]
+                self.cur.execute("UPDATE Users SET NoteID=%s WHERE userID=%s", (noteID, id))
+                self.conn.commit()
 
     def get_state(self, id):
         self.cur.execute("SELECT State FROM Users WHERE userID = %s", (id,))
