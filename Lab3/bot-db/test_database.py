@@ -212,9 +212,8 @@ class TestDatabase(unittest.TestCase):
         self.db.new_note(441220162, "Note1")
         self.db.set_note(441220162, 0)
         self.db.delete_note(441220162)
-        self.db.cur.execute("SELECT numb FROM Notes WHERE userID = %s", (441220162, ))
+        self.db.cur.execute("SELECT numb FROM Notes WHERE userID = %s", (441220162,))
         self.assertEqual(self.db.cur.fetchone()[0], 0, "The number changed")
-
 
     def test_delete_note_NotExists(self):
         self.db.new_user(441220162, "Tai", 0)
@@ -224,6 +223,32 @@ class TestDatabase(unittest.TestCase):
         self.db.delete_note(441220162)
         self.db.cur.execute("SELECT * FROM Notes WHERE userID = %s and NoteName = %s", (441220162, "Note"))
         self.assertIsNotNone(self.db.cur.fetchone(), "The note is not deleted if not exists")
+
+    def test_edit_note_Exists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.set_note(441220162, 0)
+        self.db.edit_note(441220162, "New_note")
+        self.db.cur.execute("SELECT * FROM Notes WHERE userID = %s and NoteName = %s", (441220162, "New_note"))
+        new_name = self.db.cur.fetchone()
+        self.db.cur.execute("SELECT * FROM Notes WHERE userID = %s and NoteName = %s", (441220162, "Note"))
+        old_name = self.db.cur.fetchone()
+        self.assertTrue((new_name is not None) and (old_name is None), "The note edited")
+
+
+    def test_delete_note_NotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.edit_note(441220162, "New_note")
+        self.db.cur.execute("SELECT * FROM Notes WHERE userID = %s and NoteName = %s", (441220162, "New_note"))
+        new_name = self.db.cur.fetchone()
+        self.db.cur.execute("SELECT * FROM Notes WHERE userID = %s and NoteName = %s", (441220162, "Note"))
+        old_name = self.db.cur.fetchone()
+        self.assertTrue((new_name is None) and (old_name is not None), "The note is not edited if not exists")
 
 
 if __name__ == '__main__':
