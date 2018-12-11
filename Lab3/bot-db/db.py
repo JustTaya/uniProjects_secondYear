@@ -64,29 +64,34 @@ class Database:
 
     def new_user(self, id, username, state):
         if not self.user_exists(id):
-            self.cur.execute(
-                "INSERT INTO Users (userID,first_name,State) VALUES (%s,%s,%s) ", (id, username, state))
-        self.conn.commit()
+            if len(username) < 50:
+                self.cur.execute(
+                    "INSERT INTO Users (userID,first_name,State) VALUES (%s,%s,%s) ", (id, username, state))
+                self.conn.commit()
 
     def new_list(self, id, name):
-        self.cur.execute("SELECT listsNumber FROM Users WHERE userID=%s", (id,))
-        list_numb = self.cur.fetchone()[0] + 1
-        self.cur.execute("UPDATE Users SET listsNumber=%s WHERE userID=%s", (list_numb, id))
-        self.cur.execute(
-            "INSERT INTO Lists (userID,ListName, numb) VALUES (%s,%s, %s) ", (id, name, list_numb - 1))
-        self.conn.commit()
+        if len(name) < 50:
+            self.cur.execute("SELECT listsNumber FROM Users WHERE userID=%s", (id,))
+            data = self.cur.fetchone()
+            if data[0] is not None:
+                list_numb = data[0] + 1
+                self.cur.execute("UPDATE Users SET listsNumber=%s WHERE userID=%s", (list_numb, id))
+                self.cur.execute(
+                    "INSERT INTO Lists (userID,ListName, numb) VALUES (%s,%s, %s) ", (id, name, list_numb - 1))
+                self.conn.commit()
 
     def new_note(self, id, name):
-        self.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (id,))
-        data = self.cur.fetchone()
-        if data[0] is not None:
-            listID = data[0]
-            self.cur.execute("SELECT notesNumber FROM Lists WHERE ListID=%s", (listID,))
-            note_numb = self.cur.fetchone()[0] + 1
-            self.cur.execute("UPDATE Lists SET notesNumber=%s WHERE ListID=%s", (note_numb, listID))
-            self.cur.execute("INSERT INTO Notes (ListID,NoteName,userID, numb) VALUES (%s,%s,%s,%s) ",
-                             (listID, name, id, note_numb - 1))
-            self.conn.commit()
+        if len(name) < 50:
+            self.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (id,))
+            data = self.cur.fetchone()
+            if data[0] is not None:
+                listID = data[0]
+                self.cur.execute("SELECT notesNumber FROM Lists WHERE ListID=%s", (listID,))
+                note_numb = self.cur.fetchone()[0] + 1
+                self.cur.execute("UPDATE Lists SET notesNumber=%s WHERE ListID=%s", (note_numb, listID))
+                self.cur.execute("INSERT INTO Notes (ListID,NoteName,userID, numb) VALUES (%s,%s,%s,%s) ",
+                                 (listID, name, id, note_numb - 1))
+                self.conn.commit()
 
     def delete_list(self, id):
         self.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (id,))
@@ -116,20 +121,22 @@ class Database:
                 self.conn.commit()
 
     def edit_list(self, id, name):
-        self.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (id,))
-        data = self.cur.fetchone()
-        if data[0] is not None:
-            listID = data[0]
-            self.cur.execute("UPDATE Lists SET ListName = %s WHERE ListID = %s", (name, listID))
-            self.conn.commit()
+        if len(name) < 50:
+            self.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (id,))
+            data = self.cur.fetchone()
+            if data[0] is not None:
+                listID = data[0]
+                self.cur.execute("UPDATE Lists SET ListName = %s WHERE ListID = %s", (name, listID))
+                self.conn.commit()
 
     def edit_note(self, id, name):
-        self.cur.execute("SELECT NoteID FROM Users WHERE userID=%s", (id,))
-        data = self.cur.fetchone()
-        if data[0] is not None:
-            noteID = data[0]
-            self.cur.execute("UPDATE Notes SET NoteName = %s WHERE NoteID = %s", (name, noteID))
-            self.conn.commit()
+        if len(name) < 50:
+            self.cur.execute("SELECT NoteID FROM Users WHERE userID=%s", (id,))
+            data = self.cur.fetchone()
+            if data[0] is not None:
+                noteID = data[0]
+                self.cur.execute("UPDATE Notes SET NoteName = %s WHERE NoteID = %s", (name, noteID))
+                self.conn.commit()
 
     def get_list(self, id, numb):
         self.cur.execute("SELECT ListName FROM Lists WHERE userID = %s AND numb = %s", (id, numb))
@@ -278,7 +285,7 @@ class Database:
             return audio
         return None
 
-    def close(self):
+    def clear(self):
         self.cur.execute("""DROP TABLE Users CASCADE""")
         self.cur.execute("""DROP TABLE Lists CASCADE""")
         self.cur.execute("""DROP TABLE Notes CASCADE""")
@@ -287,4 +294,6 @@ class Database:
         self.cur.execute("""DROP TABLE Voices CASCADE""")
         self.cur.execute("""DROP TABLE Audio CASCADE""")
         self.conn.commit()
+
+    def close(self):
         self.conn.close()
