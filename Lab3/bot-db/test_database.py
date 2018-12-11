@@ -143,14 +143,14 @@ class TestDatabase(unittest.TestCase):
         self.db.new_user(id, name, state)
         self.db.set_list(id, 0)
         self.db.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (id,))
-        self.assertIsNone(self.db.cur.fetchone()[0], "List is not set if not exists.")
+        self.assertIsNone(self.db.cur.fetchone()[0], "List is not set if does not exist.")
 
     def test_get_cur_list_numbNotExists(self):
         id = 441220162
         name = "Tai"
         state = 0
         self.db.new_user(id, name, state)
-        self.assertIsNone(self.db.get_cur_list_numb(id), "Got current list number if not exists.")
+        self.assertIsNone(self.db.get_cur_list_numb(id), "Got current list number if does not exist.")
 
     def test_get_cur_list_numbExists(self):
         id = 441220162
@@ -214,7 +214,7 @@ class TestDatabase(unittest.TestCase):
         self.db.set_list(id, 0)
         self.db.delete_list(id)
         self.db.cur.execute("SELECT numb FROM Lists WHERE userID = %s and ListName = %s", (id, "List1"))
-        self.assertEqual(self.db.cur.fetchone()[0], 0, "The number changed")
+        self.assertEqual(self.db.cur.fetchone()[0], 0, "Number changed")
 
     def test_delete_list_NotExists(self):
         id = 441220162
@@ -224,7 +224,7 @@ class TestDatabase(unittest.TestCase):
         self.db.new_list(id, "List")
         self.db.delete_list(id)
         self.db.cur.execute("SELECT * FROM Lists WHERE userID = %s and ListName = %s", (id, "List"))
-        self.assertIsNotNone(self.db.cur.fetchone(), "The list is not deleted")
+        self.assertIsNotNone(self.db.cur.fetchone(), "List is not deleted")
 
     def test_edit_list_Exists(self):
         id = 441220162
@@ -238,7 +238,7 @@ class TestDatabase(unittest.TestCase):
         new_name = self.db.cur.fetchone()
         self.db.cur.execute("SELECT * FROM Lists WHERE userID = %s and ListName = %s", (id, "List"))
         old_name = self.db.cur.fetchone()
-        self.assertTrue((new_name is not None) and (old_name is None), "The list edited")
+        self.assertTrue((new_name is not None) and (old_name is None), "List edited")
 
     def test_edit_list_NotExists(self):
         id = 441220162
@@ -251,7 +251,7 @@ class TestDatabase(unittest.TestCase):
         new_name = self.db.cur.fetchone()
         self.db.cur.execute("SELECT * FROM Lists WHERE userID = %s and ListName = %s", (id, "List"))
         old_name = self.db.cur.fetchone()
-        self.assertTrue((new_name is None) and (old_name is not None), "The list is not edited if not exists")
+        self.assertTrue((new_name is None) and (old_name is not None), "List is not edited if does not exist")
 
     def test_set_note_listExists(self):
         id = 441220162
@@ -299,7 +299,7 @@ class TestDatabase(unittest.TestCase):
         self.db.set_note(id, 0)
         self.db.delete_note(id)
         self.db.cur.execute("SELECT * FROM Notes WHERE userID = %s and NoteName = %s", (id, "Note"))
-        self.assertIsNone(self.db.cur.fetchone(), "The note deleted")
+        self.assertIsNone(self.db.cur.fetchone(), "Note deleted")
 
     def test_delete_note_checkNumb(self):
         id = 441220162
@@ -313,7 +313,7 @@ class TestDatabase(unittest.TestCase):
         self.db.set_note(id, 0)
         self.db.delete_note(id)
         self.db.cur.execute("SELECT numb FROM Notes WHERE userID = %s", (id,))
-        self.assertEqual(self.db.cur.fetchone()[0], 0, "The number changed")
+        self.assertEqual(self.db.cur.fetchone()[0], 0, "Number changed")
 
     def test_delete_note_NotExists(self):
         id = 441220162
@@ -325,7 +325,7 @@ class TestDatabase(unittest.TestCase):
         self.db.new_note(id, "Note")
         self.db.delete_note(id)
         self.db.cur.execute("SELECT * FROM Notes WHERE userID = %s and NoteName = %s", (id, "Note"))
-        self.assertIsNotNone(self.db.cur.fetchone(), "The note is not deleted if not exists")
+        self.assertIsNotNone(self.db.cur.fetchone(), "Note is not deleted if does not exist")
 
     def test_edit_note_Exists(self):
         id = 441220162
@@ -341,7 +341,7 @@ class TestDatabase(unittest.TestCase):
         new_name = self.db.cur.fetchone()
         self.db.cur.execute("SELECT * FROM Notes WHERE userID = %s and NoteName = %s", (id, "Note"))
         old_name = self.db.cur.fetchone()
-        self.assertTrue((new_name is not None) and (old_name is None), "The note edited")
+        self.assertTrue((new_name is not None) and (old_name is None), "Note edited")
 
     def test_edit_note_NotExists(self):
         id = 441220162
@@ -356,7 +356,7 @@ class TestDatabase(unittest.TestCase):
         new_name = self.db.cur.fetchone()
         self.db.cur.execute("SELECT * FROM Notes WHERE userID = %s and NoteName = %s", (id, "Note"))
         old_name = self.db.cur.fetchone()
-        self.assertTrue((new_name is None) and (old_name is not None), "The note is not edited if not exists")
+        self.assertTrue((new_name is None) and (old_name is not None), "Note is not edited if does not exist")
 
     def test_get_lists_exists(self):
         id = 441220162
