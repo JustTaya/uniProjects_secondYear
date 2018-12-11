@@ -93,6 +93,12 @@ class TestDatabase(unittest.TestCase):
         self.db.cur.execute("SELECT ListName FROM Lists WHERE ListID = %s", (listID,))
         self.assertEqual(self.db.cur.fetchone()[0], "List", "List set.")
 
+    def test_set_list_notExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.set_list(441220162, 0)
+        self.db.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (441220162,))
+        self.assertIsNone(self.db.cur.fetchone()[0], "List is not set if not exists.")
+
     def test_get_cur_list_numbNotExists(self):
         self.db.new_user(441220162, "Tai", 0)
         self.assertIsNone(self.db.get_cur_list_numb(441220162), "Got current list number if not exists.")
@@ -180,6 +186,44 @@ class TestDatabase(unittest.TestCase):
         self.db.set_note(441220162, 0)
         self.db.cur.execute("SELECT NoteID FROM Users WHERE userID=%s", (441220162,))
         self.assertIsNone(self.db.cur.fetchone()[0], "List set.")
+
+    def test_set_note_noteNotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_note(441220162, 0)
+        self.db.cur.execute("SELECT NoteID FROM Users WHERE userID=%s", (441220162,))
+        self.assertIsNone(self.db.cur.fetchone()[0], "List set.")
+
+    def test_delete_note_Exists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.set_note(441220162, 0)
+        self.db.delete_note(441220162)
+        self.db.cur.execute("SELECT * FROM Notes WHERE userID = %s and NoteName = %s", (441220162, "Note"))
+        self.assertIsNone(self.db.cur.fetchone(), "The note deleted")
+
+    def test_delete_note_checkNumb(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note0")
+        self.db.new_note(441220162, "Note1")
+        self.db.set_note(441220162, 0)
+        self.db.delete_note(441220162)
+        self.db.cur.execute("SELECT numb FROM Notes WHERE userID = %s", (441220162, ))
+        self.assertEqual(self.db.cur.fetchone()[0], 0, "The number changed")
+
+
+    def test_delete_note_NotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.delete_note(441220162)
+        self.db.cur.execute("SELECT * FROM Notes WHERE userID = %s and NoteName = %s", (441220162, "Note"))
+        self.assertIsNotNone(self.db.cur.fetchone(), "The note is not deleted if not exists")
 
 
 if __name__ == '__main__':

@@ -37,6 +37,7 @@ class Database:
                 NoteName VARCHAR (50) NOT NULL ,
                 NoteText TEXT,
                 PRIMARY KEY (NoteID),
+                FOREIGN KEY (userID) REFERENCES Users(userID) on delete cascade on update cascade,
                 FOREIGN KEY (ListID) REFERENCES Lists(ListID) on delete cascade on update cascade)""")
         self.cur.execute("""CREATE TABLE IF NOT EXISTS Images(
                 NoteImage VARCHAR(256),
@@ -106,11 +107,13 @@ class Database:
             listID = data[0]
             noteID = data[1]
             self.cur.execute("SELECT numb FROM Notes WHERE NoteID=%s", (noteID,))
-            number = self.cur.fetchone()[0]
-            self.cur.execute("UPDATE Notes SET numb=numb-1 WHERE numb>%s", (number,))
-            self.cur.execute("UPDATE Lists SET notesNumber=notesNumber-1 WHERE ListID=%s", (listID,))
-            self.cur.execute("DELETE FROM Notes WHERE ListID=%s", (listID,))
-            self.conn.commit()
+            data = self.cur.fetchone()
+            if data is not None:
+                number = data[0]
+                self.cur.execute("UPDATE Notes SET numb=numb-1 WHERE numb>%s and userID = %s", (number, id))
+                self.cur.execute("UPDATE Lists SET notesNumber=notesNumber-1 WHERE ListID=%s", (listID,))
+                self.cur.execute("DELETE FROM Notes WHERE NoteID=%s", (noteID,))
+                self.conn.commit()
 
     def edit_list(self, id, name):
         self.cur.execute("SELECT ListID FROM Users WHERE userID=%s", (id,))
@@ -170,8 +173,11 @@ class Database:
 
     def set_list(self, id, list_numb):
         self.cur.execute("SELECT ListID FROM Lists WHERE userID = %s AND numb = %s", (id, list_numb))
-        listID = self.cur.fetchone()[0]
-        self.cur.execute("UPDATE Users SET ListID=%s WHERE userID=%s", (listID, id))
+        data = self.cur.fetchone()
+        if data is not None:
+            listID = data[0]
+            self.cur.execute("UPDATE Users SET ListID=%s WHERE userID=%s", (listID, id))
+            self.conn.commit()
 
     def set_note(self, id, numb):
         self.cur.execute("SELECT ListID FROM Users WHERE userID = %s", (id,))
