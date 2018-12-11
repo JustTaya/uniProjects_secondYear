@@ -261,6 +261,27 @@ class TestDatabase(unittest.TestCase):
         data = self.db.get_lists(441220162)
         self.assertTrue(len(data) == 0, "Lists do not exist.")
 
+    def test_get_notes_exists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note0")
+        self.db.new_note(441220162, "Note1")
+        data = self.db.get_notes(441220162, 0)
+        self.assertTrue((len(data) == 2) and (data[0][0] == "Note0") and (data[1][0] == "Note1"), "Notes exist.")
+
+    def test_get_notes_notExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        data = self.db.get_notes(441220162, 0)
+        self.assertTrue(len(data) == 0, "Notes do not exist.")
+
+    def test_get_notes_listNotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.set_list(441220162, 0)
+        self.assertIsNone(self.db.get_notes(441220162, 0), "Notes do not exist.")
+
 
 if __name__ == '__main__':
     unittest.main()

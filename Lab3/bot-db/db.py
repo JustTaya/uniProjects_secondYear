@@ -154,7 +154,7 @@ class Database:
     def get_notes(self, userID, list_numb):
         self.cur.execute("SELECT ListID FROM Lists WHERE userID = %s AND numb = %s", (userID, list_numb))
         data = self.cur.fetchone()
-        if data[0] is not None:
+        if data is not None:
             listID = data[0]
             self.cur.execute("UPDATE Users SET ListID=%s WHERE userID=%s", (listID, userID))
             self.cur.execute("SELECT NoteName FROM Notes WHERE ListID = %s", (listID,))
