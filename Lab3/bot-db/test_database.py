@@ -282,6 +282,142 @@ class TestDatabase(unittest.TestCase):
         self.db.set_list(441220162, 0)
         self.assertIsNone(self.db.get_notes(441220162, 0), "Notes do not exist.")
 
+    def test_new_image_Exists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.set_note(441220162, 0)
+        self.db.new_image(441220162, "123")
+        self.db.cur.execute("SELECT NoteID FROM Users WHERE userID = %s", (441220162,))
+        noteID = self.db.cur.fetchone()[0]
+        self.db.cur.execute("SELECT NoteImage FROM Images WHERE NoteID = %s", (noteID,))
+        data = self.db.cur.fetchone()[0]
+        self.assertEqual(data, "123", "New image added.")
+
+    def test_new_image_NotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_image(441220162, "123")
+        self.db.cur.execute("SELECT * FROM Images WHERE NoteImage = %s", ("123",))
+        self.assertIsNone(self.db.cur.fetchone(), "New image is not added.")
+
+    def test_new_file_Exists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.set_note(441220162, 0)
+        self.db.new_file(441220162, "123")
+        self.db.cur.execute("SELECT NoteID FROM Users WHERE userID = %s", (441220162,))
+        noteID = self.db.cur.fetchone()[0]
+        self.db.cur.execute("SELECT NoteFile FROM Files WHERE NoteID = %s", (noteID,))
+        data = self.db.cur.fetchone()[0]
+        self.assertEqual(data, "123", "New file added.")
+
+    def test_new_file_NotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_file(441220162, "123")
+        self.db.cur.execute("SELECT * FROM Files WHERE NoteFile = %s", ("123",))
+        self.assertIsNone(self.db.cur.fetchone(), "New file is not added.")
+
+    def test_new_voice_Exists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.set_note(441220162, 0)
+        self.db.new_voice(441220162, "123")
+        self.db.cur.execute("SELECT NoteID FROM Users WHERE userID = %s", (441220162,))
+        noteID = self.db.cur.fetchone()[0]
+        self.db.cur.execute("SELECT NoteVoice FROM Voices WHERE NoteID = %s", (noteID,))
+        data = self.db.cur.fetchone()[0]
+        self.assertEqual(data, "123", "New voice added.")
+
+    def test_new_voice_NotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_voice(441220162, "123")
+        self.db.cur.execute("SELECT * FROM Voices WHERE NoteVoice = %s", ("123",))
+        self.assertIsNone(self.db.cur.fetchone(), "New voice is not added.")
+
+    def test_new_audio_Exists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.set_note(441220162, 0)
+        self.db.new_audio(441220162, "123")
+        self.db.cur.execute("SELECT NoteID FROM Users WHERE userID = %s", (441220162,))
+        noteID = self.db.cur.fetchone()[0]
+        self.db.cur.execute("SELECT NoteAudio FROM Audio WHERE NoteID = %s", (noteID,))
+        data = self.db.cur.fetchone()[0]
+        self.assertEqual(data, "123", "New audio added.")
+
+    def test_new_audio_NotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_audio(441220162, "123")
+        self.db.cur.execute("SELECT * FROM Audio WHERE NoteAudio = %s", ("123",))
+        self.assertIsNone(self.db.cur.fetchone(), "New audio is not added.")
+
+    def test_get_images_Exists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.set_note(441220162, 0)
+        self.db.new_image(441220162, "123")
+        self.db.new_image(441220162, "abc")
+        data = self.db.get_images(441220162)
+        self.assertTrue((data[0][0] == "123") and (data[1][0] == "abc") and (len(data) == 2), "Got images.")
+
+    def test_get_images_NotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.assertIsNone(self.db.get_images(441220162), "No images.")
+
+    def test_get_files_Exists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.set_note(441220162, 0)
+        self.db.new_file(441220162, "123")
+        self.db.new_file(441220162, "abc")
+        data = self.db.get_files(441220162)
+        self.assertTrue((data[0][0] == "123") and (data[1][0] == "abc") and (len(data) == 2), "Got files.")
+
+    def test_get_files_NotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.assertIsNone(self.db.get_files(441220162), "No files.")
+
+    def test_get_voices_Exists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.set_note(441220162, 0)
+        self.db.new_voice(441220162, "123")
+        self.db.new_voice(441220162, "abc")
+        data = self.db.get_voices(441220162)
+        self.assertTrue((data[0][0] == "123") and (data[1][0] == "abc") and (len(data) == 2), "Got voices.")
+
+    def test_get_voices_NotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.assertIsNone(self.db.get_voices(441220162), "No voices.")
+
+    def test_get_audio_Exists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.set_list(441220162, 0)
+        self.db.new_note(441220162, "Note")
+        self.db.set_note(441220162, 0)
+        self.db.new_audio(441220162, "123")
+        self.db.new_audio(441220162, "abc")
+        data = self.db.get_audio(441220162)
+        self.assertTrue((data[0][0] == "123") and (data[1][0] == "abc") and (len(data) == 2), "Got audio.")
+
+    def test_get_audio_NotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.assertIsNone(self.db.get_audio(441220162), "No audio.")
+
 
 if __name__ == '__main__':
     unittest.main()
