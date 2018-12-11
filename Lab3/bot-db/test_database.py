@@ -114,6 +114,16 @@ class TestDatabase(unittest.TestCase):
         self.db.cur.execute("SELECT ListName FROM Lists WHERE userID = %s", (441220162,))
         self.assertEqual(self.db.cur.fetchone()[0], "List", "New list added.")
 
+    def test_new_list_invalid_name(self):
+        id = 441220162
+        name = "Tai"
+        state = 0
+        self.db.new_user(id, name, state)
+        list_name = "a"*51
+        self.db.new_list(id, list_name)
+        self.db.cur.execute("SELECT ListName FROM Lists WHERE userID = %s", (441220162,))
+        self.assertIsNone(self.db.cur.fetchone(), "New list added.")
+
     def test_set_list(self):
         id = 441220162
         name = "Tai"
@@ -161,6 +171,18 @@ class TestDatabase(unittest.TestCase):
         self.db.new_note(id, "Note")
         self.db.cur.execute("SELECT NoteName FROM Notes WHERE userID = %s", (id,))
         self.assertEqual(self.db.cur.fetchone()[0], "Note", "New note added.")
+
+    def test_new_note_invalid_name(self):
+        id = 441220162
+        name = "Tai"
+        state = 0
+        self.db.new_user(id, name, state)
+        self.db.new_list(id, "List")
+        self.db.set_list(id, 0)
+        note_name = "a" * 51
+        self.db.new_note(id, note_name)
+        self.db.cur.execute("SELECT NoteName FROM Notes WHERE userID = %s", (id,))
+        self.assertIsNone(self.db.cur.fetchone(),  "New note added.")
 
     def test_new_note_listNotExists(self):
         id = 441220162
