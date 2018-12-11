@@ -65,7 +65,7 @@ class TestDatabase(unittest.TestCase):
         self.db.new_user(id, name, state)
         self.db.cur.execute("SELECT first_name, State FROM Users WHERE userID=%s", (id,))
         data = self.db.cur.fetchone()
-        self.assertIsNone(data, "New user is not created.")
+        self.assertIsNone(data, "Invalid username.")
 
     def test_user_exists_false(self):
         id = 441220162
@@ -122,7 +122,7 @@ class TestDatabase(unittest.TestCase):
         list_name = "a"*51
         self.db.new_list(id, list_name)
         self.db.cur.execute("SELECT ListName FROM Lists WHERE userID = %s", (441220162,))
-        self.assertIsNone(self.db.cur.fetchone(), "New list added.")
+        self.assertIsNone(self.db.cur.fetchone(), "Invalid list name.")
 
     def test_set_list(self):
         id = 441220162
@@ -182,7 +182,7 @@ class TestDatabase(unittest.TestCase):
         note_name = "a" * 51
         self.db.new_note(id, note_name)
         self.db.cur.execute("SELECT NoteName FROM Notes WHERE userID = %s", (id,))
-        self.assertIsNone(self.db.cur.fetchone(),  "New note added.")
+        self.assertIsNone(self.db.cur.fetchone(),  "Invalid note name.")
 
     def test_new_note_listNotExists(self):
         id = 441220162
