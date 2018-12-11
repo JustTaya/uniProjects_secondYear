@@ -10,7 +10,8 @@ class TestDatabase(unittest.TestCase):
         self.db.init_tables()
 
     def tearDown(self):
-        self.db.close()
+        if self.db.conn.closed == 0:
+            self.db.close()
 
     def test_init_tables_Users(self):
         self.db.cur.execute(
@@ -417,6 +418,10 @@ class TestDatabase(unittest.TestCase):
     def test_get_audio_NotExists(self):
         self.db.new_user(441220162, "Tai", 0)
         self.assertIsNone(self.db.get_audio(441220162), "No audio.")
+
+    def test_close(self):
+        self.db.close()
+        self.assertTrue(self.db.conn != 0, "Closed")
 
 
 if __name__ == '__main__':
