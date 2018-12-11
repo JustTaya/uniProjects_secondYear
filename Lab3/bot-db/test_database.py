@@ -122,16 +122,24 @@ class TestDatabase(unittest.TestCase):
         self.db.new_list(441220162, "List")
         self.db.set_list(441220162, 0)
         self.db.delete_list(441220162)
-        self.db.cur.execute("SELECT listsName FROM Lists WHERE userID = %s", (441220162,))
+        self.db.cur.execute("SELECT * FROM Lists WHERE userID = %s and ListName = %s", (441220162, "List"))
+        self.assertIsNone(self.db.cur.fetchone(), "The list deleted")
 
     def test_delete_list_checkNumb(self):
         self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List0")
         self.db.new_list(441220162, "List1")
-        self.db.new_list(441220162, "List2")
         self.db.set_list(441220162, 0)
         self.db.delete_list(441220162)
-        self.db.cur.execute("SELECT listsNumb FROM Lists WHERE userID = %s and List", (441220162,))
+        self.db.cur.execute("SELECT numb FROM Lists WHERE userID = %s and ListName = %s", (441220162, "List1"))
+        self.assertEqual(self.db.cur.fetchone()[0], 0, "The number changed")
 
+    def test_delete_list_NotExists(self):
+        self.db.new_user(441220162, "Tai", 0)
+        self.db.new_list(441220162, "List")
+        self.db.delete_list(441220162)
+        self.db.cur.execute("SELECT * FROM Lists WHERE userID = %s and ListName = %s", (441220162, "List"))
+        self.assertIsNotNone(self.db.cur.fetchone(), "The list is not deleted")
 
 if __name__ == '__main__':
     unittest.main()
