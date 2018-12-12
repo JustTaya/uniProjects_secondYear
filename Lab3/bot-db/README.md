@@ -7,6 +7,7 @@ Here is tutorials how to do it:
 For python3 and pip:
 
 https://www.digitalocean.com/community/tutorials/how-to-install-python-3-and-set-up-a-local-programming-environment-on-windows-10
+
 For postgresql:
 
 http://www.postgresqltutorial.com/install-postgresql/
