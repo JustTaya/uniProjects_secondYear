@@ -9,11 +9,11 @@ http://www.postgresqltutorial.com/install-postgresql/
 
 *Then you have to run the bush script download-deps-windows.sh in project folder.*
 *If it does not work try to run in terminal:*
-'pip install psycopg2-binary'
+`pip install psycopg2-binary`
 *And then in line 11 in file db.py enter your postgresql superuser name, password and host if it is necessary:*
-'''python
+```python
 self.conn = psycopg2.connect(dbname='db', user= <name of your postgresql superuser> , host='localhost', password=<your password>, sslmode='require')
-'''
+```
 *to create local postgres database.*
 
 ## On Linux
