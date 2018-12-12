@@ -12,7 +12,7 @@ For postgresql:
 
 http://www.postgresqltutorial.com/install-postgresql/
 
-Then you have to run the bush script download-deps-windows.sh in project folder.
+Then you have to run the bash script download-deps-windows.sh in project folder.
 
 If it does not work try to run in terminal:
 
@@ -27,5 +27,5 @@ to create local postgres database.
 
 ## On Linux
 
-Run the bush script using terminal in the project folder:
+Run the bash script using terminal in the project folder:
 `chmod u+x download-deps-linux.sh`
